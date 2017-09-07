@@ -1,0 +1,12 @@
+port = 9922
+datadir = "."
+
+logging {
+    directory = "."
+    file = "bitmark-node.log"
+    size = 1048576
+    count = 10
+    levels {
+        DEFAULT = "debug"
+    }
+}
