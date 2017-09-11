@@ -74,6 +74,14 @@ func (bitmarkd *Bitmarkd) IsRunning() bool {
 	return bitmarkd.running
 }
 
+func (bitmarkd *Bitmarkd) Status() string {
+	if bitmarkd.running {
+		return "started"
+	} else {
+		return "stopped"
+	}
+}
+
 func (bitmarkd *Bitmarkd) Run(args interface{}, shutdown <-chan struct{}) {
 loop:
 	for {

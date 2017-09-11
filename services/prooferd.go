@@ -70,6 +70,14 @@ func (prooferd *Prooferd) IsRunning() bool {
 	return prooferd.running
 }
 
+func (prooferd *Prooferd) Status() string {
+	if prooferd.running {
+		return "started"
+	} else {
+		return "stopped"
+	}
+}
+
 func (prooferd *Prooferd) Run(args interface{}, shutdown <-chan struct{}) {
 loop:
 	for {

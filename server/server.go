@@ -1,7 +1,11 @@
 package server
 
 import (
+	"crypto/tls"
+	"net/rpc/jsonrpc"
+
 	"github.com/bitmark-inc/bitmark-node/services"
+	"github.com/bitmark-inc/bitmarkd/rpc"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,7 +42,32 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 	case "status":
 		c.JSON(200, map[string]interface{}{
 			"ok":     1,
-			"result": ws.Bitmarkd.IsRunning(),
+			"result": ws.Bitmarkd.Status(),
+		})
+		return
+	case "info":
+		tlsConfig := &tls.Config{
+			InsecureSkipVerify: true,
+		}
+
+		conn, err := tls.Dial("tcp", "127.0.0.1:2130", tlsConfig)
+		if nil != err {
+			c.String(500, "can not parse action option")
+			return
+		}
+
+		client := jsonrpc.NewClient(conn)
+		defer client.Close()
+
+		var reply rpc.InfoReply
+		if err := client.Call("Node.Info", rpc.InfoArguments{}, &reply); err != nil {
+			c.String(500, "Node.Info error: %s\n", err.Error())
+			return
+		}
+
+		c.JSON(200, map[string]interface{}{
+			"ok":     1,
+			"result": reply,
 		})
 		return
 	default:
@@ -75,7 +104,7 @@ func (ws *WebServer) ProoferdStartStop(c *gin.Context) {
 	case "status":
 		c.JSON(200, map[string]interface{}{
 			"ok":     1,
-			"result": ws.Prooferd.IsRunning(),
+			"result": ws.Prooferd.Status(),
 		})
 		return
 	default:
