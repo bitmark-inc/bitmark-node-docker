@@ -128,6 +128,9 @@ func (bitmarkd *Bitmarkd) Start() error {
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
+				fmt.Sprintf("EC2_IPV4=%s", os.Getenv("EC2_IPV4")),
+				fmt.Sprintf("BTC_ADDR=%s", os.Getenv("BTC_ADDR")),
+				fmt.Sprintf("LTC_ADDR=%s", os.Getenv("LTC_ADDR")),
 			}
 			// start bitmarkd as sub process
 			stderr, err := cmd.StderrPipe()
