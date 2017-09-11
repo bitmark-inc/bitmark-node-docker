@@ -1,4 +1,4 @@
-port = 9922
+port = 9980
 datadir = "."
 
 logging {
