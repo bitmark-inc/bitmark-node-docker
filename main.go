@@ -39,8 +39,10 @@ func main() {
 
 	var confFile string
 	var containerIP string
+	var uiPath string
 	flag.StringVar(&confFile, "config-file", "bitmark-node.conf", "configuration for bitmark-node")
 	flag.StringVar(&containerIP, "container-ip", "", "ip address for container")
+	flag.StringVar(&uiPath, "ui", "ui/public", "path of ui interface")
 	flag.Parse()
 
 	var config Configuration
@@ -73,7 +75,7 @@ func main() {
 
 	r := gin.New()
 
-	r.Use(static.Serve("/", static.LocalFile("./ui/public", true)))
+	r.Use(static.Serve("/", static.LocalFile(uiPath, true)))
 	apiRouter := r.Group("/api")
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)
