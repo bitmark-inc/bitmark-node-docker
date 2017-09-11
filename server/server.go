@@ -2,27 +2,96 @@ package server
 
 import (
 	"crypto/tls"
+	"log"
 	"net/rpc/jsonrpc"
 
 	"github.com/bitmark-inc/bitmark-node/services"
 	"github.com/bitmark-inc/bitmarkd/rpc"
+	bolt "github.com/coreos/bbolt"
 	"github.com/gin-gonic/gin"
 )
+
+const CONFIG_BUCKET_NAME = "config"
 
 type ServiceOptionRequest struct {
 	Option string `json:"option"`
 }
 
 type WebServer struct {
+	db       *bolt.DB
 	Bitmarkd services.Service
 	Prooferd services.Service
 }
 
-func NewWebServer(bitmarkd, prooferd services.Service) *WebServer {
+func NewWebServer(dbPath string, bitmarkd, prooferd services.Service) *WebServer {
+	db, err := bolt.Open(dbPath, 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte(CONFIG_BUCKET_NAME))
+		return err
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return &WebServer{
+		db:       db,
 		Bitmarkd: bitmarkd,
 		Prooferd: prooferd,
 	}
+}
+
+func (ws *WebServer) GetConfig(c *gin.Context) {
+	config := map[string]string{
+		"btcAddr": "",
+		"ltcAddr": "",
+	}
+
+	ws.db.View(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		for key := range config {
+			b := bucket.Get([]byte(key))
+			if b != nil {
+				config[key] = string(b)
+			}
+		}
+		return nil
+	})
+	c.JSON(200, map[string]interface{}{
+		"ok":     1,
+		"result": config,
+	})
+	return
+}
+
+func (ws *WebServer) UpdateConfig(c *gin.Context) {
+	config := map[string]string{
+		"btcAddr": "",
+		"ltcAddr": "",
+	}
+
+	err := c.BindJSON(&config)
+	if err != nil {
+		c.String(400, "can not parse action option")
+		return
+	}
+
+	ws.db.Update(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		for key, val := range config {
+			err := bucket.Put([]byte(key), []byte(val))
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
+	c.String(200, "")
+	return
 }
 
 func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {

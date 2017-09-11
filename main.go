@@ -68,6 +68,7 @@ func main() {
 
 	bitmarkdPath := filepath.Join(rootPath, "bitmarkd")
 	prooferdPath := filepath.Join(rootPath, "prooferd")
+	dbPath := filepath.Join(rootPath, "bitmark-node.db")
 
 	err = os.MkdirAll(bitmarkdPath, 0755)
 	err = os.MkdirAll(prooferdPath, 0755)
@@ -79,12 +80,14 @@ func main() {
 	prooferdService.Initialise(filepath.Join(prooferdPath, "prooferd.conf"))
 	defer prooferdService.Finalise()
 
-	webserver := server.NewWebServer(bitmarkdService, prooferdService)
+	webserver := server.NewWebServer(dbPath, bitmarkdService, prooferdService)
 
 	r := gin.New()
 
 	r.Use(static.Serve("/", static.LocalFile(uiPath, true)))
 	apiRouter := r.Group("/api")
+	apiRouter.GET("/config", webserver.GetConfig)
+	apiRouter.POST("/config", webserver.UpdateConfig)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)
 	r.Run(fmt.Sprintf(":%d", config.Port))

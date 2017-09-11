@@ -63,83 +63,15 @@ div
       button.btn(@click="this.save") Save
       router-link(tag="button", class="btn cancel",to="/node") Cancel
   div
-    h5 bitmark rpc
-    div.row
-      div.col-xs-6.col-sm-4 CHAIN
-      div.upper.col-xs-6.col-sm-8 {{bitmarkdConfig.chain}}
-    div.row
-      div.col-xs-6.col-sm-4 NODES
-      div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.nodes")
-    div.row
-      div.col-xs-6.col-sm-4 Announce
-      div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.client_rpc.announce[0]")
-  div
-    h5 bitmark peer
-    div.row
-      div.col-xs-6.col-sm-4 PUBLICKEY
-      div.upper.col-xs-6.col-sm-8 {{bitmarkdConfig.peering.public_key}}
-    div.row
-      div.col-xs-6.col-sm-4 BROADCAST
-      div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.peering.announce.broadcast[0]")
-    div.row
-      div.col-xs-6.col-sm-4 LISTEN
-      div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.peering.announce.listen[0]")
-  div
     h5 bitmark proofing
     div.row
-      div.col-xs-6.col-sm-4 PUBLICKEY
-      div.upper.col-xs-6.col-sm-8 {{bitmarkdConfig.proofing.public_key}}
-    div.row
-      div.col-xs-6.col-sm-4 CURRENCY
+      div.col-xs-6.col-sm-4 BTC Address
       div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.proofing.currency")
+        input.input-form(v-model="btcAddr")
     div.row
-      div.col-xs-6.col-sm-4 ADDRESS
+      div.col-xs-6.col-sm-4 LTC Address
       div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.proofing.address")
-    div.row
-      div.col-xs-6.col-sm-4 PUBLISH
-      div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.proofing.publish[0]")
-    div.row
-      div.col-xs-6.col-sm-4 SUBMIT
-      div.col-xs-6.col-sm-8
-        input.input-form(v-model="bitmarkdConfig.proofing.submit[0]")
-  div
-    h5 prooferd peer
-    div.row
-      div.col-xs-6.col-sm-4 CONNNECT
-        a.add(@click="this.addConnect") +
-      div.upper.col-xs-6.col-sm-8
-        table
-          tbody
-            template(
-              v-for="(conn, index) in prooferdConfig.peering.connect"
-            )
-              tr
-                td \#{{ index+1 }}
-                td
-                td
-              tr
-                td PUBLICKEY
-                td
-                  input.input-form(v-model="conn.public_key")
-                td(rowspan="3", @click="() => {removeConnect(index)}") x
-              tr
-                td BLOCKS
-                td
-                  input.input-form(v-model="conn.blocks")
-                td
-              tr
-                td SUBMIT
-                td
-                  input.input-form(v-model="conn.submit")
-                td
-
+        input.input-form(v-model="ltcAddr")
 </template>
 
 <script>
@@ -149,40 +81,13 @@ div
     setCookie
   } from "../utils"
 
-  function checkAndMergeConfig(oldConf, newConf) {
-    let _conf = new oldConf.constructor()
-    for (var k in oldConf) {
-      if (newConf[k]) {
-        let v = newConf[k]
-        // The order of type checking here is important
-        if (oldConf[k] instanceof Array) {
-          _conf[k] = (newConf[k] instanceof Array && newConf[k].length > 0) ? newConf[k] : oldConf[k]
-        } else if (oldConf[k] instanceof Object) {
-          _conf[k] = checkAndMergeConfig(oldConf[k], newConf[k])
-        } else {
-          _conf[k] = v
-        }
-      } else {
-        _conf[k] = oldConf[k]
-      }
-    }
-    return _conf
-  }
 
   export default {
     methods: {
-      addConnect() {
-        this.prooferdConfig.peering.connect.push({})
-      },
-
-      removeConnect(index) {
-        this.prooferdConfig.peering.connect.splice(index, 1)
-      },
-
       save() {
         axios.post("/api/config", {
-            bitmarkConfig: this.bitmarkdConfig,
-            prooferdConfig: this.prooferdConfig
+            btcAddr: this.btcAddr,
+            ltcAddr: this.ltcAddr
           })
           .then(() => {
             this.$router.push("/node")
@@ -198,21 +103,12 @@ div
         .get("/api/config")
         .then((response) => {
           let {
-            bitmarkd,
-            prooferd
+            btcAddr,
+            ltcAddr
           } = response.data.result
 
-          if (bitmarkd.err !== "") {
-            this.$emit("error", bitmarkd.err)
-            return
-          }
-
-          if (prooferd.err !== "") {
-            this.$emit("error", prooferd.err)
-            return
-          }
-          this.bitmarkdConfig = checkAndMergeConfig(this.bitmarkdConfig, bitmarkd.data)
-          this.prooferdConfig = checkAndMergeConfig(this.prooferdConfig, prooferd.data)
+          this.btcAddr = btcAddr
+          this.ltcAddr = ltcAddr
         })
         .catch((e) => {
           console.log(e)
@@ -221,32 +117,8 @@ div
 
     data() {
       return {
-        bitmarkdConfig: {
-          chain: getCookie("bitmark-webgui-network"),
-          nodes: "chain",
-          client_rpc: {
-            announce: ["127.0.0.1:2130"]
-          },
-          peering: {
-            public_key: "",
-            announce: {
-              broadcast: ["127.0.0.1:2135"],
-              listen: ["127.0.0.1:2136"]
-            }
-          },
-          proofing: {
-            public_key: "",
-            currency: "bitcoin",
-            address: "",
-            publish: ["127.0.0.1:2140"],
-            submit: ["127.0.0.1:2141"]
-          }
-        },
-        prooferdConfig: {
-          peering: {
-            connect: []
-          }
-        }
+        ltcAddr: "",
+        btcAddr: ""
       }
     }
   }

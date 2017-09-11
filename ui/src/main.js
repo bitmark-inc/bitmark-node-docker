@@ -15,6 +15,7 @@ import {getCookie, setCookie} from "./utils"
 var routes = [
   {path: '/', component: Main, redirect: '/node'},
   {path: '/node', component: Node},
+  {path: '/config', component: Config},
 ]
 
 var router = new VueRouter({routes, linkActiveClass: "active"})

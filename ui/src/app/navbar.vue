@@ -64,6 +64,7 @@ div.navbar
     img(src="/static/images/bitmark-logo.png")
   div.menu
     router-link(to="/node") Node
+    router-link(to="/config") Config
 </template>
 
 <script>
