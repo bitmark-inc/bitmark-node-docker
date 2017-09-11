@@ -33,14 +33,11 @@ RUN go get -d github.com/bitmark-inc/bitmarkd || \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
     go install github.com/bitmark-inc/bitmark-wallet
 
-ADD docker-assets/bitmarkd.conf /.config/bitmarkd/
-ADD docker-assets/prooferd.conf /.config/prooferd/
-ADD docker-assets/discovery.conf /.config/discovery/
-
-RUN bitmarkd --config-file=/.config/bitmarkd/bitmarkd.conf gen-peer-identity && \
-    bitmarkd --config-file=/.config/bitmarkd/bitmarkd.conf gen-rpc-cert && \
-    bitmarkd --config-file /.config/bitmarkd/bitmarkd.conf gen-proof-identity && \
-    prooferd --config-file /.config/prooferd/prooferd.conf generate-identity
+ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
+ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/
+ADD docker-assets/prooferd.conf /.config/bitmark-node/prooferd/
+ADD docker-assets/discovery.conf /.config/bitmark-node/discovery/
+ADD docker-assets/start.sh /
 
 EXPOSE 2130 2135 2136 2150
-CMD ["/go/bin/bitmarkd", "--config-file", "/.config/bitmarkd/bitmarkd.conf"]
+CMD ["/start.sh"]
