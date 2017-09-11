@@ -7,8 +7,8 @@ bitmarkd --config-file=/.config/bitmark-node/bitmarkd/bitmarkd.conf gen-proof-id
 prooferd --config-file=/.config/bitmark-node/prooferd/prooferd.conf generate-identity
 
 # Set the proof public key inot prooferd config
-sed -ie "s/@BITMARKD-PROOFER-PUBLIC-KEY@/$(cat /.config/bitmarkd/proof.public | cut -d":" -f2)/g" /.config/prooferd/prooferd.conf
+sed -ie "s/@BITMARKD-PROOFER-PUBLIC-KEY@/$(cat /.config/bitmark-node/bitmarkd/proof.public | cut -d":" -f2)/g" /.config/bitmark-node/prooferd/prooferd.conf
 
 # Start bitmark node
 export CONTAINER_IP=$(awk 'END{print $1}' /etc/hosts)
-bitmark-node -config-file=/.config/bitmark-node/bitmark-node.conf -container-ip=$CONTAINER_IP
+bitmark-node -config-file=/.config/bitmark-node/bitmark-node.conf -container-ip=$CONTAINER_IP -ui=/go/src/github.com/bitmark-inc/bitmark-node/ui/public
