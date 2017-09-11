@@ -33,11 +33,15 @@ RUN go get -d github.com/bitmark-inc/bitmarkd || \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
     go install github.com/bitmark-inc/bitmark-wallet
 
+RUN go get github.com/bitmark-inc/bitmark-node
+RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
+
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
 ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/
 ADD docker-assets/prooferd.conf /.config/bitmark-node/prooferd/
 ADD docker-assets/discovery.conf /.config/bitmark-node/discovery/
 ADD docker-assets/start.sh /
 
+VOLUME /.config/bitmark-node/bitmarkd/data
 EXPOSE 2130 2135 2136 2150
 CMD ["/start.sh"]
