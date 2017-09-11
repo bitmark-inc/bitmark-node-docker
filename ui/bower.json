@@ -1,0 +1,21 @@
+{
+  "name": "bitmark-node-ui",
+  "description": "",
+  "main": "main.js",
+  "authors": [
+    "Jim Yeh <jim@bitmark.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/bitmark-inc/bitmark-webgui",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}

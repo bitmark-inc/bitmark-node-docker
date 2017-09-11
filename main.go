@@ -11,6 +11,7 @@ import (
 	"github.com/bitmark-inc/bitmark-node/services"
 	"github.com/bitmark-inc/exitwithstatus"
 	"github.com/bitmark-inc/logger"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/hcl"
 )
@@ -64,6 +65,8 @@ func main() {
 	webserver := server.NewWebServer(bitmarkdService, prooferdService)
 
 	r := gin.New()
+
+	r.Use(static.Serve("/", static.LocalFile("./ui/public", true)))
 	apiRouter := r.Group("/api")
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)
