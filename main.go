@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/bitmark-inc/bitmark-node/server"
 	"github.com/bitmark-inc/bitmark-node/services"
@@ -56,19 +56,27 @@ func main() {
 		exitwithstatus.Message(err.Error())
 	}
 	defer logger.Finalise()
-	rootPath := path.Clean(config.DataDir)
+	var rootPath string
+	if filepath.IsAbs(config.DataDir) {
+		rootPath = config.DataDir
+	} else {
+		rootPath, err = filepath.Abs(filepath.Join(filepath.Dir(confFile), config.DataDir))
+		if err != nil {
+			exitwithstatus.Message(err.Error())
+		}
+	}
 
-	bitmarkdPath := path.Join(rootPath, "bitmarkd")
-	prooferdPath := path.Join(rootPath, "prooferd")
+	bitmarkdPath := filepath.Join(rootPath, "bitmarkd")
+	prooferdPath := filepath.Join(rootPath, "prooferd")
 
 	err = os.MkdirAll(bitmarkdPath, 0755)
 	err = os.MkdirAll(prooferdPath, 0755)
 
 	bitmarkdService := services.NewBitmarkd(containerIP)
 	prooferdService := services.NewProoferd()
-	bitmarkdService.Initialise(path.Join(bitmarkdPath, "bitmarkd.conf"))
+	bitmarkdService.Initialise(filepath.Join(bitmarkdPath, "bitmarkd.conf"))
 	defer bitmarkdService.Finalise()
-	prooferdService.Initialise(path.Join(prooferdPath, "prooferd.conf"))
+	prooferdService.Initialise(filepath.Join(prooferdPath, "prooferd.conf"))
 	defer prooferdService.Finalise()
 
 	webserver := server.NewWebServer(bitmarkdService, prooferdService)
