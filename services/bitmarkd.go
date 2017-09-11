@@ -6,16 +6,15 @@ package services
 
 import (
 	"bufio"
-
-	"github.com/bitmark-inc/bitmark-node/fault"
-	"github.com/bitmark-inc/bitmark-node/utils"
-
-	"github.com/bitmark-inc/logger"
-
+	"fmt"
 	"os"
 	"os/exec"
 	"sync"
 	"time"
+
+	"github.com/bitmark-inc/bitmark-node/fault"
+	"github.com/bitmark-inc/bitmark-node/utils"
+	"github.com/bitmark-inc/logger"
 )
 
 var (
@@ -31,10 +30,13 @@ type Bitmarkd struct {
 	process     *os.Process
 	running     bool
 	ModeStart   chan bool
+	localIP     string
 }
 
-func NewBitmarkd() *Bitmarkd {
-	return &Bitmarkd{}
+func NewBitmarkd(localIP string) *Bitmarkd {
+	return &Bitmarkd{
+		localIP: localIP,
+	}
 }
 
 func (bitmarkd *Bitmarkd) Initialise(configFile string) error {
@@ -124,6 +126,9 @@ func (bitmarkd *Bitmarkd) Start() error {
 		for bitmarkd.running {
 			// start bitmarkd as sub process
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
+			cmd.Env = []string{
+				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
+			}
 			// start bitmarkd as sub process
 			stderr, err := cmd.StderrPipe()
 			if err != nil {
