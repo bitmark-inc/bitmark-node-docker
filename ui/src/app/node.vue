@@ -88,12 +88,6 @@
     p.info-box
       span(v-if="this.prooferd.status === ''") Checking prooferd status...
       span(v-else) Prooferd is {{this.prooferd.status || "loading status"}}
-
-    //- h4 configuration
-
-    //- status-grid(title="bitmarkd rpc", :data="this.bitmarkdRPCData")
-    //- status-grid(title="bitmarkd peer", :data="this.bitmarkdPeerData")
-    //- status-grid(title="prooferd peer", :data="this.prooferdPeerData")
 </template>
 
 <script>
@@ -105,27 +99,6 @@
   import statusGrid from "../components/statusGrid.vue"
 
   export default {
-
-    computed: {
-      bitmarkdRPCData() {
-        return (this.bitmarkdConfig.peering) ? {
-          chain: this.network,
-          announce: this.bitmarkdConfig.client_rpc.announce[0]
-        } : {}
-      },
-      bitmarkdPeerData() {
-        return (this.bitmarkdConfig.peering) ? {
-          publickey: this.bitmarkdConfig.peering.public_key,
-          broadcast: this.bitmarkdConfig.peering.announce.broadcast[0],
-          listen: this.bitmarkdConfig.peering.announce.listen[0]
-        } : {}
-      },
-      prooferdPeerData() {
-        return (this.prooferdConfig.peering) ? {
-          connect: this.prooferdConfig.peering.connect
-        } : {}
-      }
-    },
     components: {
       "status-grid": statusGrid
     },
@@ -172,20 +145,6 @@
         }
       },
 
-      fetchConfig() {
-        axios.get("/api/config")
-          .then((resp) => {
-            let data = resp.data
-            if (data.ok) {
-              this.bitmarkdConfig = data.result.bitmarkd.data
-              this.prooferdConfig = data.result.prooferd.data
-            }
-          })
-          .catch((e) => {
-            this.$emit(e.message)
-          })
-      },
-
       fetchStatus(serviceName) {
         let service = this[serviceName]
         if (service.querying) {
@@ -212,12 +171,11 @@
 
     mounted() {
       // let network = getCookie("bitmark-webgui-network")
-      let network = "bitmark"
+      let network = "Livenet"
       if (!network) {
         this.$router.push("/chain")
       }
       this.network = network;
-      this.fetchConfig()
       this.periodicalTask = setInterval(() => {
         this.fetchStatus('bitmarkd')
         this.fetchStatus('prooferd')
@@ -241,9 +199,7 @@
           querying: false,
           status: ""
         },
-        bitmarkdInfo: null,
-        bitmarkdConfig: {},
-        prooferdConfig: {}
+        bitmarkdInfo: null
       }
     }
   }
