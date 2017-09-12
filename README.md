@@ -18,10 +18,10 @@ In order to finish a transaction, you need to send bitcoin or litecoin to the pr
 
 Here is a table to indicate what bitmark chain corresponds to which coin chain
 
- bitmark chain | bitcoin chain | litecoin chain
-===============+===============+=================
-   testing     |   testnet     |   testnet
-   bitmark     |   livenet     |   livenet
+|   Bitmark    |   Bitcoin   |  Litecoin  |
+|    :---:     |    :---:    |    :---:   |
+|   testing    |   testnet   |   testnet  |
+|   bitmark    |   livenet   |   livenet  |
 
 ## Installation
 
@@ -40,7 +40,12 @@ When the container is first started up, it will generate required keys for you i
 ### Run
 
 ```
-$ docker run -d --name bitmarkNode -p 9980:9980 -p 2136:2136 -p 2135:2135 -p 2130:2130 -e BTC_ADDR=1KtkRmq3iAjxevKX8sYTSxU8AdRhrYGAPy -e LTC_ADDR=LN4jSR7ybzcSR9J2xv76TcmTqW3Mo6NgTj -e PUBLIC_IP=54.249.99.99 bitmark/bitmark-node
+$ docker run -d --name bitmarkNode -p 9980:9980 \
+-p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-e PUBLIC_IP=54.249.99.99 \
+-e BTC_ADDR=1KtkRmq3iAjxevKX8sYTSxU8AdRhrYGAPy \
+-e LTC_ADDR=LN4jSR7ybzcSR9J2xv76TcmTqW3Mo6NgTj \
+bitmark/bitmark-node
 ```
 
 The options are:
@@ -56,4 +61,4 @@ The options are:
 
 ### Docker Compose
 
-In the folder, there is a docker-compose file that gives you an example of how to configurate correctly to make bitmark-node up-and-run.
+In the folder, there is a `docker-compose.yml` file that gives you an example of how to configurate correctly to make bitmark-node up-and-run.
