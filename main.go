@@ -17,13 +17,13 @@ import (
 	"github.com/hashicorp/hcl"
 )
 
-type Configuration struct {
+type MasterConfiguration struct {
 	Port    int                  `hcl:"port"`
 	DataDir string               `hcl:"datadir"`
 	Logging logger.Configuration `hcl:"logging"`
 }
 
-func (c *Configuration) Parse(filename string) error {
+func (c *MasterConfiguration) Parse(filename string) error {
 	f, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -45,22 +45,22 @@ func main() {
 	flag.StringVar(&uiPath, "ui", "ui/public", "path of ui interface")
 	flag.Parse()
 
-	var config Configuration
-	err := config.Parse(confFile)
+	var masterConfig MasterConfiguration
+	err := masterConfig.Parse(confFile)
 	if err != nil {
 		exitwithstatus.Message(err.Error())
 	}
 
-	err = logger.Initialise(config.Logging)
+	err = logger.Initialise(masterConfig.Logging)
 	if err != nil {
 		exitwithstatus.Message(err.Error())
 	}
 	defer logger.Finalise()
 	var rootPath string
-	if filepath.IsAbs(config.DataDir) {
-		rootPath = config.DataDir
+	if filepath.IsAbs(masterConfig.DataDir) {
+		rootPath = masterConfig.DataDir
 	} else {
-		rootPath, err = filepath.Abs(filepath.Join(filepath.Dir(confFile), config.DataDir))
+		rootPath, err = filepath.Abs(filepath.Join(filepath.Dir(confFile), masterConfig.DataDir))
 		if err != nil {
 			exitwithstatus.Message(err.Error())
 		}
@@ -90,5 +90,5 @@ func main() {
 	apiRouter.POST("/config", webserver.UpdateConfig)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)
-	r.Run(fmt.Sprintf(":%d", config.Port))
+	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
 }
