@@ -2,12 +2,11 @@ package server
 
 import (
 	"crypto/tls"
-	"log"
 	"net/rpc/jsonrpc"
 
+	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/services"
 	"github.com/bitmark-inc/bitmarkd/rpc"
-	bolt "github.com/coreos/bbolt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,48 +17,25 @@ type ServiceOptionRequest struct {
 }
 
 type WebServer struct {
-	db       *bolt.DB
-	Bitmarkd services.Service
-	Prooferd services.Service
+	nodeConfig *config.BitmarkNodeConfig
+	Bitmarkd   services.Service
+	Prooferd   services.Service
 }
 
-func NewWebServer(dbPath string, bitmarkd, prooferd services.Service) *WebServer {
-	db, err := bolt.Open(dbPath, 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte(CONFIG_BUCKET_NAME))
-		return err
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func NewWebServer(nc *config.BitmarkNodeConfig, bitmarkd, prooferd services.Service) *WebServer {
 	return &WebServer{
-		db:       db,
-		Bitmarkd: bitmarkd,
-		Prooferd: prooferd,
+		nodeConfig: nc,
+		Bitmarkd:   bitmarkd,
+		Prooferd:   prooferd,
 	}
 }
 
 func (ws *WebServer) GetConfig(c *gin.Context) {
-	config := map[string]string{
-		"btcAddr": "",
-		"ltcAddr": "",
+	config, err := ws.nodeConfig.Get()
+	if err != nil {
+		c.String(500, "can not read bitmark node config. error: %s", err.Error())
+		return
 	}
-
-	ws.db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
-		for key := range config {
-			b := bucket.Get([]byte(key))
-			if b != nil {
-				config[key] = string(b)
-			}
-		}
-		return nil
-	})
 	c.JSON(200, map[string]interface{}{
 		"ok":     1,
 		"result": config,
@@ -68,27 +44,23 @@ func (ws *WebServer) GetConfig(c *gin.Context) {
 }
 
 func (ws *WebServer) UpdateConfig(c *gin.Context) {
-	config := map[string]string{
+	newConfig := map[string]string{
 		"btcAddr": "",
 		"ltcAddr": "",
 	}
 
-	err := c.BindJSON(&config)
+	err := c.BindJSON(&newConfig)
 	if err != nil {
 		c.String(400, "can not parse action option")
 		return
 	}
 
-	ws.db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
-		for key, val := range config {
-			err := bucket.Put([]byte(key), []byte(val))
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	})
+	err = ws.nodeConfig.Set(newConfig)
+
+	if err != nil {
+		c.String(500, "can not set bitmark node config. error: %s", err.Error())
+		return
+	}
 
 	c.String(200, "")
 	return

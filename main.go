@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/server"
 	"github.com/bitmark-inc/bitmark-node/services"
 	"github.com/bitmark-inc/exitwithstatus"
@@ -80,7 +81,13 @@ func main() {
 	prooferdService.Initialise(filepath.Join(prooferdPath, "prooferd.conf"))
 	defer prooferdService.Finalise()
 
-	webserver := server.NewWebServer(dbPath, bitmarkdService, prooferdService)
+	nodeConfig := config.New()
+	err = nodeConfig.Initialise(dbPath)
+	if err != nil {
+		exitwithstatus.Message(err.Error())
+	}
+
+	webserver := server.NewWebServer(nodeConfig, bitmarkdService, prooferdService)
 
 	r := gin.New()
 

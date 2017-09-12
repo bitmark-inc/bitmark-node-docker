@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/fault"
 	"github.com/bitmark-inc/bitmark-node/utils"
 	"github.com/bitmark-inc/logger"
@@ -116,6 +117,23 @@ func (bitmarkd *Bitmarkd) Start() error {
 		return fault.ErrNotFoundConfigFile
 	}
 
+	btcAddr := os.Getenv("BTC_ADDR")
+	ltcAddr := os.Getenv("LTC_ADDR")
+
+	nodeConfig := config.New()
+	configs, err := nodeConfig.Get()
+	if err != nil {
+		return err
+	}
+
+	if v, ok := configs["btcAddr"]; ok {
+		btcAddr = v
+	}
+
+	if v, ok := configs["ltcAddr"]; ok {
+		btcAddr = v
+	}
+
 	bitmarkd.running = true
 	stopped := make(chan bool, 1)
 
@@ -129,8 +147,8 @@ func (bitmarkd *Bitmarkd) Start() error {
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
 				fmt.Sprintf("EC2_IPV4=%s", os.Getenv("EC2_IPV4")),
-				fmt.Sprintf("BTC_ADDR=%s", os.Getenv("BTC_ADDR")),
-				fmt.Sprintf("LTC_ADDR=%s", os.Getenv("LTC_ADDR")),
+				fmt.Sprintf("BTC_ADDR=%s", btcAddr),
+				fmt.Sprintf("LTC_ADDR=%s", ltcAddr),
 			}
 			// start bitmarkd as sub process
 			stderr, err := cmd.StderrPipe()
