@@ -27,8 +27,10 @@ ENV PATH="/go/bin:${PATH}"
 RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash && \
     bash -c "source ~/.nvm/nvm.sh && nvm install v7"
 
+ENV BITMARKD_VERSION 5.6
+
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
-    go install github.com/bitmark-inc/bitmarkd/command/... && \
+    go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/... && \
     go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
     go install github.com/bitmark-inc/bitmark-wallet
