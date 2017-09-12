@@ -136,7 +136,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 	}
 
 	if v, ok := configs["ltcAddr"]; ok {
-		btcAddr = v
+		ltcAddr = v
 	}
 
 	bitmarkd.running = true
