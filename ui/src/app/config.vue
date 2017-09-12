@@ -99,6 +99,12 @@ div
       }
     },
     mounted() {
+      let network = getCookie("bitmark-node-network")
+      if (!network) {
+        this.$router.push("/chain")
+        return
+      }
+
       axios
         .get("/api/config")
         .then((response) => {

@@ -14,6 +14,7 @@ import {getCookie, setCookie} from "./utils"
 
 var routes = [
   {path: '/', component: Main, redirect: '/node'},
+  {path: '/chain', component: Chain},
   {path: '/node', component: Node},
   {path: '/config', component: Config},
 ]

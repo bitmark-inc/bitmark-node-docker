@@ -65,15 +65,14 @@ div.chain-content
             input(type="radio", value="testing", v-model="network")
             .
               TESTING
-            p.help-text Link to public test bitmark network, to pay the transactions, please contact us.
+            p.help-text Link to public test bitmark network, pay the transactions with bitcoin or litecoin on testnet.
           label.option
             input(type="radio", value="bitmark", v-model="network")
             .
               BITMARK
-            p.help-text Link to public bitmark network, pay the transactions with real bitcoin.
+            p.help-text Link to public bitmark network, pay the transactions with real bitcoin or litecoin.
         div.panel-footer
           button.start-node(@click="start") START NODE »
-
 </template>
 
 <script>
@@ -90,26 +89,15 @@ div.chain-content
           this.$emit("error", "no network is selected")
           return
         }
-        axios.post("/api/bitmarkd", {
-            "option": "setup",
+        axios.post("/api/chain", {
             "network": this.network
           })
           .then((resp) => {
             if (resp.data && resp.data.ok) {
-              return axios.post("/api/prooferd", {
-                "option": "setup",
-                "network": this.network
-              })
-            } else {
-              throw new Error('fail to setup bitmarkd service: ' + resp.data.result)
-            }
-          })
-          .then((resp) => {
-            if (resp.data && resp.data.ok) {
-              setCookie("bitmark-webgui-network", this.network, 30)
+              setCookie("bitmark-node-network", this.network, 30)
               this.$router.push("/node")
             } else {
-              throw new Error('fail to setup prooferd service: ' + resp.data.result)
+              throw new Error('fail to setup network: ' + resp.data.result)
             }
           })
           .catch((e) => {
@@ -119,7 +107,7 @@ div.chain-content
     },
     data() {
       return {
-        network: getCookie("bitmark-webgui-network")
+        network: getCookie("bitmark-node-network")
       }
     }
   }

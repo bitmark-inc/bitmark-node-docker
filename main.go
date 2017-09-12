@@ -76,9 +76,9 @@ func main() {
 
 	bitmarkdService := services.NewBitmarkd(containerIP)
 	prooferdService := services.NewProoferd()
-	bitmarkdService.Initialise(filepath.Join(bitmarkdPath, "bitmarkd.conf"))
+	bitmarkdService.Initialise(bitmarkdPath)
 	defer bitmarkdService.Finalise()
-	prooferdService.Initialise(filepath.Join(prooferdPath, "prooferd.conf"))
+	prooferdService.Initialise(prooferdPath)
 	defer prooferdService.Finalise()
 
 	nodeConfig := config.New()
@@ -95,6 +95,7 @@ func main() {
 	apiRouter := r.Group("/api")
 	apiRouter.GET("/config", webserver.GetConfig)
 	apiRouter.POST("/config", webserver.UpdateConfig)
+	apiRouter.POST("/chain", webserver.SetChain)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))

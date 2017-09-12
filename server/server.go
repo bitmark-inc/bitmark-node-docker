@@ -30,6 +30,35 @@ func NewWebServer(nc *config.BitmarkNodeConfig, bitmarkd, prooferd services.Serv
 	}
 }
 
+func (ws *WebServer) SetChain(c *gin.Context) {
+	reqBody := map[string]string{}
+	err := c.BindJSON(&reqBody)
+	if err != nil {
+		c.String(400, "can not parse action option")
+		return
+	}
+
+	network, ok := reqBody["network"]
+	if !ok {
+		c.String(400, "missing arguments")
+		return
+	}
+
+	err = ws.nodeConfig.SetNetwork(network)
+	if err != nil {
+		c.String(400, "can not set network. error: %s", err.Error())
+		return
+	}
+
+	ws.Bitmarkd.SetNetwork(network)
+	ws.Prooferd.SetNetwork(network)
+
+	c.JSON(200, map[string]interface{}{
+		"ok": 1,
+	})
+	return
+}
+
 func (ws *WebServer) GetConfig(c *gin.Context) {
 	config, err := ws.nodeConfig.Get()
 	if err != nil {

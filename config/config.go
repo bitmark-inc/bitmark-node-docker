@@ -44,6 +44,24 @@ func (c *BitmarkNodeConfig) Initialise(dbPath string) error {
 
 		err = db.Update(func(tx *bolt.Tx) error {
 			_, err := tx.CreateBucketIfNotExists([]byte(CONFIG_BUCKET_NAME))
+			if err != nil {
+				return err
+			}
+			bkt := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+
+			v := bkt.Get([]byte("network"))
+			if v == nil {
+				err := bkt.Put([]byte("network"), []byte("bitmark"))
+				if err != nil {
+					return err
+				}
+			}
+
+			_, err = bkt.CreateBucketIfNotExists([]byte("testing"))
+			if err != nil {
+				return err
+			}
+			_, err = bkt.CreateBucketIfNotExists([]byte("bitmark"))
 			return err
 		})
 		if err != nil {
@@ -52,22 +70,51 @@ func (c *BitmarkNodeConfig) Initialise(dbPath string) error {
 		c.db = db
 		c.initialised = true
 	}
-
-	_, err := nodeConfig.Get()
-	if err != nil {
-		return err
-	}
 	return nil
+}
+
+func (c *BitmarkNodeConfig) GetNetwork() string {
+	var network string
+	err := c.db.View(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		network = string(bucket.Get([]byte("network")))
+		return nil
+	})
+	if err != nil {
+		return ""
+	}
+	return network
+}
+
+func (c *BitmarkNodeConfig) SetNetwork(network string) error {
+	switch network {
+	case "bitmark", "testing":
+	default:
+		return fmt.Errorf("unexpected value of network")
+	}
+
+	return c.db.Update(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		bucket.Put([]byte("network"), []byte(network))
+		return nil
+	})
 }
 
 func (c *BitmarkNodeConfig) Set(newConfig map[string]string) error {
 	if !c.initialised {
 		return ErrNotInitialised
 	}
+
+	bucketName := c.GetNetwork()
+	if bucketName == "" {
+		return fmt.Errorf("empty network name")
+	}
+
 	c.Lock()
 	defer c.Unlock()
 	return c.db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		rootBucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		bucket := rootBucket.Bucket([]byte(bucketName))
 		for key, val := range newConfig {
 			err := bucket.Put([]byte(key), []byte(val))
 			c.config[key] = val
@@ -83,10 +130,17 @@ func (c *BitmarkNodeConfig) Get() (map[string]string, error) {
 	if !c.initialised {
 		return nil, ErrNotInitialised
 	}
+
+	bucketName := c.GetNetwork()
+	if bucketName == "" {
+		return nil, fmt.Errorf("empty network name")
+	}
+
 	c.RLock()
 	defer c.RUnlock()
 	err := c.db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		rootBucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
+		bucket := rootBucket.Bucket([]byte(bucketName))
 		for key := range c.config {
 			b := bucket.Get([]byte(key))
 			if b != nil {

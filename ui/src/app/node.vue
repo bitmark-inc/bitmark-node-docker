@@ -170,17 +170,22 @@
     },
 
     mounted() {
-      // let network = getCookie("bitmark-webgui-network")
-      let network = "Livenet"
+      let network = getCookie("bitmark-node-network")
       if (!network) {
         this.$router.push("/chain")
+      } else {
+        axios.post("/api/chain", {
+            "network": network
+          })
+          .then((resp) => {
+            this.network = network;
+             this.periodicalTask = setInterval(() => {
+              this.fetchStatus('bitmarkd')
+              this.fetchStatus('prooferd')
+              this.fetchBitmarkInfo()
+            }, 2000)
+          })
       }
-      this.network = network;
-      this.periodicalTask = setInterval(() => {
-        this.fetchStatus('bitmarkd')
-        this.fetchStatus('prooferd')
-        this.fetchBitmarkInfo()
-      }, 2000)
     },
 
     destroyed() {

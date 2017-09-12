@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -27,7 +28,9 @@ type Bitmarkd struct {
 	sync.RWMutex
 	initialised bool
 	log         *logger.L
+	rootPath    string
 	configFile  string
+	network     string
 	process     *os.Process
 	running     bool
 	cmdErr      string
@@ -41,7 +44,7 @@ func NewBitmarkd(localIP string) *Bitmarkd {
 	}
 }
 
-func (bitmarkd *Bitmarkd) Initialise(configFile string) error {
+func (bitmarkd *Bitmarkd) Initialise(rootPath string) error {
 	bitmarkd.Lock()
 	defer bitmarkd.Unlock()
 
@@ -49,7 +52,7 @@ func (bitmarkd *Bitmarkd) Initialise(configFile string) error {
 		return fault.ErrAlreadyInitialised
 	}
 
-	bitmarkd.configFile = configFile
+	bitmarkd.rootPath = rootPath
 
 	bitmarkd.log = logger.New("service-bitmarkd")
 
@@ -107,6 +110,19 @@ loop:
 
 	}
 	close(bitmarkd.ModeStart)
+}
+
+func (bitmarkd *Bitmarkd) SetNetwork(network string) {
+	bitmarkd.Stop()
+	bitmarkd.network = network
+	switch network {
+	case "testing":
+		bitmarkd.configFile = filepath.Join(bitmarkd.rootPath, "testing/bitmarkd.conf")
+	case "bitmark":
+		fallthrough
+	default:
+		bitmarkd.configFile = filepath.Join(bitmarkd.rootPath, "bitmark/bitmarkd.conf")
+	}
 }
 
 func (bitmarkd *Bitmarkd) Start() error {

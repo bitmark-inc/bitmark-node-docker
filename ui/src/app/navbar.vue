@@ -65,6 +65,13 @@ div.navbar
   div.menu
     router-link(to="/node") Node
     router-link(to="/config") Config
+  div.right.menu
+    a(@click="this.openAdmin") admin#{' '}
+      span.caret
+    div.dropdown(:class='{open: this.showAdmin}')
+      ul.dropdown-menu
+        li
+          router-link(to="/chain") Switch Chain
 </template>
 
 <script>
@@ -84,7 +91,7 @@ div.navbar
       logout(e) {
         e.preventDefault();
         setCookie("bitmark-webgui", "", 0)
-        setCookie("bitmark-webgui-network", "", 0)
+        setCookie("bitmark-node-network", "", 0)
         this.$router.push({
           path: "/login"
         })

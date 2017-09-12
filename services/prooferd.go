@@ -11,6 +11,7 @@ import (
 	"github.com/bitmark-inc/logger"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -24,7 +25,9 @@ type Prooferd struct {
 	sync.RWMutex
 	initialised bool
 	log         *logger.L
+	rootPath    string
 	configFile  string
+	network     string
 	process     *os.Process
 	running     bool
 	ModeStart   chan bool
@@ -34,7 +37,7 @@ func NewProoferd() *Prooferd {
 	return &Prooferd{}
 }
 
-func (prooferd *Prooferd) Initialise(configFile string) error {
+func (prooferd *Prooferd) Initialise(rootPath string) error {
 	prooferd.Lock()
 	defer prooferd.Unlock()
 
@@ -42,7 +45,7 @@ func (prooferd *Prooferd) Initialise(configFile string) error {
 		return fault.ErrAlreadyInitialised
 	}
 
-	prooferd.configFile = configFile
+	prooferd.rootPath = rootPath
 
 	prooferd.log = logger.New("service-prooferd")
 
@@ -95,6 +98,19 @@ loop:
 
 	}
 	close(prooferd.ModeStart)
+}
+
+func (prooferd *Prooferd) SetNetwork(network string) {
+	prooferd.Stop()
+	prooferd.network = network
+	switch network {
+	case "testing":
+		prooferd.configFile = filepath.Join(prooferd.rootPath, "testing/prooferd.conf")
+	case "bitmark":
+		fallthrough
+	default:
+		prooferd.configFile = filepath.Join(prooferd.rootPath, "bitmark/prooferd.conf")
+	}
 }
 
 func (prooferd *Prooferd) Start() error {
