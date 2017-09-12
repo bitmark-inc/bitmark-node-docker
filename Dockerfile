@@ -39,9 +39,10 @@ RUN go get github.com/bitmark-inc/bitmark-node
 RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
 
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
-ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/
-ADD docker-assets/prooferd.conf /.config/bitmark-node/prooferd/
-ADD docker-assets/discovery.conf /.config/bitmark-node/discovery/
+ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/bitmark/
+ADD docker-assets/prooferd.conf /.config/bitmark-node/prooferd/bitmark/
+ADD docker-assets/bitmarkd-test.conf /.config/bitmark-node/bitmarkd/testing/bitmarkd.conf
+ADD docker-assets/prooferd-test.conf /.config/bitmark-node/prooferd/testing/prooferd.conf
 ADD docker-assets/start.sh /
 
 VOLUME /.config/bitmark-node/bitmarkd/data

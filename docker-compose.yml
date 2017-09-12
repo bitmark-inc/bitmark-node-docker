@@ -7,7 +7,8 @@ services:
       - LTC_ADDR=LN4jSR7ybzcSR9J2xv76TcmTqW3Mo6NgTj
     build: .
     volumes:
-      - /path/to/bitmarkd/data:/.config/bitmark-node/bitmarkd/data
+      - /path/to/bitmarkd/data:/.config/bitmark-node/bitmarkd/bitmark/data
+      - /path/to/bitmarkd/data-test:/.config/bitmark-node/bitmarkd/testing/data
     ports:
       - "0.0.0.0:2130:2130"
       - "0.0.0.0:2135:2135"
