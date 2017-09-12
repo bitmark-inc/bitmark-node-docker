@@ -149,7 +149,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
-				fmt.Sprintf("EC2_IPV4=%s", os.Getenv("EC2_IPV4")),
+				fmt.Sprintf("PUBLIC_IP=%s", os.Getenv("PUBLIC_IP")),
 				fmt.Sprintf("BTC_ADDR=%s", btcAddr),
 				fmt.Sprintf("LTC_ADDR=%s", ltcAddr),
 			}

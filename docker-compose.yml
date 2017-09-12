@@ -2,7 +2,7 @@ version: '2'
 services:
   bitmark-node:
     environment:
-      - EC2_IPV4=127.0.0.1
+      - PUBLIC_IP=127.0.0.1
       - BTC_ADDR=1KtkRmq3iAjxevKX8sYTSxU8AdRhrYGAPy
       - LTC_ADDR=LN4jSR7ybzcSR9J2xv76TcmTqW3Mo6NgTj
     build: .
