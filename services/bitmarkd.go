@@ -122,22 +122,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 		return fault.ErrNotFoundConfigFile
 	}
 
-	btcAddr := os.Getenv("BTC_ADDR")
-	ltcAddr := os.Getenv("LTC_ADDR")
-
 	nodeConfig := config.New()
-	configs, err := nodeConfig.Get()
-	if err != nil {
-		return err
-	}
-
-	if v, ok := configs["btcAddr"]; ok {
-		btcAddr = v
-	}
-
-	if v, ok := configs["ltcAddr"]; ok {
-		ltcAddr = v
-	}
 
 	bitmarkd.running = true
 	stopped := make(chan bool, 1)
@@ -148,6 +133,19 @@ func (bitmarkd *Bitmarkd) Start() error {
 		}()
 		for bitmarkd.running {
 			// start bitmarkd as sub process
+			configs, err := nodeConfig.Get()
+			if err != nil {
+				bitmarkd.log.Errorf("Can not get the latest node config: %s", err.Error())
+			}
+			btcAddr := os.Getenv("BTC_ADDR")
+			ltcAddr := os.Getenv("LTC_ADDR")
+			if v, ok := configs["btcAddr"]; ok && v != "" {
+				btcAddr = v
+			}
+			if v, ok := configs["ltcAddr"]; ok && v != "" {
+				ltcAddr = v
+			}
+
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
@@ -233,5 +231,6 @@ func (bitmarkd *Bitmarkd) Stop() error {
 
 	bitmarkd.log.Infof("Stop bitmarkd. PID: %d", bitmarkd.process.Pid)
 	bitmarkd.process = nil
+	bitmarkd.cmdErr = ""
 	return nil
 }
