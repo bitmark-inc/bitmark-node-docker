@@ -49,6 +49,11 @@
     text-transform: uppercase;
     font-weight: bold;
   }
+
+  .info-box>span p{
+    text-transform: none;
+    font-weight: normal;
+  }
 </style>
 
 <template lang="pug">
@@ -60,7 +65,7 @@
       div.action
         button.btn(
           @click="this.startBitmarkd"
-          :disabled="!this.bitmarkd.status || this.bitmarkd.status==='started'") Start
+          :disabled="!this.bitmarkd.status || this.bitmarkd.status!=='stopped'") Start
         button.btn.stop(
           disabled, @click="this.stopBitmarkd"
           :disabled="!this.bitmarkd.status || this.bitmarkd.status==='stopped'") Stop
@@ -68,16 +73,21 @@
       status-grid(
         v-if="this.bitmarkdInfo", title="bitmark info", :style='{backgroundColor: "rgb(249, 251, 255)"}'
         :data="this.bitmarkdInfo", sub-align="horizontal")
-      span(v-else) {{ (this.bitmarkd.status === 'started') ? 'Bitmarkd info is not available' : ('Bitmarkd is ' + (this.bitmarkd.status || "loading status")) }}
+      span(v-else)
+        span(v-if="this.bitmarkd.status === 'started'") Bitmarkd info is not available
+        span(v-else-if="this.bitmarkd.status === 'stopped'") Bitmarkd is stopped
+        span(v-else-if="this.bitmarkd.status === ''") Checking bitmarkd status...
+        p(v-else) Bitmarkd is failed to start: {{ this.bitmarkd.status }}
 
     h4 prooferd node
       div.action
         button.btn(@click="this.startProoferd"
-          :disabled="!this.prooferd.status || this.prooferd.status==='started'") Start
+          :disabled="!this.prooferd.status || this.prooferd.status!=='stopped'") Start
         button.btn.stop(disabled, @click="this.stopProoferd"
           :disabled="!this.prooferd.status || this.prooferd.status==='stopped'") Stop
     p.info-box
-      span Prooferd is {{this.prooferd.status || "loading status"}}
+      span(v-if="this.prooferd.status === ''") Checking prooferd status...
+      span(v-else) Prooferd is {{this.prooferd.status || "loading status"}}
 
     //- h4 configuration
 

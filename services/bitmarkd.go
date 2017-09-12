@@ -30,6 +30,7 @@ type Bitmarkd struct {
 	configFile  string
 	process     *os.Process
 	running     bool
+	cmdErr      string
 	ModeStart   chan bool
 	localIP     string
 }
@@ -79,7 +80,11 @@ func (bitmarkd *Bitmarkd) IsRunning() bool {
 
 func (bitmarkd *Bitmarkd) Status() string {
 	if bitmarkd.running {
-		return "started"
+		if bitmarkd.cmdErr != "" {
+			return fmt.Sprintf("error: %s", bitmarkd.cmdErr)
+		} else {
+			return "started"
+		}
 	} else {
 		return "stopped"
 	}
@@ -173,22 +178,24 @@ func (bitmarkd *Bitmarkd) Start() error {
 			go func() {
 				for {
 					stde, err := stdeReader.ReadString('\n')
-					bitmarkd.log.Errorf("bitmarkd stderr: %q", stde)
 					if nil != err {
 						bitmarkd.log.Errorf("Error: %v", err)
 						return
 					}
+					bitmarkd.log.Errorf("bitmarkd stderr: %q", stde)
+					bitmarkd.cmdErr = stde
 				}
 			}()
 
 			go func() {
 				for {
 					stdo, err := stdoReader.ReadString('\n')
-					bitmarkd.log.Infof("bitmarkd stdout: %q", stdo)
 					if nil != err {
 						bitmarkd.log.Errorf("Error: %v", err)
 						return
 					}
+					bitmarkd.log.Infof("bitmarkd stdout: %q", stdo)
+					bitmarkd.cmdErr = ""
 				}
 			}()
 
