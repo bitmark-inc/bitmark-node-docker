@@ -76,7 +76,7 @@
       span(v-else)
         span(v-if="this.bitmarkd.status === 'started'") Bitmarkd info is not available
         span(v-else-if="this.bitmarkd.status === 'stopped'") Bitmarkd is stopped
-        span(v-else-if="this.bitmarkd.status === ''") Checking bitmarkd status...
+        span(v-else-if="this.bitmarkd.status === ''") Checking bitmarkd status…
         p(v-else) Bitmarkd is failed to start: {{ this.bitmarkd.status }}
 
     h4 prooferd node
@@ -86,7 +86,7 @@
         button.btn.stop(disabled, @click="this.stopProoferd"
           :disabled="!this.prooferd.status || this.prooferd.status==='stopped'") Stop
     p.info-box
-      span(v-if="this.prooferd.status === ''") Checking prooferd status...
+      span(v-if="this.prooferd.status === ''") Checking prooferd status…
       span(v-else) Prooferd is {{this.prooferd.status || "loading status"}}
 </template>
 

@@ -8,7 +8,6 @@
     min-height: 30px;
     max-height: 280px;
     padding-left: 10px;
-    margin-top: 4px;
     background-color: white;
   }
 
@@ -65,13 +64,15 @@ div
   div
     h5 bitmark proofing
     div.row
-      div.col-xs-6.col-sm-4 BTC Address
-      div.col-xs-6.col-sm-8
+      div.col-xs-6.col-sm-4.col-md-2 BTC Address
+      div.col-xs-6.col-sm-8.col-md-10
         input.input-form(v-model="btcAddr")
+        span.help-block The BTC address where a transfer is going to pay
     div.row
-      div.col-xs-6.col-sm-4 LTC Address
-      div.col-xs-6.col-sm-8
+      div.col-xs-6.col-sm-4.col-md-2 LTC Address
+      div.col-xs-6.col-sm-8.col-md-10
         input.input-form(v-model="ltcAddr")
+        span.help-block The LTC address where a transfer is going to pay
 </template>
 
 <script>
