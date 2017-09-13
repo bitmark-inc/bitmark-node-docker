@@ -43,8 +43,6 @@ When the container is first started up, it will generate required keys for you i
 $ docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=54.249.99.99 \
--e BTC_ADDR=1KtkRmq3iAjxevKX8sYTSxU8AdRhrYGAPy \
--e LTC_ADDR=LN4jSR7ybzcSR9J2xv76TcmTqW3Mo6NgTj \
 bitmark/bitmark-node
 ```
 
