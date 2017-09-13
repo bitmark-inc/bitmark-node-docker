@@ -30,6 +30,17 @@ func NewWebServer(nc *config.BitmarkNodeConfig, bitmarkd, prooferd services.Serv
 	}
 }
 
+func (ws *WebServer) GetChain(c *gin.Context) {
+	network := ws.nodeConfig.GetNetwork()
+
+	c.SetCookie("bitmark-node-network", network, 30, "/", "", false, false)
+	c.JSON(200, map[string]interface{}{
+		"ok":     1,
+		"result": network,
+	})
+	return
+}
+
 func (ws *WebServer) SetChain(c *gin.Context) {
 	reqBody := map[string]string{}
 	err := c.BindJSON(&reqBody)

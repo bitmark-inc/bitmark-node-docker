@@ -95,6 +95,7 @@ func main() {
 	apiRouter := r.Group("/api")
 	apiRouter.GET("/config", webserver.GetConfig)
 	apiRouter.POST("/config", webserver.UpdateConfig)
+	apiRouter.GET("/chain", webserver.GetChain)
 	apiRouter.POST("/chain", webserver.SetChain)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)

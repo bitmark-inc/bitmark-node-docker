@@ -21,8 +21,12 @@ var routes = [
 
 var router = new VueRouter({routes, linkActiveClass: "active"})
 
-var app = new Vue({
-  router,
-  el: '#main',
-  render: h => h(Main)
-})
+// Set chain cookie on start up
+axios.get("/api/chain")
+  .then((resp) => {
+    var app = new Vue({
+      router,
+      el: '#main',
+      render: h => h(Main)
+    })
+  })
