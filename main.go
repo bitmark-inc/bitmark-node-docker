@@ -87,6 +87,11 @@ func main() {
 		exitwithstatus.Message(err.Error())
 	}
 
+	if network := nodeConfig.GetNetwork(); network != "" {
+		bitmarkdService.SetNetwork(network)
+		prooferdService.SetNetwork(network)
+	}
+
 	webserver := server.NewWebServer(nodeConfig, bitmarkdService, prooferdService)
 
 	r := gin.New()
