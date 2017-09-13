@@ -12,9 +12,11 @@ bitmark-node is the easiest way for anyone to join the Bitmark network as a full
 
 ## Chain
 
-Bitmark provide two diffrent chains for the bitmarkd to join in. They are testing, bitmark.
+Bitmark provide two diffrent chains for the bitmarkd to join in. They are `testing`, `bitmark`.
 
 In order to finish a transaction, you need to send bitcoin or litecoin to the proofing(mining) address of the bitcoin or litecoin which can be configured in the proofing block via web ui.
+
+Please note that: there is a default value given in both chain. Please set your own value if you want to validate a transfer via you own addresses.
 
 Here is a table to indicate what bitmark chain corresponds to which coin chain
 
@@ -56,6 +58,9 @@ The options are:
     - 2130 - Port of RPC server
     - 2135, 2136 - Port of peering
     - 9980 - Port of web server
+  - Volume:
+    - /.config/bitmark-node/bitmarkd/bitmark/data - chain data for bitmark
+    - /.config/bitmark-node/bitmarkd/testing/data - chain data for testing
 
 ### Docker Compose
 
