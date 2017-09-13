@@ -74,7 +74,7 @@
         v-if="this.bitmarkdInfo", title="bitmark info", :style='{backgroundColor: "rgb(249, 251, 255)"}'
         :data="this.bitmarkdInfo", sub-align="horizontal")
       span(v-else)
-        span(v-if="this.bitmarkd.status === 'started'") Bitmarkd info is not available
+        span(v-if="this.bitmarkd.status === 'started'") Loading bitmarkd info…
         span(v-else-if="this.bitmarkd.status === 'stopped'") Bitmarkd is stopped
         span(v-else-if="this.bitmarkd.status === ''") Checking bitmarkd status…
         p(v-else) Bitmarkd is failed to start: {{ this.bitmarkd.status }}
