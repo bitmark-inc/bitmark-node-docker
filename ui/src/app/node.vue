@@ -54,6 +54,10 @@
     text-transform: none;
     font-weight: normal;
   }
+
+  .info-box span.error {
+    color: red;
+  }
 </style>
 
 <template lang="pug">
@@ -75,7 +79,9 @@
         :data="this.bitmarkdInfo", sub-align="horizontal")
       span(v-else)
         span(v-if="this.bitmarkd.status === 'started'") Loading bitmarkd info…
-        span(v-else-if="this.bitmarkd.status === 'stopped'") Bitmarkd is stopped
+        span(v-else-if="this.bitmarkd.status === 'stopped'")
+          span(v-if="this.bitmarkd.errorMsg", class="error") {{ this.bitmarkd.errorMsg }}
+          span(v-else) Bitmarkd is stopped
         span(v-else-if="this.bitmarkd.status === ''") Checking bitmarkd status…
         p(v-else) Bitmarkd is failed to start: {{ this.bitmarkd.status }}
 
@@ -87,7 +93,9 @@
           :disabled="!this.prooferd.status || this.prooferd.status==='stopped'") Stop
     p.info-box
       span(v-if="this.prooferd.status === ''") Checking prooferd status…
-      span(v-else) Prooferd is {{this.prooferd.status || "loading status"}}
+      span(v-else)
+        span(v-if="this.prooferd.errorMsg", class="error") {{ this.prooferd.errorMsg }}
+        span(v-else) Prooferd is {{this.prooferd.status || "loading status"}}
 </template>
 
 <script>
@@ -105,30 +113,46 @@
     methods: {
       startBitmarkd() {
         this.bitmarkd.status = ""
+        this.bitmarkd.errorMsg = ""
         axios.post("/api/" + "bitmarkd", {
           option: "start"
+        })
+        .catch((err, resp) => {
+          this.bitmarkd.errorMsg = err.response.data.msg
         })
       },
 
       stopBitmarkd() {
         this.bitmarkd.status = ""
+        this.bitmarkd.errorMsg = ""
         this.bitmarkdInfo = null;
         axios.post("/api/" + "bitmarkd", {
           option: "stop"
+        })
+        .catch((err, resp) => {
+          this.bitmarkd.errorMsg = err.response.data.msg
         })
       },
 
       startProoferd() {
         this.prooferd.status = ""
+        this.prooferd.errorMsg = ""
         axios.post("/api/" + "prooferd", {
           option: "start"
+        })
+        .catch((err, resp) => {
+          this.prooferd.errorMsg = err.response.data.msg
         })
       },
 
       stopProoferd() {
         this.prooferd.status = ""
+        this.prooferd.errorMsg = ""
         axios.post("/api/" + "prooferd", {
           option: "stop"
+        })
+        .catch((err, resp) => {
+          this.prooferd.errorMsg = err.response.data.msg
         })
       },
 
@@ -191,10 +215,12 @@
         network: "",
         periodicalTask: null,
         bitmarkd: {
+          errorMsg: "",
           querying: false,
           status: ""
         },
         prooferd: {
+          errorMsg: "",
           querying: false,
           status: ""
         },
