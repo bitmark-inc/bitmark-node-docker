@@ -113,7 +113,9 @@ loop:
 }
 
 func (bitmarkd *Bitmarkd) SetNetwork(network string) {
-	bitmarkd.Stop()
+	if bitmarkd.running {
+		bitmarkd.Stop()
+	}
 	bitmarkd.network = network
 	switch network {
 	case "testing":

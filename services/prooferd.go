@@ -101,7 +101,9 @@ loop:
 }
 
 func (prooferd *Prooferd) SetNetwork(network string) {
-	prooferd.Stop()
+	if prooferd.running {
+		prooferd.Stop()
+	}
 	prooferd.network = network
 	switch network {
 	case "testing":
