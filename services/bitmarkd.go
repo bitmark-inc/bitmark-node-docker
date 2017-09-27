@@ -32,7 +32,8 @@ type Bitmarkd struct {
 	configFile  string
 	network     string
 	process     *os.Process
-	running     bool
+	running     bool // determine whether the process is running
+	started     bool // determine whether the service is started
 	cmdErr      string
 	ModeStart   chan bool
 	localIP     string
@@ -56,6 +57,7 @@ func (bitmarkd *Bitmarkd) Initialise(rootPath string) error {
 
 	bitmarkd.log = logger.New("service-bitmarkd")
 
+	bitmarkd.started = false
 	bitmarkd.running = false
 	bitmarkd.ModeStart = make(chan bool, 1)
 
@@ -82,7 +84,7 @@ func (bitmarkd *Bitmarkd) IsRunning() bool {
 }
 
 func (bitmarkd *Bitmarkd) Status() string {
-	if bitmarkd.running {
+	if bitmarkd.started {
 		if bitmarkd.cmdErr != "" {
 			return fmt.Sprintf("error: %s", bitmarkd.cmdErr)
 		} else {
@@ -113,7 +115,7 @@ loop:
 }
 
 func (bitmarkd *Bitmarkd) SetNetwork(network string) {
-	if bitmarkd.running {
+	if bitmarkd.started {
 		bitmarkd.Stop()
 	}
 	bitmarkd.network = network
@@ -128,7 +130,7 @@ func (bitmarkd *Bitmarkd) SetNetwork(network string) {
 }
 
 func (bitmarkd *Bitmarkd) Start() error {
-	if bitmarkd.running {
+	if bitmarkd.started {
 		bitmarkd.log.Errorf("Start bitmarkd failed: %v", ErrBitmarkdIsRunning)
 		return ErrBitmarkdIsRunning
 	}
@@ -141,15 +143,10 @@ func (bitmarkd *Bitmarkd) Start() error {
 	}
 
 	nodeConfig := config.New()
-
-	bitmarkd.running = true
-	stopped := make(chan bool, 1)
+	bitmarkd.started = true
 
 	go func() {
-		defer func() {
-			stopped <- true
-		}()
-		for bitmarkd.running {
+		for bitmarkd.started {
 			// start bitmarkd as sub process
 			configs, err := nodeConfig.Get()
 			if err != nil {
@@ -214,15 +211,18 @@ func (bitmarkd *Bitmarkd) Start() error {
 					bitmarkd.cmdErr = ""
 				}
 			}()
-
+			bitmarkd.running = true
 			if err := cmd.Wait(); nil != err {
-				if bitmarkd.running {
+				if bitmarkd.started {
 					bitmarkd.log.Errorf("bitmarkd has terminated unexpectedly. failed: %v", err)
 					bitmarkd.log.Errorf("bitmarkd will be restarted in 5 second...")
 					time.Sleep(5 * time.Second)
+				} else {
+					bitmarkd.cmdErr = ""
 				}
-				bitmarkd.process = nil
 			}
+			bitmarkd.process = nil
+			bitmarkd.running = false
 		}
 	}()
 
@@ -237,18 +237,24 @@ func (bitmarkd *Bitmarkd) Stop() error {
 		bitmarkd.log.Errorf("Stop bitmarkd failed: %v", ErrBitmarkdIsNotRunning)
 		return ErrBitmarkdIsNotRunning
 	}
-	bitmarkd.running = false
+
+	bitmarkd.log.Infof("Stop bitmarkd. PID: %d", bitmarkd.process.Pid)
 
 	if bitmarkd.process == nil {
 		return nil
 	}
-	if err := bitmarkd.process.Signal(os.Kill); nil != err {
-		bitmarkd.log.Errorf("Send kill to bitmarkd failed: %v", err)
-		return err
-	}
 
-	bitmarkd.log.Infof("Stop bitmarkd. PID: %d", bitmarkd.process.Pid)
-	bitmarkd.process = nil
-	bitmarkd.cmdErr = ""
+	if bitmarkd.started {
+		if err := bitmarkd.process.Signal(os.Interrupt); nil != err {
+			bitmarkd.log.Errorf("Send sigint to bitmarkd failed: %v", err)
+			return err
+		}
+	} else {
+		if err := bitmarkd.process.Signal(os.Kill); nil != err {
+			bitmarkd.log.Errorf("Send sigkill to bitmarkd failed: %v", err)
+			return err
+		}
+	}
+	bitmarkd.started = false
 	return nil
 }
