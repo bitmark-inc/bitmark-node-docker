@@ -10,11 +10,13 @@ Bitmark node is the easiest way for anyone to join the Bitmark network as a full
  - `bitmark-cli`: Command line interface to `bitmarkd`
  - `bitmark-webui`: A web-based user interface for basic control of Bitmark node
 
-## Chain
+## Bitmark Blockchain
 
-Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet respectively. In order to finish a Bitmark transaction, you need to send Bitcoin or Litecoin to the proofing(mining) Bitcoin or Litecoin address, which can be configured in `bitmark-webui`.
+Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet, respectively.
 
-_Please note: There are default Bitcoin & Litecoin addresses in both testing & bitmark chains. Please set your own value if you want to validate a Bitmark transfer and get the reward in your own Bitcoin/Litecoin addresses._
+As a reward for block miners, a transaction fee will be payed to the block owner in Bitcoin or Litecoin. A Bitmark node's Bitcoin or Litecoin addresses can be configured in `bitmark-webui`.
+
+_Please note: There are default Bitcoin & Litecoin addresses in both testing & bitmark chains. Please set your own value if you want to validate a Bitmark transfer and get the reward in your own Bitcoin and Litecoin addresses._
 
 Here is a table to indicate what bitmark chain corresponds to which coin chain
 
@@ -31,7 +33,7 @@ It is simple to install Bitmark node, just install Docker and pull docker image 
 
 Go to Docker website to download and install: https://www.docker.com
 
-### Fetch
+### Fetch Bitmark Node in Docker
 
 After you successfully installed Docker, use the following command to pull `bitmark-node` image:
 
@@ -41,7 +43,7 @@ $ docker pull bitmark/bitmark-node
 
 When the Docker container has been started up for the first time, it will generate required keys for you inside the container. A web server is running inside the container and is able to control Bitmark services.
 
-### Run
+### Run Bitmark Node
 
 ```
 $ docker run -d --name bitmarkNode -p 9980:9980 \
