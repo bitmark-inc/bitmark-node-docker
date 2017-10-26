@@ -14,7 +14,7 @@ Bitmark node is the easiest way for anyone to join the Bitmark network as a full
 
 Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet, respectively.
 
-As a reward for block miners, a transaction fee will be payed to the block owner in Bitcoin or Litecoin. A Bitmark node's Bitcoin or Litecoin addresses can be configured in `bitmark-webui`.
+As a reward for block miners, a transaction fee will be paid to the block owner in Bitcoin or Litecoin. A Bitmark node's Bitcoin or Litecoin addresses can be configured in `bitmark-webui`.
 
 _Please note: There are default Bitcoin & Litecoin addresses in both testing & bitmark chains. Please set your own value if you want to validate a Bitmark transfer and get the reward in your own Bitcoin and Litecoin addresses._
 
