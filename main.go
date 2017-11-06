@@ -68,18 +68,18 @@ func main() {
 	}
 
 	bitmarkdPath := filepath.Join(rootPath, "bitmarkd")
-	prooferdPath := filepath.Join(rootPath, "prooferd")
+	recorderdPath := filepath.Join(rootPath, "recorderd")
 	dbPath := filepath.Join(rootPath, "bitmark-node.db")
 
 	err = os.MkdirAll(bitmarkdPath, 0755)
-	err = os.MkdirAll(prooferdPath, 0755)
+	err = os.MkdirAll(recorderdPath, 0755)
 
 	bitmarkdService := services.NewBitmarkd(containerIP)
-	prooferdService := services.NewProoferd()
+	recorderdService := services.NewRecorderd()
 	bitmarkdService.Initialise(bitmarkdPath)
 	defer bitmarkdService.Finalise()
-	prooferdService.Initialise(prooferdPath)
-	defer prooferdService.Finalise()
+	recorderdService.Initialise(recorderdPath)
+	defer recorderdService.Finalise()
 
 	nodeConfig := config.New()
 	err = nodeConfig.Initialise(dbPath)
@@ -89,10 +89,10 @@ func main() {
 
 	if network := nodeConfig.GetNetwork(); network != "" {
 		bitmarkdService.SetNetwork(network)
-		prooferdService.SetNetwork(network)
+		recorderdService.SetNetwork(network)
 	}
 
-	webserver := server.NewWebServer(nodeConfig, bitmarkdService, prooferdService)
+	webserver := server.NewWebServer(nodeConfig, bitmarkdService, recorderdService)
 
 	r := gin.New()
 
@@ -103,6 +103,6 @@ func main() {
 	apiRouter.GET("/chain", webserver.GetChain)
 	apiRouter.POST("/chain", webserver.SetChain)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
-	apiRouter.POST("/prooferd", webserver.ProoferdStartStop)
+	apiRouter.POST("/recorderd", webserver.RecorderdStartStop)
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
 }

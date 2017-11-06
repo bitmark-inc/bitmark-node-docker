@@ -168,7 +168,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 	}
 }
 
-func (ws *WebServer) ProoferdStartStop(c *gin.Context) {
+func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 	var req ServiceOptionRequest
 	err := c.BindJSON(&req)
 	if err != nil {
