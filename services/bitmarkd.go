@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -206,6 +207,9 @@ func (bitmarkd *Bitmarkd) Start() error {
 					if nil != err {
 						bitmarkd.log.Errorf("Error: %v", err)
 						return
+					}
+					if strings.HasPrefix(stdo, "CURVE I:") {
+						continue
 					}
 					bitmarkd.log.Infof("bitmarkd stdout: %q", stdo)
 					bitmarkd.cmdErr = ""
