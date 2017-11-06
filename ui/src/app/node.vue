@@ -85,17 +85,17 @@
         span(v-else-if="this.bitmarkd.status === ''") Checking bitmarkd status…
         p(v-else) Bitmarkd is failed to start: {{ this.bitmarkd.status }}
 
-    h4 prooferd node
+    h4 recorderd node
       div.action
-        button.btn(@click="this.startProoferd"
-          :disabled="!this.prooferd.status || this.prooferd.status!=='stopped'") Start
-        button.btn.stop(disabled, @click="this.stopProoferd"
-          :disabled="!this.prooferd.status || this.prooferd.status==='stopped'") Stop
+        button.btn(@click="this.startRecorderd"
+          :disabled="!this.recorderd.status || this.recorderd.status!=='stopped'") Start
+        button.btn.stop(disabled, @click="this.stopRecorderd"
+          :disabled="!this.recorderd.status || this.recorderd.status==='stopped'") Stop
     p.info-box
-      span(v-if="this.prooferd.status === ''") Checking prooferd status…
+      span(v-if="this.recorderd.status === ''") Checking recorderd status…
       span(v-else)
-        span(v-if="this.prooferd.errorMsg", class="error") {{ this.prooferd.errorMsg }}
-        span(v-else) Prooferd is {{this.prooferd.status || "loading status"}}
+        span(v-if="this.recorderd.errorMsg", class="error") {{ this.recorderd.errorMsg }}
+        span(v-else) Recorderd is {{this.recorderd.status || "loading status"}}
 </template>
 
 <script>
@@ -134,25 +134,25 @@
         })
       },
 
-      startProoferd() {
-        this.prooferd.status = ""
-        this.prooferd.errorMsg = ""
-        axios.post("/api/" + "prooferd", {
+      startRecorderd() {
+        this.recorderd.status = ""
+        this.recorderd.errorMsg = ""
+        axios.post("/api/" + "recorderd", {
           option: "start"
         })
         .catch((err, resp) => {
-          this.prooferd.errorMsg = err.response.data.msg
+          this.recorderd.errorMsg = err.response.data.msg
         })
       },
 
-      stopProoferd() {
-        this.prooferd.status = ""
-        this.prooferd.errorMsg = ""
-        axios.post("/api/" + "prooferd", {
+      stopRecorderd() {
+        this.recorderd.status = ""
+        this.recorderd.errorMsg = ""
+        axios.post("/api/" + "recorderd", {
           option: "stop"
         })
         .catch((err, resp) => {
-          this.prooferd.errorMsg = err.response.data.msg
+          this.recorderd.errorMsg = err.response.data.msg
         })
       },
 
@@ -201,7 +201,7 @@
       this.network = network;
       this.periodicalTask = setInterval(() => {
         this.fetchStatus('bitmarkd')
-        this.fetchStatus('prooferd')
+        this.fetchStatus('recorderd')
         this.fetchBitmarkInfo()
       }, 2000)
     },
@@ -219,7 +219,7 @@
           querying: false,
           status: ""
         },
-        prooferd: {
+        recorderd: {
           errorMsg: "",
           querying: false,
           status: ""

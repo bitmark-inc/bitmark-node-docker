@@ -19,14 +19,14 @@ type ServiceOptionRequest struct {
 type WebServer struct {
 	nodeConfig *config.BitmarkNodeConfig
 	Bitmarkd   services.Service
-	Prooferd   services.Service
+	Recorderd  services.Service
 }
 
-func NewWebServer(nc *config.BitmarkNodeConfig, bitmarkd, prooferd services.Service) *WebServer {
+func NewWebServer(nc *config.BitmarkNodeConfig, bitmarkd, recorderd services.Service) *WebServer {
 	return &WebServer{
 		nodeConfig: nc,
 		Bitmarkd:   bitmarkd,
-		Prooferd:   prooferd,
+		Recorderd:  recorderd,
 	}
 }
 
@@ -62,7 +62,7 @@ func (ws *WebServer) SetChain(c *gin.Context) {
 	}
 
 	ws.Bitmarkd.SetNetwork(network)
-	ws.Prooferd.SetNetwork(network)
+	ws.Recorderd.SetNetwork(network)
 
 	c.JSON(200, map[string]interface{}{
 		"ok": 1,
@@ -179,13 +179,13 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 	err = nil
 	switch req.Option {
 	case "start":
-		err = ws.Prooferd.Start()
+		err = ws.Recorderd.Start()
 	case "stop":
-		err = ws.Prooferd.Stop()
+		err = ws.Recorderd.Stop()
 	case "status":
 		c.JSON(200, map[string]interface{}{
 			"ok":     1,
-			"result": ws.Prooferd.Status(),
+			"result": ws.Recorderd.Status(),
 		})
 		return
 	default:

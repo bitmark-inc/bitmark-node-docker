@@ -5,7 +5,7 @@
 Bitmark node is the easiest way for anyone to join the Bitmark network as a fully-validating peer. You can create, verify, mine Bitmark transactions and get possible reward.  A Bitmark node contains the following programs:
 
  - `bitmarkd`: Main program
- - `prooferd`: A tool to mine Bitmark blocks
+ - `recorderd`: A tool to mine Bitmark blocks
  - `bitmark-wallet`: A wallet for transactions (currently support Bitcoin & Litecoin)
  - `bitmark-cli`: Command line interface to `bitmarkd`
  - `bitmark-webui`: A web-based user interface for basic control of Bitmark node
