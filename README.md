@@ -36,6 +36,7 @@ Go to Docker website to download and install: https://www.docker.com
 ### Fetch Bitmark Node in Docker
 
 After you successfully installed Docker, use the following command to pull `bitmark-node` image:
+_(Bitmark node has been upgraded from ver. 5.7 to 6.3 on Nov.7, 2017.  If you are currently running ver. 5.7, please pull `bitmark-node` image again to upgrade to ver.6.3)_
 
 ```
 $ docker pull bitmark/bitmark-node
