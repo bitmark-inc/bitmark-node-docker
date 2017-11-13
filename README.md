@@ -63,6 +63,7 @@ The configurable options are:
     - 2130: Port of RPC server
     - 2135 & 2136: Port of peering
     - 9980: Port of web server
+    _(Note: Please make sure that you setup port forwarding in order to let others connect you via public network)_
   - Volume:
     - /.config/bitmark-node/bitmarkd/bitmark/data - chain data for `bitmark`.
     - /.config/bitmark-node/bitmarkd/testing/data - chain data for `testing`.
