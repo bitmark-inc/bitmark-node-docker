@@ -56,14 +56,14 @@ bitmark/bitmark-node
 The configurable options are:
 
   - Enviornments:
-    - PUBLIC_IP: public address to announce
+    - PUBLIC_IP: Your public IP address
     - BTC_ADDR: Bitcoin address for proofing
     - LTC_ADDR: Litecoin address for proofing
   - Ports:
     - 2130: Port of RPC server
     - 2135 & 2136: Port of peering
     - 9980: Port of web server
-    _(Note: Please make sure that you setup port forwarding in order to let others connect you via public network)_
+    _(Note: Please make sure that you setup port forwarding with TCP in order to let others connect you via public network)_
   - Volume:
     - /.config/bitmark-node/bitmarkd/bitmark/data - chain data for `bitmark`.
     - /.config/bitmark-node/bitmarkd/testing/data - chain data for `testing`.
@@ -71,7 +71,7 @@ The configurable options are:
 ### Web UI
 
 Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980) to check  or configure Bitmark blockchain status.
-Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized. 
+Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized.
 
 ### Docker Compose
 
