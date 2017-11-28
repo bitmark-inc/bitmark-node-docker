@@ -70,7 +70,7 @@ The configurable options are:
 
 ### Web UI
 
-Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980) to check  or configure Bitmark blockchain status.
+Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980. Ex: 54.249.99.99:9980) to check  or configure Bitmark blockchain status.
 _Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized._
 
 ### Docker Compose
