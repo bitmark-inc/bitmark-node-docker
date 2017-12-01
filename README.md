@@ -12,7 +12,7 @@ The Bitmark node software is distributed as a standalone [Docker container](http
 
 The Bitmark node container consists of the following software programs:
 
- - **bitmarkd** — the main program for validating and recoding transactions in the Bitmark [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmarkd)
+ - **bitmarkd** — the main program for validating and recoding transactions in the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmarkd)
  - **recorderd** — an auxillary application for computing the Bitmark proof-of-work algorithm that is required to compete to win blocks on the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/recorderd)
  - **bitmark-wallet** — an integrated cryptocurrency wallet for receiving Bitcoin and Litecoin payments for won blocks [(view source code on GitHub)](https://github.com/bitmark-inc/bitmark-wallet)
  - **bitmark-cli** — a command line interface to `bitmarkd` [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmark-cli) 
