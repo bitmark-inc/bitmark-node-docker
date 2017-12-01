@@ -2,28 +2,21 @@
 
 ## Introduction
 
-Bitmark node is the easiest way for anyone to join the Bitmark network as a fully-validating peer. You can create, verify, mine Bitmark transactions and get possible reward.  A Bitmark node contains the following programs:
+The Bitmark node software enables any computer on the Internet to join the Bitmark network as a fully-validating peer. Unlike conventional property systems that rely on a handful of trusted government officials to act as centralized gatekeepers, the Bitmark blockchain is an open and transparent property system that is strengthened through the active participation of anyone on the Internet. The integrity of Bitmark’s open-source blockchain is ensured by a peer-to-peer network of voluntary participants running the Bitmark node software. These participants are incentivized to participate in verifying Bitmark property transactions through the possibility of winning monetary and property rewards.
 
- - `bitmarkd`: Main program
- - `recorderd`: A tool to record (mine) new Bitmark blocks
- - `bitmark-wallet`: A wallet for transactions (currently support Bitcoin & Litecoin)
- - `bitmark-cli`: Command line interface to `bitmarkd`
- - `bitmark-webui`: A web-based user interface for basic control of Bitmark node
+The Bitmark node software is distributed as a standalone [Docker container](https://www.docker.com/what-container), which supports easy installation on all major platforms including: 
 
-## Bitmark Blockchain
+- **desktop devices**, such as [Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac) and [Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
+- **Linux servers**, such as [CentOS](https://store.docker.com/editions/community/docker-ce-server-centos), [Debian](https://store.docker.com/editions/community/docker-ce-server-debian), [Fedora](https://store.docker.com/editions/community/docker-ce-server-fedora), and [Ubuntu](https://store.docker.com/editions/community/docker-ce-server-ubuntu)
+- **cloud providers**, such as [AWS](https://store.docker.com/editions/community/docker-ce-aws) and [Azure](https://store.docker.com/editions/community/docker-ce-azure)
 
-Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet, respectively.
+The Bitmark node container consists of the following software programs:
 
-As a reward for block miners, a transaction fee will be paid to the block owner in Bitcoin or Litecoin. A Bitmark node's Bitcoin or Litecoin addresses can be configured in `bitmark-webui`.
-
-_Please note: There are default Bitcoin & Litecoin addresses in both testing & bitmark chains. Please set your own value if you want to validate a Bitmark transfer and get the reward in your own Bitcoin and Litecoin addresses._
-
-Here is a table to indicate what bitmark chain corresponds to which coin chain
-
-|   Bitmark Blockchain   |   Bitcoin Blockchain  |  Litecoin Blockchain |
-|    :---:     |    :---:    |    :---:   |
-|   testing    |   testnet   |   testnet  |
-|   bitmark    |   livenet   |   livenet  |
+ - **bitmarkd** — the main program for validating and recoding transactions in the Bitmark [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmarkd)
+ - **recorderd** — an auxillary application for computing the Bitmark proof-of-work algorithm that is required to compete to win blocks on the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/recorderd)
+ - **bitmark-wallet** — an integrated cryptocurrency wallet for receiving Bitcoin and Litecoin payments for won blocks [(view source code on GitHub)](https://github.com/bitmark-inc/bitmark-wallet)
+ - **bitmark-cli** — a command line interface to `bitmarkd` [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmark-cli) 
+ - **bitmark-webui** — a web-based user interface to control and configure the Bitmark node via a web browser
 
 ## Installation
 
@@ -72,6 +65,21 @@ The configurable options are:
 
 Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980. Ex: 54.249.99.99:9980) to check  or configure Bitmark blockchain status.
 _Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized._
+
+###d Bitmark Blockchain
+
+Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet, respectively.
+
+As a reward for block miners, a transaction fee will be paid to the block owner in Bitcoin or Litecoin. A Bitmark node's Bitcoin or Litecoin addresses can be configured in `bitmark-webui`.
+
+_Please note: There are default Bitcoin & Litecoin addresses in both testing & bitmark chains. Please set your own value if you want to validate a Bitmark transfer and get the reward in your own Bitcoin and Litecoin addresses._
+
+Here is a table to indicate what bitmark chain corresponds to which coin chain
+
+|   Bitmark Blockchain   |   Bitcoin Blockchain  |  Litecoin Blockchain |
+|    :---:     |    :---:    |    :---:   |
+|   testing    |   testnet   |   testnet  |
+|   bitmark    |   livenet   |   livenet  |
 
 ### Docker Compose
 
