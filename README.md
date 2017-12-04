@@ -2,7 +2,10 @@
 
 ## Introduction
 
-The [Bitmark](https://bitmark.com) node software enables any computer on the Internet to join the Bitmark network as a fully-validating peer. Unlike conventional property systems that rely on a handful of trusted government officials to act as centralized gatekeepers, the Bitmark blockchain is an open and transparent property system that is strengthened through the active participation of anyone on the Internet. The integrity of Bitmark’s open-source blockchain is ensured by a peer-to-peer network of voluntary participants running the Bitmark node software. These participants are incentivized to participate in verifying Bitmark property transactions through the possibility of winning monetary and property rewards.
+The [Bitmark](https://bitmark.com) node software enables any computer on the Internet to join the Bitmark network as a fully-validating peer. Unlike conventional property systems that rely on a handful of trusted government officials to act as centralized gatekeepers, the Bitmark blockchain is an open and transparent property system that is strengthened through the active participation of anyone on the Internet. The integrity of Bitmark’s open-source blockchain is ensured by a peer-to-peer network of voluntary participants running the Bitmark node software. These participants are incentivized to participate in verifying Bitmark property transactions through the possibility of winning monetary and property rewards. 
+
+The Bitmark blockchain is an independent chain, optimized for storing property titles, or *bitmarks*, and does not have its own internal currency (transaction fees are in bitcoin or litecoin). The peer-to-peer network is written in [Go](https://golang.org) and uses the [ZeroMQ distributed messaging library](http://zeromq.org). Consensus is secured using the [Argon2](https://github.com/P-H-C/phc-winner-argon2) hashing algorithm as proof-of-work.
+
 
 ## Suported Platforms
 
@@ -17,7 +20,7 @@ The Bitmark node software is distributed as a standalone [Docker container](http
 
 The Bitmark node consists of the following software programs:
 
- - **bitmarkd** — the main program for validating and recoding transactions in the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmarkd)
+ - **bitmarkd** — the main program for verifying and recoding transactions in the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmarkd)
  - **recorderd** — an auxillary application for computing the Bitmark proof-of-work algorithm that is required for a node to compete to win blocks on the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/recorderd)
  - **bitmark-wallet** — an integrated cryptocurrency wallet for receiving Bitcoin and Litecoin payments for won blocks [(view source code on GitHub)](https://github.com/bitmark-inc/bitmark-wallet)
  - **bitmark-cli** — a command line interface to `bitmarkd` [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmark-cli) 
@@ -25,31 +28,69 @@ The Bitmark node consists of the following software programs:
 
 ## Installation
 
-It is simple to install Bitmark node, just install Docker and pull docker image `bitmark-node` from docker hub.
+**To install the Bitmark node software, please complete the following steps: **
 
-### Install Docker
+### 1. Install Docker
 
-Go to Docker website to download and install: https://www.docker.com
+The Bitmark node software is distributed as a standalone [Docker container](https://www.docker.com/what-container) which requires you to first install Docker: 
 
-### Fetch Bitmark Node in Docker
 
-After you successfully installed Docker, use the following command to pull `bitmark-node` image:
-_(Bitmark node latest version is ver.6.3)_
+- [Get Docker for MacOS](https://store.docker.com/editions/community/docker-ce-desktop-mac) 
+- [Get Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) 
+- [Get Docker for CentOS](https://store.docker.com/editions/community/docker-ce-server-centos) 
+- [Get Docker for Debian](https://store.docker.com/editions/community/docker-ce-server-debian) 
+- [Get Docker for Fedora](https://store.docker.com/editions/community/docker-ce-server-fedora) 
+- [Get Docker for Ubuntu](https://store.docker.com/editions/community/docker-ce-server-ubuntu) 
+- [Get Docker for AWS](https://store.docker.com/editions/community/docker-ce-aws) 
+- [Get Docker for Azure](https://store.docker.com/editions/community/docker-ce-azure) 
+
+### 2. Download the Bitmark Node
+
+After successfully installing Docker, you can download the Bitmark node software. To do so, first open a command-line terminal or shell application, such as Terminal on the Mac or `cmd.exe` on Windows. Then enter the following command to download the Bitmark node software:
 
 ```
-$ docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node
 ```
 
-When the Docker container has been started up for the first time, it will generate required keys for you inside the container. A web server is running inside the container and is able to control Bitmark services.
-
-### Run Bitmark Node
+After entering the pull command, the download sequence should begin in the terminal. You will receive the following message the download is completed successfully:
 
 ```
-$ docker run -d --name bitmarkNode -p 9980:9980 \
+Status: Downloaded newer image for bitmark/bitmark-node:latest
+```
+
+### 3. Run Bitmark Node
+
+After the Bitmark node software has successfully downloaded, copy and paste the following command into the command-line terminal to run the Bitmark node: 
+
+```
+docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=54.249.99.99 \
 bitmark/bitmark-node
 ```
+
+Once the Bitmark node has successfully started, the terminal will display a 64-character hexidecimal string that represents the Bitmark node's Docker container ID, such as: 
+
+```
+dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
+```
+
+When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you including necessary public and private keypairs. A web server will also be started inside the Bitmark node container which can be used to access the Bitmark node services via a web browswer interface (see the next step to [Launch the web interface](#4.-launch-web-interface)).
+
+For an explanation of each of the above `run` command options, please enter the following command into the terminal: 
+
+```
+docker run --help
+ ```
+
+### 4. Launch Web Interface
+
+Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980. Ex: 54.249.99.99:9980) to check  or configure Bitmark blockchain status.
+_Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized._
+
+## Configuration Options
+
+
 
 The configurable options are:
 
@@ -66,12 +107,8 @@ The configurable options are:
     - /.config/bitmark-node/bitmarkd/bitmark/data - chain data for `bitmark`.
     - /.config/bitmark-node/bitmarkd/testing/data - chain data for `testing`.
 
-### Web UI
 
-Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980. Ex: 54.249.99.99:9980) to check  or configure Bitmark blockchain status.
-_Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized._
-
-###d Bitmark Blockchain
+### Bitmark Blockchain
 
 Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet, respectively.
 
