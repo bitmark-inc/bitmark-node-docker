@@ -90,7 +90,7 @@ docker run --help
 
 ### 4. Start Services in Web Interface
 
-The Bitmark node includes a web-based user interface to monitor and contorl the Bitmark node via a web browser. After running the Bitmark node in step 3, you should lauch the Bitmark node web UI to start the `bitmarkd` and optional `recorderd` programs. 
+The Bitmark node includes a web-based user interface to monitor and control the Bitmark node within a web browser. After running the Bitmark node in step 3, you should lauch the Bitmark node web UI to start the `bitmarkd` and optional `recorderd` programs. 
 
 On most computer systems, the web UI can be accessed on designated port `9980` of the `localhost` address (`127.0.0.1`) by clicking the following link: 
 
