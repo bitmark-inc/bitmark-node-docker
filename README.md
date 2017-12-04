@@ -28,7 +28,7 @@ The Bitmark node consists of the following software programs:
 
 ## Installation
 
-**To install the Bitmark node software, please complete the following steps: **
+**To install the Bitmark node software, please complete the following steps:**
 
 ### 1. Install Docker
 
@@ -52,7 +52,7 @@ After successfully installing Docker, you can download the Bitmark node software
 docker pull bitmark/bitmark-node
 ```
 
-After entering the pull command, the download sequence should begin in the terminal. You will receive the following message the download is completed successfully:
+After entering the pull command, the download sequence should begin in the terminal. You will receive the following message after the download is completed successfully:
 
 ```
 Status: Downloaded newer image for bitmark/bitmark-node:latest
@@ -87,6 +87,8 @@ docker run --help
 
 Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980. Ex: 54.249.99.99:9980) to check  or configure Bitmark blockchain status.
 _Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized._
+
+[http://127.0.0.1:9980](http://127.0.0.1:9980)
 
 ## Configuration Options
 
