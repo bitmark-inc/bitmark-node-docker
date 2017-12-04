@@ -1,4 +1,4 @@
-# Bitmark Node
+# Bitmark Node Documentation
 
 ## Introduction
 
@@ -24,15 +24,15 @@ The Bitmark node consists of the following software programs:
  - **recorderd** — an auxillary application for computing the Bitmark proof-of-work algorithm that is required for a node to compete to win blocks on the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/recorderd)
  - **bitmark-wallet** — an integrated cryptocurrency wallet for receiving Bitcoin and Litecoin payments for won blocks [(view source code on GitHub)](https://github.com/bitmark-inc/bitmark-wallet)
  - **bitmark-cli** — a command line interface to `bitmarkd` [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmark-cli) 
- - **bitmark-webui** — a web-based user interface to control and configure the Bitmark node via a web browser
+ - **bitmark-webui** — a web-based user interface to monitor and configure the Bitmark node via a web browser
 
 ## Installation
 
-**To install the Bitmark node software, please complete the following steps:**
+**To install the Bitmark node software, please complete the following 4 steps:**
 
 ### 1. Install Docker
 
-The Bitmark node software is distributed as a standalone [Docker container](https://www.docker.com/what-container) which requires you to first install Docker: 
+The Bitmark node software is distributed as a standalone [Docker container](https://www.docker.com/what-container) which requires you to first install Docker for your operating system: 
 
 
 - [Get Docker for MacOS](https://store.docker.com/editions/community/docker-ce-desktop-mac) 
@@ -52,11 +52,13 @@ After successfully installing Docker, you can download the Bitmark node software
 docker pull bitmark/bitmark-node
 ```
 
+
 After entering the pull command, the download sequence should begin in the terminal. You will receive the following message after the download is completed successfully:
 
 ```
 Status: Downloaded newer image for bitmark/bitmark-node:latest
 ```
+
 
 ### 3. Run Bitmark Node
 
@@ -69,26 +71,37 @@ docker run -d --name bitmarkNode -p 9980:9980 \
 bitmark/bitmark-node
 ```
 
-Once the Bitmark node has successfully started, the terminal will display a 64-character hexidecimal string that represents the Bitmark node's Docker container ID, such as: 
+
+Once the Bitmark node has successfully started, it will return a 64-character hexidecimal string that represents the Bitmark node's Docker container ID, such as: 
 
 ```
 dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
 ```
 
-When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you including necessary public and private keypairs. A web server will also be started inside the Bitmark node container which can be used to access the Bitmark node services via a web browswer interface (see the next step to [Launch the web interface](#4.-launch-web-interface)).
+
+When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you including necessary public and private keypairs.
 
 For an explanation of each of the above `run` command options, please enter the following command into the terminal: 
 
 ```
 docker run --help
  ```
+ 
 
-### 4. Launch Web Interface
+### 4. Start Services in Web Interface
 
-Open web browser and go to  `bitmark-webui` (PUBLIC_IP:9980. Ex: 54.249.99.99:9980) to check  or configure Bitmark blockchain status.
-_Note that the actual recording (mining) won't start before the `bitmarkd` is fully synchronized._
+The Bitmark node includes a web-based user interface to monitor and contorl the Bitmark node via a web browser. After running the Bitmark node in step 3, you should lauch the Bitmark node web UI to start the `bitmarkd` and optional `recorderd` programs. 
 
-[http://127.0.0.1:9980](http://127.0.0.1:9980)
+On most computer systems, the web UI can be accessed on designated port `9980` of the `localhost` address (`127.0.0.1`) by clicking the following link: 
+
+> [http://127.0.0.1:9980](http://127.0.0.1:9980). 
+
+After loading the Bitmark node web UI, start the Bitmark node software `bitmarkd` which is reponsible for verifying Bitmark transactions and recording them in the Bitmark blockchain and optional `recorderd` software. 
+
+If you wish to compete with other Bitmark nodes to win blocks and monetary compensation by solving the Bitmark blockchain's proof-of-work for each block, you should also start the `recorderd` node. 
+
+After starting the `bitmarkd` node for the first time, the node will go through a `Resynchronizing` mode in which a copy of the current Bitmark blockchain will be downloaded to your Bitmark node. Once the resynchronization phase has completed, your Bitmark node will begin verifying and recording transactions for the current Bitmark blockchian block. 
+
 
 ## Configuration Options
 
