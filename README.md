@@ -96,9 +96,10 @@ On most computer systems, the web UI can be accessed on designated port `9980` o
 
 > [http://127.0.0.1:9980](http://127.0.0.1:9980). 
 
-After loading the Bitmark node web UI, start the Bitmark node software `bitmarkd` which is reponsible for verifying Bitmark transactions and recording them in the Bitmark blockchain and optional `recorderd` software. 
+After loading the Bitmark node web UI, you should use the UI to start the two main Bitmark node software programs: 
 
-If you wish to compete with other Bitmark nodes to win blocks and monetary compensation by solving the Bitmark blockchain's proof-of-work for each block, you should also start the `recorderd` node. 
+1. `bitmarkd` — reponsible for verifying Bitmark transactions and recording them in the Bitmark blockchain (required for all Bitmark nodes) 
+2. `recorderd` required for solving the Bitmark blockchain's proof-of-work algorithm, which qualifies nodes to win blocks and receive monetary compensation (optional)
 
 After starting the `bitmarkd` node for the first time, the node will go through a `Resynchronizing` mode in which a copy of the current Bitmark blockchain will be downloaded to your Bitmark node. Once the resynchronization phase has completed, your Bitmark node will begin verifying and recording transactions for the current Bitmark blockchian block. 
 
