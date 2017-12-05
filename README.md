@@ -21,7 +21,7 @@ The Bitmark node software is distributed as a standalone [Docker container](http
 The Bitmark node consists of the following software programs:
 
  - **bitmarkd** — the main program for verifying and recoding transactions in the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmarkd)
- - **recorderd** — an auxillary application for computing the Bitmark proof-of-work algorithm that is required for a node to compete to win blocks on the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/recorderd)
+ - **recorderd** — an auxillary application for computing the Bitmark proof-of-work algorithm that allows nodes to compete to win blocks on the Bitmark blockchain [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/recorderd)
  - **bitmark-wallet** — an integrated cryptocurrency wallet for receiving Bitcoin and Litecoin payments for won blocks [(view source code on GitHub)](https://github.com/bitmark-inc/bitmark-wallet)
  - **bitmark-cli** — a command line interface to `bitmarkd` [(view source code on GitHub)](https://github.com/bitmark-inc/bitmarkd/tree/master/command/bitmark-cli) 
  - **bitmark-webui** — a web-based user interface to monitor and configure the Bitmark node via a web browser
@@ -107,11 +107,53 @@ After starting the `bitmarkd` node for the first time, the node will go through 
 
 ## Configuration Options
 
+### Current Blockchain 
+
+The Bitmark node allows participants to verify and record transactions on two different Bitmark blockchains:
+
+- `bitmark` — the official version of the Bitmark blockchain
+- `testing` — a `testnet` version of the blockchain used solely for development testing
+
+Node participants can select which blockchain they wish to operate on via the web UI. Note that switching to a different blockchain will require you to restart the `bitmarkd` and `recorderd` programs in the web UI for that specific blockchain.
+
+The Bitmark system offers monetary rewards to block winners for both the `bitmark` and `testing` blockchains. 
+
+### Payment Addresses 
+
+Bitmark node partipants running both `bitmarkd` and `recorderd` are awarded monetary payments for winning blocks on both the `bitmark` and `testing` blockchains. These payments are delivered as either bitoin or litecoin payments (depending on current cryptocurrency prices and confirmation times) and are delivered to a node's designated bitcoin and litecoin payment addresses. 
+
+When the Bitmark node software is first started up, the installation program automatically generates default bitcoin and litecoin payment addresses. These payment addresses can be viewed and configured in the Bitmark node web UI. You can also configure these payment addresses in the `docker-compose.yml` file located in your Bitmark node container folder. 
+
+### Docker Run Command Options
+
+Various Bitmark node environmental settings, such as ports and IP addresses, can be configured using the Docker `run` command when running the Bitmark node from the command-line terminal: 
+
+```
+docker run -d --name bitmarkNode -p 9980:9980 \
+-p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-e PUBLIC_IP=54.249.99.99 \
+bitmark/bitmark-node
+```
+
+The following table describes the various configuration options for the Bitmark node `run` command: 
 
 
-The configurable options are:
+| OPTION  | DEFAULT  | DESCRIPTION  |
+|:---|:---|:---|
+| `-name`  | `bitmarkNode` | Assigns a name to the Bitmark node Docker container. |
+| `-p`  | `9980` | Web server port for web UI |
+| `-p`  | `2136` | Port for connecting to other peer bitmarkd nodes |
+| `-p`  | `2135` | Port for connecting to other peer bitmarkd nodes |
+| `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
+| `-e`  | `PUBLIC_IP=54.249.99.99` | Environment variable for public IP address |
 
-  - Enviornments:
+### Docker Compose Settings
+
+Participants familiar with [Docker Compose](https://docs.docker.com/compose/) can use the included `docker-compose.yml` file as an example for how to configure Bitmark node services.
+
+Configurable options are:
+
+  - Environments:
     - PUBLIC_IP: Your public IP address
     - BTC_ADDR: Bitcoin address for proofing
     - LTC_ADDR: Litecoin address for proofing
@@ -120,29 +162,9 @@ The configurable options are:
     - 2135 & 2136: Port of peering
     - 9980: Port of web server
     _(Note: Please make sure that you setup port forwarding with TCP in order to let others connect you via public network)_
-  - Volume:
-    - /.config/bitmark-node/bitmarkd/bitmark/data - chain data for `bitmark`.
-    - /.config/bitmark-node/bitmarkd/testing/data - chain data for `testing`.
-
-
-### Bitmark Blockchain
-
-Bitmark provides two different chains for a Bitmark node to join in. They are `testing` & `bitmark`, which refer to testnet & livenet, respectively.
-
-As a reward for block miners, a transaction fee will be paid to the block owner in Bitcoin or Litecoin. A Bitmark node's Bitcoin or Litecoin addresses can be configured in `bitmark-webui`.
-
-_Please note: There are default Bitcoin & Litecoin addresses in both testing & bitmark chains. Please set your own value if you want to validate a Bitmark transfer and get the reward in your own Bitcoin and Litecoin addresses._
-
-Here is a table to indicate what bitmark chain corresponds to which coin chain
-
-|   Bitmark Blockchain   |   Bitcoin Blockchain  |  Litecoin Blockchain |
-|    :---:     |    :---:    |    :---:   |
-|   testing    |   testnet   |   testnet  |
-|   bitmark    |   livenet   |   livenet  |
-
-### Docker Compose
-
-In the folder, there is a `docker-compose.yml` file that gives you an example of how to configure correctly to make Bitmark node up-and-run.
+  - Volumes:
+    - /.config/bitmark-node/bitmarkd/bitmark/data - block data for `bitmark` blockchain
+    - /.config/bitmark-node/bitmarkd/testing/data - block data for `testing` blockchain
 
 
 # Bitmark節點
