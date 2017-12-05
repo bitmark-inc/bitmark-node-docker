@@ -79,7 +79,7 @@ dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
 ```
 
 
-When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you including necessary public and private keypairs.
+When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you, including your public and private keypairs.
 
 For an explanation of each of the above `run` command options, please enter the following command into the terminal: 
 
@@ -87,16 +87,17 @@ For an explanation of each of the above `run` command options, please enter the 
 docker run --help
  ```
  
+ 
 
 ### 4. Start Services in Web Interface
 
-The Bitmark node includes a web-based user interface to monitor and control the Bitmark node within a web browser. After running the Bitmark node in step 3, you should lauch the Bitmark node web UI to start the `bitmarkd` and optional `recorderd` programs. 
+The Bitmark node includes a web-based user interface to monitor and control the Bitmark node within a web browser. After running the Bitmark node in step 3, you should lauch the web UI to start the `bitmarkd` and optional `recorderd` programs. 
 
-On most computer systems, the web UI can be accessed on designated port `9980` of the `localhost` address (`127.0.0.1`) by clicking the following link: 
+On most computer systems, the web UI can be accessed on port `9980` of the `localhost` address (`127.0.0.1`) by clicking the following link: 
 
 > [http://127.0.0.1:9980](http://127.0.0.1:9980). 
 
-After loading the Bitmark node web UI, you should use the UI to start the two main Bitmark node software programs: 
+After loading web UI, you should use it to start the two main Bitmark node software programs: 
 
 1. `bitmarkd` — reponsible for verifying Bitmark transactions and recording them in the Bitmark blockchain (required for all Bitmark nodes) 
 2. `recorderd` — required for solving the Bitmark blockchain's proof-of-work algorithm, which qualifies nodes to win blocks and receive monetary compensation (optional)
