@@ -114,7 +114,7 @@ The Bitmark node allows participants to verify and record transactions on two di
 - `bitmark` — the official version of the Bitmark blockchain
 - `testing` — a `testnet` version of the blockchain used solely for development testing
 
-Node participants can select which blockchain they wish to operate on via the web UI. Note that switching to a different blockchain will require you to restart the `bitmarkd` and `recorderd` programs in the web UI for that specific blockchain.
+Node participants can select which blockchain they are currently working on via the web UI. Note that switching to a different blockchain will require you to restart the `bitmarkd` and `recorderd` programs in the web UI for the new blockchain.
 
 The Bitmark system offers monetary rewards to block winners for both the `bitmark` and `testing` blockchains. 
 
@@ -122,7 +122,8 @@ The Bitmark system offers monetary rewards to block winners for both the `bitmar
 
 Bitmark node partipants running both `bitmarkd` and `recorderd` are awarded monetary payments for winning blocks on both the `bitmark` and `testing` blockchains. These payments are delivered as either bitoin or litecoin payments (depending on current cryptocurrency prices and confirmation times) and are delivered to a node's designated bitcoin and litecoin payment addresses. 
 
-When the Bitmark node software is first started up, the installation program automatically generates default bitcoin and litecoin payment addresses. These payment addresses can be viewed and configured in the Bitmark node web UI. You can also configure these payment addresses in the `docker-compose.yml` file located in your Bitmark node container folder. 
+When the Bitmark node software is first started up, the installation program automatically generates default bitcoin and litecoin payment addresses. These payment addresses can be viewed and configured in the Bitmark node web UI.
+
 
 ### Docker Run Command Options
 
@@ -166,6 +167,52 @@ Configurable options are:
     - /.config/bitmark-node/bitmarkd/bitmark/data - block data for `bitmark` blockchain
     - /.config/bitmark-node/bitmarkd/testing/data - block data for `testing` blockchain
 
+
+## Updates
+
+**To update the Bitmark node software, please complete the following 3 steps:**
+
+### 1. Download Latest Node Version
+
+To update your version of the Bitmark node software, open a command-line terminal or shell application, such as Terminal on the Mac or `cmd.exe` on Windows, then enter the following command to download the software update:
+
+```
+docker pull bitmark/bitmark-node
+```
+
+
+After entering the pull command, the download sequence should begin in the terminal. You will receive the following message after the download is completed successfully:
+
+```
+Status: Downloaded newer image for bitmark/bitmark-node:latest
+```
+
+
+### 2. Run Bitmark Node
+
+After the software update has successfully downloaded, re-enter the Docker `run` command from the command-line terminal: 
+
+```
+docker run -d --name bitmarkNode -p 9980:9980 \
+-p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-e PUBLIC_IP=54.249.99.99 \
+bitmark/bitmark-node
+```
+ 
+ 
+
+### 3. Restart Services in Web Interface
+
+Finally, restart the `bitmarkd` and optional `recorderd` programs via the web UI. On most computer systems, the web UI can be accessed on port `9980` of the `localhost` address (`127.0.0.1`) by clicking the following link: 
+
+> [http://127.0.0.1:9980](http://127.0.0.1:9980). 
+
+After loading web UI, you should use it to start the two main Bitmark node software programs: 
+
+1. `bitmarkd` — reponsible for verifying Bitmark transactions and recording them in the Bitmark blockchain (required for all Bitmark nodes) 
+2. `recorderd` — required for solving the Bitmark blockchain's proof-of-work algorithm, which qualifies nodes to win blocks and receive monetary compensation (optional)
+
+After restarting the `bitmarkd` node for the first time, the node will go through an initial `Resynchronizing` phase in which a copy of the current Bitmark blockchain will be downloaded to your Bitmark node. Once the blockchain resynchronization has completed, your Bitmark node will begin verifying and recording transactions for the current block. 
 
 # Bitmark節點
 
