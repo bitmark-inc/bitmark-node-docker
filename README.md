@@ -1,6 +1,6 @@
 # Bitmark Node Documentation
 
-[ [English](#introduction) | [中文](Bitmark節點說明) ]
+[ [English](#introduction) | [中文](#Bitmark節點說明) ]
 
 ## Introduction
 
