@@ -158,8 +158,6 @@ Configurable options are:
 
   - Environments:
     - PUBLIC_IP: Your public IP address
-    - BTC_ADDR: Bitcoin address for proofing
-    - LTC_ADDR: Litecoin address for proofing
   - Ports:
     - 2130: Port of RPC server
     - 2135 & 2136: Port of peering
@@ -368,8 +366,6 @@ bitmark/bitmark-node
 
   - 環境：
     - PUBLIC_IP: 您的公開 IP 位址
-    - BTC_ADDR: Bitcoin 付款位址
-    - LTC_ADDR: Litecoin 付款位址
   - 連接埠:
     - 2130: RPC 伺服器連接埠
     - 2135 & 2136: Peering 連接埠

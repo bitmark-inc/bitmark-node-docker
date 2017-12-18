@@ -3,8 +3,6 @@ services:
   bitmark-node:
     environment:
       - PUBLIC_IP=127.0.0.1
-      - BTC_ADDR=1KtkRmq3iAjxevKX8sYTSxU8AdRhrYGAPy
-      - LTC_ADDR=LN4jSR7ybzcSR9J2xv76TcmTqW3Mo6NgTj
     build: .
     volumes:
       - /path/to/bitmarkd/data:/.config/bitmark-node/bitmarkd/bitmark/data

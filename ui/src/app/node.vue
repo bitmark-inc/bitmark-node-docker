@@ -4,14 +4,18 @@
       <div class="row">
         <h3 class="paragraph-title">Bitmark node status</h3>
         <div class="row__box">
-          <Box :class="{'running': this.bitmarkd.status === 'started', 'stop-running': this.bitmarkd.status === 'stopped'}" title="Bitmark Node (bitmarkd)">
-            <button slot="header-button" class="btn-default" :disabled="!this.bitmarkd.status" @click="toggleBitmarkd">{{ (this.bitmarkd.status === 'started') ? 'Stop' : 'Start' }}</button>
+          <Box :class="{'running': this.bitmarkd.status.started, 'stop-running': !this.bitmarkd.status.started}" title="Bitmark Node (bitmarkd)">
+            <button slot="header-button" class="btn-default" @click="toggleBitmarkd">{{ this.bitmarkd.status.started ? 'Stop' : 'Start' }}</button>
             <ul>
-              <li>
+              <li v-if="!this.bitmarkd.status.error">
                 <span class="label">Status:</span>
-                <span class="status">{{ (this.bitmarkd.status) === 'started' ? "Running" : "Stopped" }}</span>
+                <span class="status">{{ this.bitmarkd.status.started ? "Running" : "Stopped" }}</span>
               </li>
-              <li v-if="this.bitmarkd.status === 'started'">
+              <li v-else>
+                <span class="label">Error: </span>
+                <span class="status">{{ this.bitmarkd.status.error }}</span>
+              </li>
+              <li v-if="this.bitmarkd.status.running === 'started'">
                 <span class="label">Connection:</span>
                 <span class="status" v-if="bitmarkdConnStat !== null">You’re connected to {{ this.bitmarkdConnStat.connections }} nodes.
                   <span v-if="!bitmarkdConnStat.port_state.broadcast"> <br> Broadcast port (2135) is not accessible.</span>
@@ -22,12 +26,12 @@
             </ul>
           </Box>
           <!-- End: box -->
-          <Box :class="{'running': this.recorderd.status === 'started', 'stop-running': this.recorderd.status === 'stopped'}" title="Recorder Node (recorderd)">
-            <button slot="header-button" class="btn-default" :disabled="!this.recorderd.status" @click="toggleRecorderd">{{ (this.recorderd && this.recorderd.status === 'started') ? 'Stop' : 'Start' }}</button>
+          <Box :class="{'running': this.recorderd.status.started, 'stop-running': !this.recorderd.status.started}" title="Recorder Node (recorderd)">
+            <button slot="header-button" class="btn-default" @click="toggleRecorderd">{{ this.recorderd.status.started ? 'Stop' : 'Start' }}</button>
             <ul>
               <li>
                 <span class="label ">Status:</span>
-                <span class="status ">{{ (this.recorderd && this.recorderd.status) === 'started' ? "Running" : "Stopped" }}</span>
+                <span class="status ">{{ this.recorderd.status.started ? "Running" : "Stopped" }}</span>
               </li>
             </ul>
           </Box>
@@ -129,7 +133,7 @@
     methods: {
 
       toggleBitmarkd() {
-        if (this.bitmarkd.status === 'started') {
+        if (this.bitmarkd.status.started) {
           this.stopBitmarkd()
         } else {
           this.startBitmarkd()
@@ -160,7 +164,7 @@
       },
 
       toggleRecorderd() {
-        if (this.recorderd.status === 'started') {
+        if (this.recorderd.status.started) {
           this.stopRecorderd()
         } else {
           this.startRecorderd()
@@ -227,7 +231,7 @@
       },
 
       getBitmarkdConnectionStatus() {
-        if (this.bitmarkd.status != "started") {
+        if (!this.bitmarkd.status.started) {
           return
         }
         axios.get("/api/" + "bitmarkd/conn_stat")
@@ -240,7 +244,7 @@
       },
 
       fetchBitmarkInfo() {
-        if (this.bitmarkd.status === "started") {
+        if (this.bitmarkd.status.started) {
           axios.post("/api/" + "bitmarkd", {
             option: "info"
           }).then((resp) => {
@@ -310,12 +314,14 @@
         bitmarkd: {
           errorMsg: "",
           querying: false,
-          status: ""
+          status: "",
+          error: ""
         },
         recorderd: {
           errorMsg: "",
           querying: false,
-          status: ""
+          status: "",
+          error:""
         },
 
         bitmarkdInfo: null,

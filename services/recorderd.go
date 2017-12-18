@@ -73,11 +73,10 @@ func (recorderd *Recorderd) IsRunning() bool {
 	return recorderd.running
 }
 
-func (recorderd *Recorderd) Status() string {
-	if recorderd.running {
-		return "started"
-	} else {
-		return "stopped"
+func (recorderd *Recorderd) Status() map[string]interface{} {
+	return map[string]interface{}{
+		"started": recorderd.running,
+		"running": recorderd.running,
 	}
 }
 

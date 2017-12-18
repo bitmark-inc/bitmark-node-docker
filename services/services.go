@@ -5,7 +5,7 @@ type Service interface {
 	Finalise() error
 	IsRunning() bool
 	SetNetwork(string)
-	Status() string
+	Status() map[string]interface{}
 	Start() error
 	Stop() error
 }

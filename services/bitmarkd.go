@@ -84,15 +84,11 @@ func (bitmarkd *Bitmarkd) IsRunning() bool {
 	return bitmarkd.running
 }
 
-func (bitmarkd *Bitmarkd) Status() string {
-	if bitmarkd.started {
-		if bitmarkd.cmdErr != "" {
-			return fmt.Sprintf("error: %s", bitmarkd.cmdErr)
-		} else {
-			return "started"
-		}
-	} else {
-		return "stopped"
+func (bitmarkd *Bitmarkd) Status() map[string]interface{} {
+	return map[string]interface{}{
+		"started": bitmarkd.started,
+		"running": bitmarkd.running,
+		"error":   bitmarkd.cmdErr,
 	}
 }
 
