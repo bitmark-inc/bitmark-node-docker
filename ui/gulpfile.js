@@ -28,19 +28,19 @@ gulp.task("dev", ["clean", "html"], function () {
       this.emit('end');
     })
     .pipe(source("bundle.js"))
-    .pipe(gulp.dest("./public/static/js/"));
+    .pipe(gulp.dest("./public/assets/js/"));
   }
 
   b.bundle()
     .pipe(source("bundle.js"))
-    .pipe(gulp.dest("./public/static/js/"))
+    .pipe(gulp.dest("./public/assets/js/"))
     .on('end', function () {
       gulp.src('public')
       .pipe(webserver({
         fallback: 'index.html',
         livereload: false,
         directoryListing: false,
-        open: true
+        open: false
       }));
     })
   gulp.watch(["src/index.html", "src/**/*.vue", "src/**/*.js", "!src/dist/**"],
@@ -48,7 +48,7 @@ gulp.task("dev", ["clean", "html"], function () {
 })
 
 gulp.task('clean', function () {
-  return gulp.src('public/static/js/bundle-*', {read: false})
+  return gulp.src('public/assets/js/bundle-*', {read: false})
     .pipe(clean());
 });
 
@@ -59,16 +59,11 @@ gulp.task("watch", ["clean", "fonts", "bundle-js", "html"], function() {
   }]);
 });
 
-gulp.task("fonts", function () {
-  return gulp.src("src/bower_components/bootstrap/fonts/**/*.{ttf,woff,woff2,eof,svg}")
-  .pipe(rename({dirname: ''}))
-  .pipe(gulp.dest("./public/static/fonts/"))
-})
-
 gulp.task("html", ["bundle-js"], function(){
   return gulp.src("./src/index.html")
     .pipe(useref())
     .pipe(gulpif('*.css', rev()))
+    // .pipe(gulpif('*.js', rev()))
     .pipe(revReplace())
     .pipe(gulp.dest("./public"));
 });
@@ -87,5 +82,5 @@ gulp.task("bundle-js", function() {
     .pipe(gulp.dest("./src/dist"));
 });
 
-gulp.task("bundle", ["clean", "fonts", "bundle-js", "html"]);
-gulp.task("default", ["clean", "fonts", "bundle-js", "html"]);
+gulp.task("bundle", ["clean", "bundle-js", "html"]);
+gulp.task("default", ["clean", "bundle-js", "html"]);

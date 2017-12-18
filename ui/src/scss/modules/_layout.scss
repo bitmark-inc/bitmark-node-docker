@@ -1,0 +1,391 @@
+html {
+  height: 100%;
+}
+body {
+   font: 300 $default-font-size $font-face-default;
+   margin: 0;
+   height: 100%;
+   color: #333;
+}
+
+a {
+  color: $brand-primary;
+  text-decoration: none;
+  &:hover {text-decoration: underline;}
+}
+
+
+.bitmark-node-wrapper {
+  width: 100%;
+  //max-width: $max-width;
+  height: calc(100% - 128px);
+  margin: 0 auto;
+  //padding: 0 $gutter*2;
+}
+
+//
+// Header
+//
+.header__top {
+  @extend .container-center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $gutter/2 0 0 0;
+  //border-bottom: solid 1px $silver-bg;
+}
+.header__bottom {
+  @extend .container-center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $gutter/2 0 $gutter/2 33px;
+  //border-bottom: solid 1px $silver-bg;
+}
+.divider {
+  height: 1px;
+  background: $color-inactive;
+}
+.container-center {
+  max-width: 1000px;
+  margin: 0 auto;
+  //padding: 0 $gutter*2;
+}
+
+// header__top elements
+.logo {
+  //width: $grid*4;
+  padding-bottom: $gutter/2;
+  img {
+    width: 139px;
+    display: block;
+  }
+}
+.account {
+  //width: $grid*8;
+  display: flex;
+  justify-content: flex-end;
+}
+.user {
+  @extend .pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-bottom: $gutter/3;
+  i {
+    display: inline-block;
+    padding-left: ($gutter /2) + 3px;
+  }
+  &:hover {
+    .menu {display: block;}
+    .icon-account-circle {fill: $brand-primary;}
+  }
+}
+.hambuger {
+  @extend .pointer;
+  position: relative;
+  padding-left: $gutter/2;
+  padding-bottom: $gutter/3;
+  padding-top: 4px;
+  &:hover {
+    .menu {display: block;}
+    .icon-hamburger {fill: $brand-primary;}
+  }
+}
+.menu {
+  display: none;
+  @extend .link-white;
+  padding: $gutter /3;
+  position: absolute;
+  top: 45px;
+  background: black;
+  color: white;
+  &:before {
+    position: absolute;
+    top: -6px;
+    content:"";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 6px solid black;
+  }
+  li {
+    white-space: nowrap;
+    padding-bottom: $gutter/6;
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+  .icon-description,
+  .icon-language {
+    fill: white;
+  }
+}
+.menu.account__menu {
+  right: -70px;
+  &:before {
+    right: 32%;
+  }
+  li:after {
+    content: '»';
+    padding-left: $gutter/6;
+  }
+}
+.menu.hambuger__menu {
+  left: -70px;
+  &:before {
+    left: 51%;
+  }
+}
+.lan-opt {
+  display: block;
+  margin-left: 19px;
+  font-size: $font-size-medium;
+  a.active {
+    @include opacity(0.5);
+  }
+}
+
+// header__bottom elements
+.blockchain {
+  color: $brand-primary;
+  display: flex;
+  //width: $grid*9;
+}
+.chain-title {
+  font-weight: bold;
+}
+.chain-select {
+  margin-left: $gutter*2;
+  display: flex;
+}
+.chain-opt {
+  li {
+    display: none;
+    &.active {
+      display: flex;
+    }
+  }
+  a {
+    color: $brand-primary;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  p {
+    margin: 2px 0 0 $gutter/2;
+    color: $silverChalice-bg;
+    font-size: $font-size-medium;
+  }
+}
+.bitmark-version {
+  //width: $grid*3;
+  text-align: right;
+}
+.bitmark-node-version {
+  font-weight: bold;
+}
+.bitmark-node-update {
+  font-size: $font-size-xxsmall;
+}
+
+//
+// Content
+//
+.content-body {
+  background: $light-gray;
+  height: 100%;
+}
+.row {
+  @extend .container-center;
+  padding: $gutter 0 $gutter 33px;
+  //border-bottom: solid 1px $silver-bg;
+}
+.row__box {
+  display: flex;
+  flex-wrap: wrap;
+}
+.box {
+  @extend .box-shadow;
+  background: white;
+  padding:0 $gutter/2 $gutter/2 $gutter/2;
+  width: calc(50% - 15px);
+  margin-bottom: $gutter /2;
+  &:nth-child(2n-1) {
+    margin-right: $gutter/2;
+  }
+  &:nth-child(2n+0) {
+    margin-left: $gutter /2;
+  }
+  &.full-width {
+    width: 100%;
+    margin: 0;
+  }
+  &.running {
+    .box__header {background: $color-active;}
+  }
+  &.stop-running {
+    .box__header {background: $color-error;}
+  }
+}
+.box__header {
+  color: white;
+  background: $color-dark-gray;
+  margin: 0 (-($gutter/2)) $gutter/2 (-($gutter/2));
+  padding: $gutter/6 $gutter/2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  span.title {
+    //width: $grid*10;
+  }
+  span.btn {
+    //width: $grid *2;
+    text-align: right;
+  }
+}
+.box__body {
+  @extend .word-wrap;
+  ul li {
+    display: flex;
+    margin-bottom: $gutter/3;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .label {
+      font-weight: bold;
+      padding-right: $gutter /6;
+      //width: $grid *3;
+    }
+  }
+}
+.blocks {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .blocks__num {
+    //width: $grid * 7;
+    font-size: $font-size-xxlarge * 1.5;
+  }
+  .blocks__label {
+    //width: $grid * 5;
+    text-align: right;
+  }
+}
+.times {
+  font-size: $font-size-xxlarge * 1.5;
+}
+
+// Bitmark wallet
+.btc-address, .ltc-address {
+  display: flex;
+  margin-bottom: $gutter /3;
+  &.complete {
+    input[type="text"] {
+      border: 0;
+    }
+  }
+  .coin-title {
+    //width: $grid*1.5;
+    padding: 0 $gutter /6;
+    white-space: nowrap;
+  }
+  .field {
+    width: $grid *9;
+    input {width: 100%;}
+  }
+
+}
+
+//
+// Icons
+//
+.icon-account-circle,
+.icon-hamburger {
+  width: 24px;
+  height: 24px;
+}
+.icon-description,
+.icon-language {
+  width: 14px;
+  height: 14px;
+}
+.icon-bitcoin {
+  width: 12px;
+  height: 12px;
+}
+.black {
+  fill: black;
+}
+
+//
+// Buttons
+//
+.btn-default {
+  @extend .pointer;
+  @include border-radius(0px);
+  border: solid 1px $light-gray;
+  font-size: $font-size-medium;
+  padding: $gutter/6 $gutter /2;
+  outline: 0;
+}
+
+//
+// Form
+//
+input[type="text"] {
+  @extend .font-andale;
+}
+
+//
+// Links style
+//
+.link-white {
+  a {
+    color: white;
+    text-decoration: none;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}
+
+@include respond-to (handheld-devices) {
+  .container-center {
+    max-width: 1000px;
+    margin: 0 $gutter;
+  }
+}
+
+@include respond-to (mobile) {
+  .header__bottom, .header__top {
+    display: block;
+  }
+  .bitmark-version {
+    text-align: left;
+    margin-top: $gutter;
+  }
+  .box {
+    .box__header {
+      display: block;
+      span {display: block;}
+      span.btn { text-align: left;}
+    }
+  }
+  .box__body ul li {
+    display: block;
+    span {display: block;}
+  }
+  .blocks {
+    display: block;
+    .blocks__num {
+    }
+    .blocks__label {
+    }
+  }
+  .btc-address, .ltc-address {
+    display: block;
+  }
+  .chain-opt p {display: none}
+}

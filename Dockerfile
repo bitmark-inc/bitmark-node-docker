@@ -51,5 +51,7 @@ ADD docker-assets/bitmarkd-test.conf /.config/bitmark-node/bitmarkd/testing/bitm
 ADD docker-assets/recorderd-test.conf /.config/bitmark-node/recorderd/testing/recorderd.conf
 ADD docker-assets/start.sh /
 
+ENV network bitmark
+
 EXPOSE 2130 2135 2136 2150
 CMD ["/start.sh"]

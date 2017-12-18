@@ -1,0 +1,59 @@
+
+//== Color
+//
+//
+$brand-primary:         #0060F2;
+$color-base:            #000;
+$color-inactive:        #C1C1C1;
+$color-blue-gray:       #EDF0F4;
+
+$silverChalice-bg:      #999999;
+$silver-bg:             #c1c1c1;
+$highlight:             #e6ff00;
+$light-gray:            #f9f9f9;
+$lightBlue-bg:          #F2FAFF;
+$rockBlue-bg:           #A4B5CD;
+$color-error:           #FF003C;
+
+$color-active:          #00C308;
+$color-dark-gray:       #636363;
+
+
+//Grid
+//
+//
+$max-width:                     1200px;
+$full-width:                    100%;
+$grid-numbers:                  12;
+$gutter:                        30px;
+$grid:                          ($full-width / $grid-numbers); // %
+$col:                           ($max-width / $grid-numbers); // px
+
+
+//== Typography
+//
+//## Font, line-height, and color for body text, headings, and more.
+
+$font-andale:          'AndaleMono', sans-serif;
+$font-avenir:          'Avenir', sans-serif;
+$font-avenir-next:     'AvenirNext', sans-serif;
+$font-face-default:    'Avenir', 'Noto Sans', sans-serif;
+
+//1em = 12pt = 16px = 100%
+
+$font-size-xxlarge:     24px;
+$font-size-xlarge:      18px;
+$font-size-large:       16px;
+$font-size-medium:      14px;
+$font-size-small:       13px;
+$font-size-xsmall:      12px;
+$font-size-xxsmall:     11px;
+
+$default-font-size:     $font-size-large;
+
+
+$base-line-height:      20px;
+
+
+
+

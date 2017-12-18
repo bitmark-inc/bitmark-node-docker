@@ -1,16 +1,33 @@
 package server
 
 import (
+	"bytes"
 	"crypto/tls"
-	"net/rpc/jsonrpc"
+	"encoding/json"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/services"
+	"github.com/bitmark-inc/bitmarkd/account"
 	"github.com/bitmark-inc/bitmarkd/rpc"
 	"github.com/gin-gonic/gin"
 )
 
 const CONFIG_BUCKET_NAME = "config"
+
+var client = &http.Client{
+	Timeout: 5 * time.Second,
+	Transport: &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	},
+}
 
 type ServiceOptionRequest struct {
 	Option string `json:"option"`
@@ -18,16 +35,56 @@ type ServiceOptionRequest struct {
 
 type WebServer struct {
 	nodeConfig *config.BitmarkNodeConfig
+	rootPath   string
 	Bitmarkd   services.Service
 	Recorderd  services.Service
 }
 
-func NewWebServer(nc *config.BitmarkNodeConfig, bitmarkd, recorderd services.Service) *WebServer {
+func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recorderd services.Service) *WebServer {
 	return &WebServer{
 		nodeConfig: nc,
+		rootPath:   rootPath,
 		Bitmarkd:   bitmarkd,
 		Recorderd:  recorderd,
 	}
+}
+
+func (ws *WebServer) NodeInfo(c *gin.Context) {
+	network := ws.nodeConfig.GetNetwork()
+	if network == "" {
+		c.String(500, "wrong network configuration")
+		return
+	}
+
+	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
+	f, err := os.Open(seedFile)
+	if err != nil {
+		c.String(500, "fail to open seed file from: %s", seedFile)
+		return
+	}
+	defer f.Close()
+
+	var buf bytes.Buffer
+	_, err = io.Copy(&buf, f)
+	if err != nil {
+		c.String(500, "can not read config file")
+		return
+	}
+	seed := strings.Trim(strings.Split(buf.String(), ":")[1], "\n")
+	a, err := account.PrivateKeyFromBase58Seed(seed)
+	if err != nil {
+		c.String(500, "unable to get your account. error: %s", err.Error())
+		return
+	}
+	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
+	c.JSON(200, map[string]interface{}{
+		"ok": 1,
+		"result": map[string]string{
+			"version": os.Getenv("VERSION"),
+			"network": network,
+			"account": a.Account().String(),
+		},
+	})
 }
 
 func (ws *WebServer) GetChain(c *gin.Context) {
@@ -41,34 +98,34 @@ func (ws *WebServer) GetChain(c *gin.Context) {
 	return
 }
 
-func (ws *WebServer) SetChain(c *gin.Context) {
-	reqBody := map[string]string{}
-	err := c.BindJSON(&reqBody)
-	if err != nil {
-		c.String(400, "can not parse action option")
-		return
-	}
+// func (ws *WebServer) SetChain(c *gin.Context) {
+// 	reqBody := map[string]string{}
+// 	err := c.BindJSON(&reqBody)
+// 	if err != nil {
+// 		c.String(400, "can not parse action option")
+// 		return
+// 	}
 
-	network, ok := reqBody["network"]
-	if !ok {
-		c.String(400, "missing arguments")
-		return
-	}
+// 	network, ok := reqBody["network"]
+// 	if !ok {
+// 		c.String(400, "missing arguments")
+// 		return
+// 	}
 
-	err = ws.nodeConfig.SetNetwork(network)
-	if err != nil {
-		c.String(400, "can not set network. error: %s", err.Error())
-		return
-	}
+// 	err = ws.nodeConfig.SetNetwork(network)
+// 	if err != nil {
+// 		c.String(400, "can not set network. error: %s", err.Error())
+// 		return
+// 	}
 
-	ws.Bitmarkd.SetNetwork(network)
-	ws.Recorderd.SetNetwork(network)
+// 	ws.Bitmarkd.SetNetwork(network)
+// 	ws.Recorderd.SetNetwork(network)
 
-	c.JSON(200, map[string]interface{}{
-		"ok": 1,
-	})
-	return
-}
+// 	c.JSON(200, map[string]interface{}{
+// 		"ok": 1,
+// 	})
+// 	return
+// }
 
 func (ws *WebServer) GetConfig(c *gin.Context) {
 	config, err := ws.nodeConfig.Get()
@@ -127,22 +184,26 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 		})
 		return
 	case "info":
-		tlsConfig := &tls.Config{
-			InsecureSkipVerify: true,
-		}
 
-		conn, err := tls.Dial("tcp", "127.0.0.1:2130", tlsConfig)
-		if nil != err {
-			c.String(500, "can not parse action option")
+		resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/info")
+		if err != nil {
+			c.String(500, "unable to get bitmark info")
+			return
+		}
+		defer resp.Body.Close()
+		bb := bytes.Buffer{}
+		io.Copy(&bb, resp.Body)
+
+		if resp.StatusCode != 200 {
+			c.String(500, "unable to get bitmark info. message: %s", bb.String())
 			return
 		}
 
-		client := jsonrpc.NewClient(conn)
-		defer client.Close()
-
 		var reply rpc.InfoReply
-		if err := client.Call("Node.Info", rpc.InfoArguments{}, &reply); err != nil {
-			c.String(500, "Node.Info error: %s\n", err.Error())
+		d := json.NewDecoder(&bb)
+
+		if err := d.Decode(&reply); err != nil {
+			c.String(500, "fail to read bitmark info response. error: %s\n", err.Error())
 			return
 		}
 

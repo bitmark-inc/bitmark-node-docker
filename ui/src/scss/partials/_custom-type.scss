@@ -1,0 +1,126 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+//media screen size
+//
+@mixin respond-to($media) {
+    @if $media==mobile {
+        @media only screen and (max-width: 750px) {
+            @content;
+        }
+    }
+    @else if $media==mobile-xs {
+        @media only screen and (max-width: 375px) {
+            @content;
+        }
+    }
+    @else if $media==tablets {
+        @media only screen and (min-width: 751px) and (max-width: 1100px) {
+            @content;
+        }
+    }
+    @else if $media==handheld-devices {
+        @media only screen and (max-width: 1100px) {
+            @content;
+        }
+    }
+}
+
+@mixin placeholder {
+    ::-webkit-input-placeholder {
+        @content
+    }
+    :-moz-placeholder {
+        @content
+    }
+    ::-moz-placeholder {
+        @content
+    }
+    :-ms-input-placeholder {
+        @content
+    }
+}
+
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+    border-radius: $radius;
+}
+
+@mixin opacity($opacity) {
+    opacity: $opacity;
+    filter: alpha(opacity=($opacity*100));
+    /* For IE8 and earlier */
+}
+
+.opacity {
+    @include opacity(0.4);
+}
+
+@mixin hyphens($hyphens) {
+    -webkit-hyphens: $hyphens;
+    -moz-hyphens: $hyphens;
+    -ms-hyphens: $hyphens;
+    hyphens: $hyphens;
+}
+
+@mixin transform-origin($x, $y) {
+    -ms-transform-origin: $x $y;
+    -webkit-transform-origin: $x $y;
+    transform-origin: $x $y;
+}
+
+.transform-origin-top-left{
+    @include transform-origin(0, 0);
+}
+
+@mixin transition($time) {
+    -webkit-transition: all $time ease-in-out;
+    transition: all $time ease-in-out;
+}
+
+.box-shadow {
+    -webkit-box-shadow: 1px 0 3px 0 rgba(0,0,0,0.1);
+    box-shadow: 1px 0 3px 0 rgba(0,0,0,0.1);
+}
+
+
+//== Content style set
+//
+//
+//Font-family
+
+
+//list
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    clear: both;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.word-wrap {
+    word-break: keep-all;
+    word-wrap:  break-word;
+
+}
+

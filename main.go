@@ -92,16 +92,17 @@ func main() {
 		recorderdService.SetNetwork(network)
 	}
 
-	webserver := server.NewWebServer(nodeConfig, bitmarkdService, recorderdService)
+	webserver := server.NewWebServer(nodeConfig, rootPath, bitmarkdService, recorderdService)
 
 	r := gin.New()
 
 	r.Use(static.Serve("/", static.LocalFile(uiPath, true)))
 	apiRouter := r.Group("/api")
+	apiRouter.GET("/info", webserver.NodeInfo)
 	apiRouter.GET("/config", webserver.GetConfig)
 	apiRouter.POST("/config", webserver.UpdateConfig)
 	apiRouter.GET("/chain", webserver.GetChain)
-	apiRouter.POST("/chain", webserver.SetChain)
+	apiRouter.GET("/bitmarkd/conn_stat", webserver.ConnectionStatus)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.POST("/recorderd", webserver.RecorderdStartStop)
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
