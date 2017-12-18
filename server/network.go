@@ -24,11 +24,10 @@ func connCheck(host, port string) bool {
 	}
 }
 
-func (ws *WebServer) ConnectionStatus(c *gin.Context) {
+func getConnectors() int {
 	resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/info/connectors")
 	if err != nil {
-		c.String(500, "unable to get connectors")
-		return
+		return 0
 	}
 	defer resp.Body.Close()
 
@@ -36,22 +35,25 @@ func (ws *WebServer) ConnectionStatus(c *gin.Context) {
 	io.Copy(&buf, resp.Body)
 
 	if resp.StatusCode != 200 {
-		c.String(500, "unable to get bitmark info. message: %s", buf.String())
-		return
+		return 0
 	}
 
 	var result map[string][]map[string]string
 	d := json.NewDecoder(&buf)
 	err = d.Decode(&result)
 	if err != nil {
-		c.String(500, "fail to read bitmark connector response. error: %s\n", err.Error())
-		return
+		return 0
 	}
+
+	return len(result["clients"])
+}
+
+func (ws *WebServer) ConnectionStatus(c *gin.Context) {
 
 	publicIP := os.Getenv("PUBLIC_IP")
 
 	c.JSON(200, map[string]interface{}{
-		"connections": len(result["clients"]),
+		"connections": getConnectors(),
 		"port_state": map[string]interface{}{
 			"broadcast": connCheck(publicIP, "2135"),
 			"listening": connCheck(publicIP, "2136"),
