@@ -1,3 +1,6 @@
+
+
+
 <template>
   <div class="bitmark-node-wrapper">
     <div class="content-body">
@@ -112,6 +115,35 @@
         </div>
       </div>
       <div class="divider "></div>
+      <!-- POP UP - payment address -->
+      <div class="pop-up-box">
+        <div class="pop-up-box__content">
+          <div class="pop-up-box__header">
+            <h1>Please enter your payment addresses.</h1>
+            <span class="close">
+              <svg class="icon-hamburger">
+                <use xlink:href="assets/img/icons.svg#icon-cancel" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
+              </svg>
+            </span>
+          </div>
+          <p>Bitcoin and litecoin payments for blocks won will be transferred to the following addresses:</p>
+          <div class="wallet-address">
+            <div class="bitcoin">
+              <i><img src="assets/img/icons/ic_bitcoin.svg " alt="icon bitcoin "></i>
+              <span class="coin-title">BTC Address:</span>
+              <span class="field "></span>
+            </div>
+            <div class="litecoin">
+              <i><img src="assets/img/icons/ic_litecoin.svg " alt="icon bitcoin "></i>
+              <span class="coin-title ">LTC Address:</span>
+              <span class="field "></span>
+            </div>
+          </div>
+          <div class="button">
+            <button type="button" class="btn-default-fill" disabled="true">Save</button>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- End: content-body -->
   </div>

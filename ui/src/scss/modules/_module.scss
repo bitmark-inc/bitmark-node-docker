@@ -1,0 +1,44 @@
+.pop-up-box {
+   position: fixed;
+   left: 0;
+   right: 0;
+   top: 128px;
+   bottom: 0;
+   background: rgba(black, 0.6);
+}
+
+.pop-up-box__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.close {
+  @extend .pointer;
+}
+
+.pop-up-box__content {
+  background: white;
+  position: absolute;
+  top: 30%;
+  left: calc(50% - 350px);
+  width: 700px;
+  padding: $gutter;
+}
+
+.wallet-address {
+  .bitcoin, .litecoin {
+    display: flex;
+    margin-bottom: $gutter;
+  }
+  i {
+    padding-right: 5px;
+  }
+  .coin-title {
+    width: 100px;
+  }
+  .field {
+    width: 75%;
+    margin-left: $gutter /2;
+    border-bottom: solid 1px black;
+  }
+}

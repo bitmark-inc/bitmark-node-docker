@@ -331,6 +331,22 @@ a {
   outline: 0;
 }
 
+.btn-default-fill {
+  @extend .btn-default;
+  background: $brand-primary;
+  color: white;
+  &.disable {
+    background: $silverChalice-bg;
+  }
+}
+
+button[disabled], button:disabled {
+  &.btn-default-fill {
+    background: $silverChalice-bg;
+  }
+}
+
+
 //
 // Form
 //
