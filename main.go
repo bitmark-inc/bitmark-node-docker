@@ -18,6 +18,8 @@ import (
 	"github.com/hashicorp/hcl"
 )
 
+const VERSION = "v0.3"
+
 type MasterConfiguration struct {
 	Port    int                  `hcl:"port"`
 	DataDir string               `hcl:"datadir"`
@@ -33,6 +35,10 @@ func (c *MasterConfiguration) Parse(filename string) error {
 	var buf bytes.Buffer
 	io.Copy(&buf, f)
 	return hcl.Unmarshal(buf.Bytes(), c)
+}
+
+func init() {
+	os.Setenv("CURRENT_VERSION", VERSION)
 }
 
 func main() {
@@ -104,6 +110,7 @@ func main() {
 	apiRouter.GET("/chain", webserver.GetChain)
 	apiRouter.GET("/bitmarkd/conn_stat", webserver.ConnectionStatus)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
+	apiRouter.GET("/version", webserver.Version)
 	apiRouter.POST("/recorderd", webserver.RecorderdStartStop)
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
 }
