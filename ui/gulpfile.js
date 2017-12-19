@@ -43,7 +43,7 @@ gulp.task("dev", ["clean", "html"], function () {
         open: false
       }));
     })
-  gulp.watch(["src/index.html", "src/**/*.vue", "src/**/*.js", "!src/dist/**"],
+  gulp.watch(["src/index.html", "src/**/*.vue", "src/**/*.js", "src/**/*.scss", "!src/dist/**"],
               function(event) { bundle(); });
 })
 
