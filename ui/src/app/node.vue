@@ -15,7 +15,7 @@
                 <span class="label">Error: </span>
                 <span class="status">{{ this.bitmarkd.status.error }}</span>
               </li>
-              <li v-if="this.bitmarkd.status.running === 'started'">
+              <li v-if="!this.bitmarkd.status.error">
                 <span class="label">Connection:</span>
                 <span class="status" v-if="bitmarkdConnStat !== null">You’re connected to {{ this.bitmarkdConnStat.connections }} nodes.
                   <span v-if="!bitmarkdConnStat.port_state.broadcast">
