@@ -293,7 +293,7 @@
       this.getConfig()
         .then(() => {
           let lastRun = this.lastRun
-          if (!lastRun && !this.paymentAddrs.btc || !this.paymentAddrs.ltc) {
+          if (!lastRun && (!this.paymentAddrs.btc || !this.paymentAddrs.ltc)) {
             this.showPaymentConfig = true;
             setCookie("lastRun", Date(), 30)
           }
