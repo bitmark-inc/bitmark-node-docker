@@ -1,6 +1,3 @@
-
-
-
 <template>
   <div class="bitmark-node-wrapper">
     <div class="content-body">
@@ -21,8 +18,10 @@
               <li v-if="this.bitmarkd.status.running === 'started'">
                 <span class="label">Connection:</span>
                 <span class="status" v-if="bitmarkdConnStat !== null">You’re connected to {{ this.bitmarkdConnStat.connections }} nodes.
-                  <span v-if="!bitmarkdConnStat.port_state.broadcast"> <br> Broadcast port (2135) is not accessible.</span>
-                  <span v-if="!bitmarkdConnStat.port_state.listening"> <br> Listening port (2136) is not accessible.</span>
+                  <span v-if="!bitmarkdConnStat.port_state.broadcast">
+                    <br> Broadcast port (2135) is not accessible.</span>
+                  <span v-if="!bitmarkdConnStat.port_state.listening">
+                    <br> Listening port (2136) is not accessible.</span>
                 </span>
                 <span class="status" v-else>Checking networking…</span>
               </li>
@@ -88,16 +87,14 @@
         <h3 class="paragraph-title ">Bitmark wallet</h3>
         <div class="row__box ">
           <Box class="full-width" title="Payment Addresses">
-            <button slot="header-button" class="btn-default " @click="editPayment">{{ paymentEditing ? "Done" : "Edit" }}</button>
+            <button slot="header-button" class="btn-default " @click="openConfig">Edit</button>
             <div class="btc-address complete ">
               <i>
                 <img src="assets/img/icons/ic_bitcoin.svg " alt="icon bitcoin ">
               </i>
               <span class="coin-title ">BTC Address:</span>
               <span class="field ">
-                <input v-if="paymentEditing" type="text " v-model="paymentAddrs.btc">
-                <span v-else>{{ paymentAddrs.btc || 'NOT SET' }}</span>
-
+                <span>{{ paymentAddrs.btc || 'NOT SET' }}</span>
               </span>
             </div>
             <div class="ltc-address ">
@@ -106,8 +103,7 @@
               </i>
               <span class="coin-title ">LTC Address:</span>
               <span class="field ">
-                <input v-if="paymentEditing" type="text " v-model="paymentAddrs.ltc">
-                <span v-else>{{ paymentAddrs.ltc || 'NOT SET' }}</span>
+                <span>{{ paymentAddrs.ltc || 'NOT SET' }}</span>
               </span>
             </div>
           </Box>
@@ -115,35 +111,8 @@
         </div>
       </div>
       <div class="divider "></div>
-      <!-- POP UP - payment address -->
-      <div class="pop-up-box">
-        <div class="pop-up-box__content">
-          <div class="pop-up-box__header">
-            <h1>Please enter your payment addresses.</h1>
-            <span class="close">
-              <svg class="icon-hamburger">
-                <use xlink:href="assets/img/icons.svg#icon-cancel" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
-              </svg>
-            </span>
-          </div>
-          <p>Bitcoin and litecoin payments for blocks won will be transferred to the following addresses:</p>
-          <div class="wallet-address">
-            <div class="bitcoin">
-              <i><img src="assets/img/icons/ic_bitcoin.svg " alt="icon bitcoin "></i>
-              <span class="coin-title">BTC Address:</span>
-              <span class="field "></span>
-            </div>
-            <div class="litecoin">
-              <i><img src="assets/img/icons/ic_litecoin.svg " alt="icon bitcoin "></i>
-              <span class="coin-title ">LTC Address:</span>
-              <span class="field "></span>
-            </div>
-          </div>
-          <div class="button">
-            <button type="button" class="btn-default-fill" disabled="true">Save</button>
-          </div>
-        </div>
-      </div>
+      <PaymentPopUp v-if="showPaymentConfig" v-on:saved="saveConfig" v-on:close="closeConfig"
+        :initBtcAddr="paymentAddrs.btc" :initLtcAddr="paymentAddrs.ltc"></PaymentPopUp>
     </div>
     <!-- End: content-body -->
   </div>
@@ -153,13 +122,16 @@
   import axios from "axios"
 
   import {
-    getCookie
+    getCookie,
+    setCookie
   } from "../utils"
   import Box from './box.vue'
+  import PaymentPopUp from '../components/paymentPopUp.vue'
 
   export default {
     components: {
-      Box: Box
+      Box: Box,
+      PaymentPopUp: PaymentPopUp
     },
 
     methods: {
@@ -173,6 +145,10 @@
       },
 
       startBitmarkd() {
+        if (!this.paymentAddrs.btc || !this.paymentAddrs.ltc) {
+          this.openConfig()
+          return;
+        }
         this.bitmarkd.status = ""
         this.bitmarkd.errorMsg = ""
         axios.post("/api/" + "bitmarkd", {
@@ -226,7 +202,7 @@
       },
 
       getConfig() {
-        axios
+        return axios
           .get("/api/config")
           .then((response) => {
             let {
@@ -241,25 +217,26 @@
             console.log(e)
           })
       },
+      openConfig() {
+        this.showPaymentConfig = true
+      },
+      closeConfig() {
+        this.showPaymentConfig = false
+      },
 
-      saveConfig() {
+      saveConfig(paymentAddrs) {
         axios.post("/api/config", {
-            btcAddr: this.paymentAddrs.btc,
-            ltcAddr: this.paymentAddrs.ltc
+            btcAddr: paymentAddrs.btcAddr,
+            ltcAddr: paymentAddrs.ltcAddr
           })
           .then(() => {
-            console.log("saved")
+            this.paymentAddrs.btc = paymentAddrs.btcAddr
+            this.paymentAddrs.ltc = paymentAddrs.ltcAddr
+            this.showPaymentConfig = false
           })
           .catch((e) => {
             this.$emit('error', e)
           })
-      },
-
-      editPayment() {
-        if (this.paymentEditing) {
-          this.saveConfig()
-        }
-        this.paymentEditing = !this.paymentEditing
       },
 
       getBitmarkdConnectionStatus() {
@@ -314,6 +291,13 @@
 
     created() {
       this.getConfig()
+        .then(() => {
+          let lastRun = this.lastRun
+          if (!lastRun && !this.paymentAddrs.btc || !this.paymentAddrs.ltc) {
+            this.showPaymentConfig = true;
+            setCookie("lastRun", Date(), 30)
+          }
+        })
     },
 
     mounted() {
@@ -321,6 +305,7 @@
       if (!network) {
         this.$router.push("/chain")
       }
+
       this.network = network;
       this.periodicalTask = setInterval(() => {
         this.fetchStatus('bitmarkd')
@@ -336,11 +321,14 @@
 
     data() {
       return {
-        paymentEditing: false,
+        lastRun: getCookie("lastRun"),
+
+        showPaymentConfig: false,
         paymentAddrs: {
           btc: "",
           ltc: ""
         },
+
         network: "",
         periodicalTask: null,
         bitmarkd: {
@@ -353,7 +341,7 @@
           errorMsg: "",
           querying: false,
           status: "",
-          error:""
+          error: ""
         },
 
         bitmarkdInfo: null,
