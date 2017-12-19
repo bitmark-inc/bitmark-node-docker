@@ -29,7 +29,7 @@ RUN go get github.com/gin-gonic/gin && go get github.com/gin-gonic/contrib/stati
 
 COPY . /go/src/github.com/bitmark-inc/bitmark-node
 RUN go install github.com/bitmark-inc/bitmark-node
-COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public /go/src/github.com/bitmark-inc/bitmark-node/ui/
+COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
 
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
 ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/bitmark/
