@@ -1,0 +1,114 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <symbol viewBox="0 0 3000 3000" id="icon-hamburger">
+        <title>Hamburger</title>
+        <g transform="translate(-3813 5320)">
+            <g id="Hamburger" clip-path="url(#clip-0)">
+                <g id="Union">
+                    <use xlink:href="#path0_fill" transform="translate(4410 -4595)" />
+                </g>
+            </g>
+        </g>
+        <defs>
+            <path id="path0_fill" fill-rule="evenodd" d="M 1810 0L 0 0L 0 255.75L 1810 255.75L 1810 0ZM 0 637.269L 1810 637.269L 1810 893.019L 0 893.019L 0 637.269ZM 0 1274L 1810 1274L 1810 1529.75L 0 1529.75L 0 1274Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 3000 3000" id="icon-plus">
+        <title>Plus</title>
+        <g transform="translate(-108 5320)">
+            <g id="Plus" clip-path="url(#clip-0)">
+                <g id="Union">
+                    <use xlink:href="#path1_fill" transform="translate(705 -4730)" />
+                </g>
+            </g>
+        </g>
+        <defs>
+            <path id="path1_fill" fill-rule="evenodd" d="M 1029 772L 1029 0L 773 0L 773 772L 0 772L 0 1028L 773 1028L 773 1814L 1029 1814L 1029 1028L 1810 1028L 1810 772L 1029 772Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 3000 3000" id="icon-dropdown">
+        <title>Plus</title>
+        <g transform="translate(-7518 1312)">
+            <g id="Dropdown" clip-path="url(#clip-0)">
+                <g id="Rectangle 56">
+                    <use xlink:href="#path2_fill" transform="matrix(-6.12323e-17 -1 -1 6.12323e-17 9784 807)" />
+                </g>
+            </g>
+        </g>
+        <defs>
+            <path id="path2_fill" fill-rule="evenodd" d="M 0 764.5L 764.5 1529L 1529 764.5L 764.5 0L 0 764.5ZM 298.246 764.5L 913.62 1379.87L 1528.99 764.5L 913.62 149.126L 298.246 764.5Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 3000 3000" id="icon-help">
+        <title>Plus</title>
+        <g transform="translate(-108 -2488)">
+            <g id="Help" clip-path="url(#clip-0)">
+                <g id="Subtract">
+                    <use xlink:href="#path3_fill" transform="translate(562 2934)" />
+                </g>
+            </g>
+        </g>
+        <defs>
+            <path id="path3_fill" fill-rule="evenodd" d="M 1046.5 2093C 1624.47 2093 2093 1624.47 2093 1046.5C 2093 468.534 1624.47 0 1046.5 0C 468.534 0 0 468.534 0 1046.5C 0 1624.47 468.534 2093 1046.5 2093ZM 948.257 1203.75L 948.257 1293.83L 1144.74 1293.83L 1144.74 1231.59C 1144.74 1210.84 1146.38 1193.37 1149.66 1179.18C 1152.93 1163.89 1157.84 1150.78 1164.39 1139.86C 1172.03 1127.85 1181.31 1116.39 1192.23 1105.47C 1203.14 1094.55 1216.24 1081.99 1231.53 1067.79C 1255.54 1044.86 1277.92 1023.02 1298.66 1002.27C 1320.49 981.527 1339.59 959.687 1355.97 936.755C 1372.34 913.824 1385.44 888.708 1395.26 861.408C 1405.09 834.109 1410 802.441 1410 766.406C 1410 715.082 1401.27 669.765 1383.8 630.454C 1366.34 590.05 1341.78 556.745 1310.12 530.537C 1279.55 503.237 1242.99 482.49 1200.41 468.294C 1158.93 454.098 1113.63 447 1064.51 447C 1012.12 447 964.085 454.644 920.421 469.932C 876.758 484.128 838.006 505.421 804.167 533.813C 771.419 562.204 744.675 597.148 723.935 638.643C 703.194 679.047 683 737.5 683 794.251L 892.586 794.251C 896.952 749.48 913.872 711.807 943.345 681.231C 972.817 649.563 1010.48 633.729 1056.32 633.729C 1098.9 633.729 1133.83 647.379 1161.12 674.679C 1189.5 700.887 1203.69 735.284 1203.69 777.872C 1203.69 821.551 1190.04 857.041 1162.75 884.34L 1036.68 1012.1C 1020.3 1029.57 1006.11 1044.86 994.104 1057.97C 983.188 1069.98 973.909 1083.08 966.268 1097.28C 959.719 1110.38 954.807 1125.67 951.531 1143.14C 949.349 1159.52 948.257 1179.72 948.257 1203.75ZM 953.169 1431.42C 928.062 1456.54 915.509 1486.57 915.509 1521.51C 915.509 1538.99 918.784 1555.37 925.333 1570.65C 932.975 1585.94 942.799 1599.04 954.807 1609.96C 966.813 1620.88 980.459 1629.62 995.741 1636.17C 1012.12 1642.72 1029.04 1646 1046.5 1646C 1082.52 1646 1113.09 1633.44 1138.19 1608.33C 1164.39 1583.21 1177.49 1553.18 1177.49 1518.24C 1177.49 1483.29 1164.39 1453.81 1138.19 1429.79C 1112 1405.76 1081.43 1393.75 1046.5 1393.75C 1010.48 1393.75 979.367 1406.31 953.169 1431.42Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 3000 3000" id="icon-cancel">
+        <title>Cancel</title>
+        <g transform="translate(-7518 5320)">
+            <g id="Cancel" clip-path="url(#clip-0)">
+                <g id="Union">
+                    <use xlink:href="#path4_fill" transform="matrix(0.707107 0.707107 -0.707107 0.707107 9019.34 -5344.81)" />
+                </g>
+            </g>
+        </g>
+        <defs>
+            <path id="path4_fill" fill-rule="evenodd" d="M 952.979 949.234L 0 949.234L 0.000172633 1188.57L 952.979 1188.57L 952.978 2151.22L 1192.31 2151.22L 1192.31 1188.57L 2153.09 1188.57L 2153.09 949.234L 1192.31 949.234L 1192.32 0.000172633L 952.979 0L 952.979 949.234Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 3000 3000" id="icon-select">
+        <title>Select</title>
+        <g id="Canvas" transform="translate(-11223 5320)">
+            <g id="Select">
+                <g id="Polygon">
+                    <use xlink:href="#path5_fill" transform="matrix(-1 -1.22465e-16 1.22465e-16 -1 13487.8 -3344.97)" />
+                </g>
+            </g>
+        </g>
+        <defs>
+            <path id="path5_fill" d="M 764.5 0L 1527.5 867.496L 0 867.496L 764.5 0Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 20 20" id="icon-account-circle">
+        <title>Account circle</title>
+        <g id="account-circle" transform="translate(56 -1377)">
+            <g id="ic_account_circle_black_24px">
+                <use xlink:href="#icon-account" transform="translate(-56 1377)" />
+            </g>
+        </g>
+        <defs>
+            <path id="icon-account" d="M 10 0C 4.48 0 0 4.48 0 10C 0 15.52 4.48 20 10 20C 15.52 20 20 15.52 20 10C 20 4.48 15.52 0 10 0ZM 10 3C 11.66 3 13 4.34 13 6C 13 7.66 11.66 9 10 9C 8.34 9 7 7.66 7 6C 7 4.34 8.34 3 10 3ZM 10 18C 7.5 18 4.79 16.44 3.5 14.5C 3.53 12.51 8 10.9 10 10.9C 11.99 10.9 16.47 12.51 16.5 14.5C 15.21 16.44 12.5 18 10 18Z" />
+        </defs>
+    </symbol>
+    <symbol viewBox="0 0 24 24" id="icon-description" fill="">
+        <title>Description</title>
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+    </symbol>
+    <symbol viewBox="0 0 24 24" id="icon-language" fill="">
+        <title>Language</title>
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/>
+    </symbol>
+    <symbol viewBox="0 0 12 12" id="icon-bitcoin" fill="">
+        <title>Bitcoin</title>
+        <g id="Canvas" transform="translate(-243 -1819)">
+        <g id="29738-200">
+            <use xlink:href="#path0_fill99"  transform="translate(243 1819)" />
+        </g>
+    </g>
+    <defs>
+
+        <path id="path0_fill99" d="M 0 0L 12 0L 12 12L 0 12L 0 0Z" />
+        <image id="image0" width="200" height="200" preserveAspectRatio="none" xlink:href="data:image/png;base64,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" />
+    </defs>
+    </symbol>
+</svg>
