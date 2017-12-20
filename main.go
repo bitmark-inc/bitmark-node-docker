@@ -18,7 +18,7 @@ import (
 	"github.com/hashicorp/hcl"
 )
 
-var version string = "zero" // do not change this value
+var version string = "v0.1" // do not change this value
 
 type MasterConfiguration struct {
 	Port    int                  `hcl:"port"`
@@ -110,7 +110,7 @@ func main() {
 	apiRouter.GET("/chain", webserver.GetChain)
 	apiRouter.GET("/bitmarkd/conn_stat", webserver.ConnectionStatus)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
-	apiRouter.GET("/version", webserver.Version)
+	apiRouter.GET("/latestVersion", webserver.LatestVersion)
 	apiRouter.POST("/recorderd", webserver.RecorderdStartStop)
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
 }

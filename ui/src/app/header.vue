@@ -14,7 +14,7 @@
           </i>
           <ul class="menu account__menu">
             <li>
-              <a href="https://registry.bitmark.com">View blocks won on Registry</a>
+              <a href="https://registry.bitmark.com" target="_blank">View blocks won on Registry</a>
             </li>
             <li>
               <a href="#">Write down recovery phrases</a>
@@ -67,9 +67,9 @@
         </div>
       </div>
       <div class="bitmark-version">
-        <div class="bitmark-node-version">Bitmark node v{{ nodeInfo.version }}</div>
+        <div class="bitmark-node-version">Bitmark node {{ nodeInfo.version }}</div>
         <div class="bitmark-node-update">
-          <a href="#">New update available</a>
+          <a href="https://hub.docker.com/r/bitmark/bitmark-node/tags/" target="_blank" v-if="(latestVersion > nodeInfo.version)">New update available</a>
         </div>
       </div>
     </div>
@@ -79,6 +79,9 @@
 
 
 <script>
+
+  import axios from 'axios';
+
   export default {
     props: {
       nodeInfo: Object
@@ -91,7 +94,20 @@
       }
     },
 
+    mounted() {
+      setTimeout(this.getLatestVersion, 6000)
+    },
+
     methods: {
+      getLatestVersion() {
+        axios.get('/api/latestVersion')
+          .then((resp) => {
+            this.latestVersion = resp.data.latest
+          })
+          .catch((error) => {
+            this.$emit("error", error)
+          })
+      },
       copyAccount() {
         let i = document.createElement("input")
         document.body.appendChild(i)
@@ -103,7 +119,9 @@
     },
 
     data() {
-      return {}
+      return {
+        latestVersion: this.nodeInfo.version,
+      }
     }
   }
 </script>

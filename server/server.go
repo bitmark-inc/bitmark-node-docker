@@ -6,14 +6,10 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/services"
-	"github.com/bitmark-inc/bitmarkd/account"
 	"github.com/bitmark-inc/bitmarkd/rpc"
 	"github.com/gin-gonic/gin"
 )
@@ -47,44 +43,6 @@ func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recor
 		Bitmarkd:   bitmarkd,
 		Recorderd:  recorderd,
 	}
-}
-
-func (ws *WebServer) NodeInfo(c *gin.Context) {
-	network := ws.nodeConfig.GetNetwork()
-	if network == "" {
-		c.String(500, "wrong network configuration")
-		return
-	}
-
-	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
-	f, err := os.Open(seedFile)
-	if err != nil {
-		c.String(500, "fail to open seed file from: %s", seedFile)
-		return
-	}
-	defer f.Close()
-
-	var buf bytes.Buffer
-	_, err = io.Copy(&buf, f)
-	if err != nil {
-		c.String(500, "can not read config file")
-		return
-	}
-	seed := strings.Trim(strings.Split(buf.String(), ":")[1], "\n")
-	a, err := account.PrivateKeyFromBase58Seed(seed)
-	if err != nil {
-		c.String(500, "unable to get your account. error: %s", err.Error())
-		return
-	}
-	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
-	c.JSON(200, map[string]interface{}{
-		"ok": 1,
-		"result": map[string]string{
-			"version": os.Getenv("VERSION"),
-			"network": network,
-			"account": a.Account().String(),
-		},
-	})
 }
 
 func (ws *WebServer) GetChain(c *gin.Context) {
