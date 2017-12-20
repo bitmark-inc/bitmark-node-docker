@@ -164,6 +164,7 @@
         this.bitmarkd.status = ""
         this.bitmarkd.errorMsg = ""
         this.bitmarkdInfo = null;
+        this.bitmarkdConnStat = null;
         axios.post("/api/" + "bitmarkd", {
             option: "stop"
           })

@@ -14,7 +14,7 @@
           </i>
           <ul class="menu account__menu">
             <li>
-              <a href="https://registry.bitmark.com" target="_blank">View blocks won on Registry</a>
+              <a :href="blockLink" target="_blank">View blocks won on Registry</a>
             </li>
             <li>
               <a href="#">Write down recovery phrases</a>
@@ -33,7 +33,7 @@
               <svg class="icon-description">
                 <use xlink:href="assets/img/icons.svg#icon-description" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
               </svg>
-              <a href="https://hub.docker.com/r/bitmark/bitmark-node/">Instructions</a>
+              <a href="https://hub.docker.com/r/bitmark/bitmark-node/" target="_blank">Instructions</a>
             </li>
             <li>
               <svg class="icon-language">
@@ -88,6 +88,11 @@
     },
 
     computed: {
+      blockLink() {
+        let l = (this.nodeInfo.network === 'bitmark') ? "https://registry.bitmark.com" : "https://registry.test.bitmark.com"
+        return l
+      },
+
       abbrAccount() {
         let a = this.nodeInfo.account || ""
         return a.slice(0, 6) + "......" + a.slice(-6)

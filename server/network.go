@@ -25,7 +25,7 @@ func connCheck(host, port string) bool {
 }
 
 func getConnectors() int {
-	resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/info/connectors")
+	resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/info")
 	if err != nil {
 		return 0
 	}
@@ -38,14 +38,17 @@ func getConnectors() int {
 		return 0
 	}
 
-	var result map[string][]map[string]string
+	var result map[string]interface{}
 	d := json.NewDecoder(&buf)
 	err = d.Decode(&result)
 	if err != nil {
 		return 0
 	}
-
-	return len(result["clients"])
+	if count, ok := result["client_count"]; !ok {
+		return 0
+	} else {
+		return int(count.(float64))
+	}
 }
 
 func (ws *WebServer) ConnectionStatus(c *gin.Context) {
