@@ -7,7 +7,8 @@ RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/
 
 FROM bitmark/go-env as go-env
 
-ENV BITMARKD_VERSION 6.8
+ENV VERSION v0.3
+ENV BITMARKD_VERSION v6.9
 ENV PATH=/go/src/github.com/bitmark-inc/bitmarkd/c-libraries/:${PATH}
 
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
@@ -18,7 +19,7 @@ RUN go get -d github.com/bitmark-inc/bitmarkd || \
     go get -d github.com/bitmark-inc/go-libucl && \
     go get github.com/bitmark-inc/exitwithstatus
 
-RUN cd /go/src/github.com/bitmark-inc/bitmarkd && git checkout "v$BITMARKD_VERSION" && \
+RUN cd /go/src/github.com/bitmark-inc/bitmarkd && git checkout "$BITMARKD_VERSION" && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/... && \
     go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
@@ -28,7 +29,7 @@ RUN go get github.com/gin-gonic/gin && go get github.com/gin-gonic/contrib/stati
     go get github.com/coreos/bbolt
 
 COPY . /go/src/github.com/bitmark-inc/bitmark-node
-RUN go install github.com/bitmark-inc/bitmark-node
+RUN go install -ldflags "-X main.version=$VERSION" github.com/bitmark-inc/bitmark-node
 COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
 
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf

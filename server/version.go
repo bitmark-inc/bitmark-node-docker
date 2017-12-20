@@ -47,7 +47,7 @@ func lastVersion() string {
 
 func (ws *WebServer) Version(c *gin.Context) {
 	c.JSON(200, map[string]interface{}{
-		"current": os.Getenv("CURRENT_VERSION"),
+		"current": os.Getenv("VERSION"),
 		"latest":  lastVersion(),
 	})
 	return

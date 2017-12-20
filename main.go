@@ -18,7 +18,7 @@ import (
 	"github.com/hashicorp/hcl"
 )
 
-const VERSION = "v0.3"
+var version string = "zero" // do not change this value
 
 type MasterConfiguration struct {
 	Port    int                  `hcl:"port"`
@@ -38,7 +38,7 @@ func (c *MasterConfiguration) Parse(filename string) error {
 }
 
 func init() {
-	os.Setenv("CURRENT_VERSION", VERSION)
+	os.Setenv("VERSION", version)
 }
 
 func main() {
