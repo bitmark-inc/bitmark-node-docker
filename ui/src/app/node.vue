@@ -23,7 +23,8 @@
                   <span v-if="!bitmarkdConnStat.port_state.listening">
                     <br> Listening port (2136) is not accessible.</span>
                 </span>
-                <span class="status" v-else>Checking networking…</span>
+                <span class="status" v-else-if="this.bitmarkd.status.started">Checking connection…</span>
+                <span class="status" v-else>Not connected</span>
               </li>
             </ul>
           </Box>
