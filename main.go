@@ -108,6 +108,8 @@ func main() {
 	apiRouter.GET("/config", webserver.GetConfig)
 	apiRouter.POST("/config", webserver.UpdateConfig)
 	apiRouter.GET("/chain", webserver.GetChain)
+	apiRouter.POST("/account/phrase", webserver.SetRecoveryPhrase)
+	apiRouter.GET("/account/phrase", webserver.GetRecoveryPhrase)
 	apiRouter.GET("/bitmarkd/conn_stat", webserver.ConnectionStatus)
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.GET("/latestVersion", webserver.LatestVersion)
