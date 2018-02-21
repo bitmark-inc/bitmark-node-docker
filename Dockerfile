@@ -17,7 +17,8 @@ RUN go get -d github.com/bitmark-inc/bitmarkd || \
     make all && \
     go get -d github.com/bitmark-inc/go-argon2 && \
     go get -d github.com/bitmark-inc/go-libucl && \
-    go get github.com/bitmark-inc/exitwithstatus
+    go get github.com/bitmark-inc/exitwithstatus && \
+    go get github.com/bitmark-inc/bitmark-sdk-go
 
 RUN cd /go/src/github.com/bitmark-inc/bitmarkd && git checkout "$BITMARKD_VERSION" && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/... && \
@@ -41,5 +42,5 @@ ADD docker-assets/start.sh /
 
 ENV NETWORK bitmark
 
-EXPOSE 2130 2135 2136 2150
+EXPOSE 2130 2131 2135 2136 2150
 CMD ["/start.sh"]

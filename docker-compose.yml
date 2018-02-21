@@ -9,6 +9,7 @@ services:
       - /path/to/bitmarkd/data-test:/.config/bitmark-node/bitmarkd/testing/data
     ports:
       - "0.0.0.0:2130:2130"
+      - "0.0.0.0:2131:2131"
       - "0.0.0.0:2135:2135"
       - "0.0.0.0:2136:2136"
       - "0.0.0.0:2150:2150"
