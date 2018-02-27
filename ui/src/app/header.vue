@@ -17,7 +17,7 @@
               <a :href="blockLink" target="_blank">View blocks won on Registry</a>
             </li>
             <li>
-              <a href="#">Write down recovery phrases</a>
+              <a href="#" @click="openRecoveryAlert">Write down recovery phrases</a>
             </li>
             <li>
               <a href="#" @click="copyAccount">Copy account address</a>
@@ -120,6 +120,10 @@
         i.select()
         document.execCommand("copy");
         i.remove();
+      },
+
+      openRecoveryAlert () {
+        this.$emit("openRecoveryAlert")
       }
     },
 
