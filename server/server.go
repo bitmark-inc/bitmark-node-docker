@@ -165,6 +165,9 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 			return
 		}
 
+		t, _ := time.ParseDuration(reply.Uptime)
+		reply.Uptime = t.Round(time.Second).String()
+
 		c.JSON(200, map[string]interface{}{
 			"ok":     1,
 			"result": reply,
