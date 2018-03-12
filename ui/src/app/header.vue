@@ -17,7 +17,7 @@
               <a :href="blockLink" target="_blank">View blocks won on Registry</a>
             </li>
             <li>
-              <a href="#" @click="openRecoveryAlert">Write down recovery phrases</a>
+              <a href="#" @click="openRecoveryAlert">Write down recovery phrase</a>
             </li>
             <li>
               <a href="#" @click="copyAccount">Copy account address</a>
@@ -90,7 +90,7 @@
     computed: {
       blockLink() {
         let l = (this.nodeInfo.network === 'bitmark') ? "https://registry.bitmark.com" : "https://registry.test.bitmark.com"
-        return l
+        return l + '/' + this.nodeInfo.account
       },
 
       abbrAccount() {
