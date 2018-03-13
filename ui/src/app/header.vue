@@ -90,7 +90,7 @@
     computed: {
       blockLink() {
         let l = (this.nodeInfo.network === 'bitmark') ? "https://registry.bitmark.com" : "https://registry.test.bitmark.com"
-        return l + '/' + this.nodeInfo.account
+        return l + '/account/' + this.nodeInfo.account
       },
 
       abbrAccount() {
