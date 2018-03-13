@@ -75,10 +75,11 @@ func main() {
 
 	bitmarkdPath := filepath.Join(rootPath, "bitmarkd")
 	recorderdPath := filepath.Join(rootPath, "recorderd")
-	dbPath := filepath.Join(rootPath, "bitmark-node.db")
+	dbPath := filepath.Join(rootPath, "db")
 
 	err = os.MkdirAll(bitmarkdPath, 0755)
 	err = os.MkdirAll(recorderdPath, 0755)
+	err = os.MkdirAll(dbPath, 0755)
 
 	bitmarkdService := services.NewBitmarkd(containerIP)
 	recorderdService := services.NewRecorderd()

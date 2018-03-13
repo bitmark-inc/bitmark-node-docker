@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 
 	bolt "github.com/coreos/bbolt"
@@ -38,7 +39,7 @@ func New() *BitmarkNodeConfig {
 
 func (c *BitmarkNodeConfig) Initialise(dbPath string) error {
 	if !c.initialised {
-		db, err := bolt.Open(dbPath, 0600, nil)
+		db, err := bolt.Open(filepath.Join(dbPath, "bitmark-node.db"), 0600, nil)
 		if err != nil {
 			return err
 		}

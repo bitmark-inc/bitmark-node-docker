@@ -5,6 +5,7 @@ services:
       - PUBLIC_IP=127.0.0.1
     build: .
     volumes:
+      - /path/to/node/db:/.config/bitmark-node/db
       - /path/to/bitmarkd/data:/.config/bitmark-node/bitmarkd/bitmark/data
       - /path/to/bitmarkd/data-test:/.config/bitmark-node/bitmarkd/testing/data
     ports:
