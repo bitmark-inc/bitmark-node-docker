@@ -5,7 +5,7 @@
 <template>
   <div>
     <HeaderBar :node-info="nodeInfo" v-on:openRecoveryAlert="openRecoveryAlert"></HeaderBar>
-    <router-view v-on:error="this.handleError"></router-view>
+    <router-view :node-info="nodeInfo" v-on:error="this.handleError"></router-view>
     <RecoveryAlert v-if="showRecoveryAlert" v-on:showPhrase="openRecoveryPhrase" v-on:close="closeRecoveryAlert"></RecoveryAlert>
     <RecoveryPhrase v-if="showRecoveryPhrase" v-on:close="closeRecoveryPhrase"></RecoveryPhrase>
   </div>

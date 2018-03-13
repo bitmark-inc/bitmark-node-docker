@@ -1,3 +1,22 @@
+<style lang="scss" scoped>
+.block-table {
+  text-align: left;
+  .date {
+    width: 250px;
+  }
+
+  .block {
+    width: 100px;
+  }
+}
+
+.hash-table {
+  max-height: 400px;
+  overflow: auto;
+}
+</style>
+
+
 <template>
   <div class="bitmark-node-wrapper">
     <div class="content-body">
@@ -81,6 +100,23 @@
             </Box>
             <!-- End: box -->
           </div>
+          <div class="row__box ">
+            <Box class="full-width hash-table" title="Your Blocks">
+              <table class="block-table" v-if="minedBlocks.length > 0">
+                <tr>
+                  <th class="date">Date</th>
+                  <th class="block">Block</th>
+                  <th>Hash</th>
+                </tr>
+                <tr v-for="block in minedBlocks">
+                  <td>{{ block.created_at | moment }}</td>
+                  <td>{{ block.number }}</td>
+                  <td>{{ block.hash }}</td>
+                </tr>
+              </table>
+              <p v-if="minedBlocks.length === 0">No blocks mined</p>
+            </Box>
+          </div>
         </div>
         <div class="divider "></div>
       </template>
@@ -121,6 +157,7 @@
 
 <script>
   import axios from "axios"
+  import moment from "moment"
 
   import {
     getCookie,
@@ -133,6 +170,17 @@
     components: {
       Box: Box,
       PaymentPopUp: PaymentPopUp
+    },
+
+    props: {
+      nodeInfo: Object
+    },
+
+    computed: {
+      registryApi() {
+        return (this.nodeInfo.network === 'bitmark') ? "https://api.bitmark.com" :
+          "https://api.test.bitmark.com"
+      }
     },
 
     methods: {
@@ -288,6 +336,16 @@
           .then(() => {
             service.querying = false
           })
+      },
+
+      fetchBlockInfo() {
+        let account = this.nodeInfo.account
+        axios.get(this.registryApi + "/v1/blocks?owner=" + account)
+          .then((resp) => {
+            this.minedBlocks = resp.data.blocks
+          }).catch((e) => {
+            this.$emit("error", e.message)
+          })
       }
     },
 
@@ -313,8 +371,15 @@
         this.fetchStatus('bitmarkd')
         this.fetchStatus('recorderd')
         this.fetchBitmarkInfo()
+        this.fetchBlockInfo()
         this.getBitmarkdConnectionStatus()
       }, 2000)
+    },
+
+    filters: {
+      moment: function (timestamp) {
+        return moment(timestamp).format('MMMM Do YYYY, hh:mm:ss');
+      }
     },
 
     destroyed() {
@@ -345,6 +410,8 @@
           status: "",
           error: ""
         },
+
+        minedBlocks: [],
 
         bitmarkdInfo: null,
         bitmarkdConnStat: null
