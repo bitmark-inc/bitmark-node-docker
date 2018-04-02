@@ -69,12 +69,11 @@ After the Bitmark node software has successfully downloaded, copy and paste the 
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
--e PUBLIC_IP=54.249.99.99 \
+-e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 bitmark/bitmark-node
 ```
 
-
-Once the Bitmark node has successfully started, it will return a 64-character hexidecimal string that represents the Bitmark node's Docker container ID, such as:
+Please remember to replace `[YOUR_PUBLIC_IP]` to your node public ip. Once the Bitmark node has successfully started, it will return a 64-character hexidecimal string that represents the Bitmark node's Docker container ID, such as:
 
 ```
 dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
@@ -134,7 +133,7 @@ Various Bitmark node environmental settings, such as ports and IP addresses, can
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
--e PUBLIC_IP=54.249.99.99 \
+-e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 bitmark/bitmark-node
 ```
 
@@ -148,7 +147,7 @@ The following table describes the various configuration options for the Bitmark 
 | `-p`  | `2136` | Port for connecting to other peer bitmarkd nodes |
 | `-p`  | `2135` | Port for connecting to other peer bitmarkd nodes |
 | `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
-| `-e`  | `PUBLIC_IP=54.249.99.99` | Environment variable for public IP address |
+| `-e`  | `PUBLIC_IP=54.249.99.99` | Environment variable for register your public IP address |
 
 ### Docker Compose Settings
 
@@ -190,12 +189,13 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 ### 2. Run Bitmark Node
 
-After the software update has successfully downloaded, re-enter the Docker `run` command from the command-line terminal:
+After the software update has successfully downloaded, you need remove the previous container and start a new one via command-line terminal:
 
 ```
+docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
--e PUBLIC_IP=54.249.99.99 \
+-e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 bitmark/bitmark-node
 ```
 
@@ -281,11 +281,11 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
--e PUBLIC_IP=54.249.99.99 \
+-e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 bitmark/bitmark-node
 ```
 
-一旦 Bitmark 節點成功的開始執行，它會回傳一個代表 Bitmark 節點的 Docker container ID 的64字的16進位字串，如：
+請注意將`[YOUR_PUBLIC_IP]`置換成節點的對外IP。一旦 Bitmark 節點成功的開始執行，它會回傳一個代表 Bitmark 節點的 Docker container ID 的64字的16進位字串，如：
 
 ```
 dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
@@ -343,7 +343,7 @@ Bitmark 節點的參與者在`bitmark`或`testing`上運行`bitmarkd`及`recorde
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
--e PUBLIC_IP=54.249.99.99 \
+-e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 bitmark/bitmark-node
 ```
 
@@ -356,7 +356,7 @@ bitmark/bitmark-node
 | `-p`  | `2136` | 連接至其他節點的 bitmarkd 的連接埠 |
 | `-p`  | `2135` | 連接至其他節點的 bitmarkd 的連接埠 |
 | `-p`  | `2130` | Bitmark 節點 [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) 伺服器的連接埠 |
-| `-e`  | `PUBLIC_IP=54.249.99.99` | 公開 IP 位址的環境參數 |
+| `-e`  | `PUBLIC_IP=54.249.99.99` | 註冊節點公有 IP 位址的環境參數 |
 
 ### Docker Compose 設定
 
@@ -397,12 +397,13 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 ### 二、執行 Bitmark 節點
 
-成功下載軟體更新之後，請在命令列終端機重新輸入 Docker `run`指令：
+成功下載軟體更新之後，請在命令列終端機利用下列指令，移除舊版節點並重新運行節點：
 
 ```
+docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
--e PUBLIC_IP=54.249.99.99 \
+-e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 bitmark/bitmark-node
 ```
 
