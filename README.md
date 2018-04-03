@@ -70,6 +70,9 @@ After the Bitmark node software has successfully downloaded, copy and paste the 
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
@@ -134,6 +137,9 @@ Various Bitmark node environmental settings, such as ports and IP addresses, can
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
@@ -147,7 +153,7 @@ The following table describes the various configuration options for the Bitmark 
 | `-p`  | `2136` | Port for connecting to other peer bitmarkd nodes |
 | `-p`  | `2135` | Port for connecting to other peer bitmarkd nodes |
 | `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
-| `-e`  | `PUBLIC_IP=54.249.99.99` | Environment variable for register your public IP address |
+| `-e`  | `PUBLIC_IP=[YOUR_PUBLIC_IP]` | Environment variable for register your public IP address |
 
 ### Docker Compose Settings
 
@@ -196,6 +202,9 @@ docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
@@ -282,6 +291,9 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
@@ -344,6 +356,9 @@ Bitmark 節點的參與者在`bitmark`或`testing`上運行`bitmarkd`及`recorde
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
@@ -356,7 +371,7 @@ bitmark/bitmark-node
 | `-p`  | `2136` | 連接至其他節點的 bitmarkd 的連接埠 |
 | `-p`  | `2135` | 連接至其他節點的 bitmarkd 的連接埠 |
 | `-p`  | `2130` | Bitmark 節點 [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) 伺服器的連接埠 |
-| `-e`  | `PUBLIC_IP=54.249.99.99` | 註冊節點公有 IP 位址的環境參數 |
+| `-e`  | `PUBLIC_IP=[YOUR_PUBLIC_IP]` | 註冊節點公有 IP 位址的環境參數 |
 
 ### Docker Compose 設定
 
@@ -404,6 +419,9 @@ docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2135:2135 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
