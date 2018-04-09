@@ -64,12 +64,12 @@
           <h3 class="paragraph-title ">Bitmark node info</h3>
           <div class="row__box ">
             <Box title="Network ID ">
-              <p>{{ this.bitmarkdInfo.public_key }}</p>
+              <p>{{ this.bitmarkdInfo.publicKey }}</p>
             </Box>
             <!-- End: box -->
             <Box title="Current Block ">
               <div class="blocks ">
-                <span class="blocks__num ">{{ this.bitmarkdInfo.blocks }}/{{ this.bitmarkdInfo.block_height || this.bitmarkdInfo.blocks }}</span>
+                <span class="blocks__num ">{{ this.bitmarkdInfo.blocks.local }}/{{ this.bitmarkdInfo.blocks.local || this.bitmarkdInfo.blocks.remote }}</span>
                 <span class="blocks__label ">
                   <template v-if="this.bitmarkdInfo.mode === 'Resynchronise'">Updating blockchain</template>
                   <template v-else-if="this.bitmarkdInfo.mode === 'Normal'">Latest block</template>

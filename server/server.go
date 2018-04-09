@@ -10,7 +10,6 @@ import (
 
 	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/services"
-	"github.com/bitmark-inc/bitmarkd/rpc"
 	"github.com/gin-gonic/gin"
 )
 
@@ -143,7 +142,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 		return
 	case "info":
 
-		resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/info")
+		resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/details")
 		if err != nil {
 			c.String(500, "unable to get bitmark info")
 			return
@@ -157,7 +156,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 			return
 		}
 
-		var reply rpc.InfoReply
+		var reply DetailReply
 		d := json.NewDecoder(&bb)
 
 		if err := d.Decode(&reply); err != nil {
