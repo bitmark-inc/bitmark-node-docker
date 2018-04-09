@@ -37,8 +37,6 @@
               <li v-if="!this.bitmarkd.status.error">
                 <span class="label">Connection:</span>
                 <span class="status" v-if="bitmarkdConnStat !== null">You’re connected to {{ this.bitmarkdConnStat.connections }} nodes.
-                  <span v-if="!bitmarkdConnStat.port_state.broadcast">
-                    <br> Broadcast port (2135) is not accessible.</span>
                   <span v-if="!bitmarkdConnStat.port_state.listening">
                     <br> Listening port (2136) is not accessible.</span>
                 </span>

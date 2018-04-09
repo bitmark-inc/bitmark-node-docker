@@ -58,7 +58,6 @@ func (ws *WebServer) ConnectionStatus(c *gin.Context) {
 	c.JSON(200, map[string]interface{}{
 		"connections": getConnectors(),
 		"port_state": map[string]interface{}{
-			"broadcast": connCheck(publicIP, "2135"),
 			"listening": connCheck(publicIP, "2136"),
 		},
 	})

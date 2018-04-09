@@ -68,7 +68,7 @@ After the Bitmark node software has successfully downloaded, copy and paste the 
 
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
@@ -135,7 +135,7 @@ Various Bitmark node environmental settings, such as ports and IP addresses, can
 
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
@@ -200,7 +200,7 @@ After the software update has successfully downloaded, you need remove the previ
 ```
 docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
@@ -289,7 +289,7 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
@@ -354,7 +354,7 @@ Bitmark 節點的參與者在`bitmark`或`testing`上運行`bitmarkd`及`recorde
 
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
@@ -417,7 +417,7 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 ```
 docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2135:2135 -p 2130:2130 \
+-p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
