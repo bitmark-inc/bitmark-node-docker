@@ -367,13 +367,16 @@
       }
 
       this.network = network;
-      this.periodicalTask = setInterval(() => {
+      let t1 = setInterval(() => {
         this.fetchStatus('bitmarkd')
         this.fetchStatus('recorderd')
-        this.fetchBitmarkInfo()
         this.fetchBlockInfo()
         this.getBitmarkdConnectionStatus()
       }, 2000)
+      let t2 = setInterval(() => {
+        this.fetchBitmarkInfo()
+      }, 1000)
+      this.periodicalTasks.push(t1, t2);
     },
 
     filters: {
@@ -383,7 +386,9 @@
     },
 
     destroyed() {
-      clearInterval(this.periodicalTask)
+      this.periodicalTasks.forEach(task => {
+        clearInterval(task)
+      });
     },
 
     data() {
@@ -397,7 +402,7 @@
         },
 
         network: "",
-        periodicalTask: null,
+        periodicalTasks: [],
         bitmarkd: {
           errorMsg: "",
           querying: false,
