@@ -76,36 +76,12 @@ func (c *BitmarkNodeConfig) Initialise(dbPath string) error {
 }
 
 func (c *BitmarkNodeConfig) GetNetwork() string {
-	// var network string
-	// err := c.db.View(func(tx *bolt.Tx) error {
-	// 	bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
-	// 	network = string(bucket.Get([]byte("network")))
-	// 	return nil
-	// })
-	// if err != nil {
-	// 	return ""
-	// }
-	// return network
 	n := os.Getenv("NETWORK")
 	if n != "bitmark" && n != "testing" {
 		return ""
 	}
 	return n
 }
-
-// func (c *BitmarkNodeConfig) SetNetwork(network string) error {
-// 	switch network {
-// 	case "bitmark", "testing":
-// 	default:
-// 		return fmt.Errorf("unexpected value of network")
-// 	}
-
-// 	return c.db.Update(func(tx *bolt.Tx) error {
-// 		bucket := tx.Bucket([]byte(CONFIG_BUCKET_NAME))
-// 		bucket.Put([]byte("network"), []byte(network))
-// 		return nil
-// 	})
-// }
 
 func (c *BitmarkNodeConfig) Set(newConfig map[string]string) error {
 	if !c.initialised {
