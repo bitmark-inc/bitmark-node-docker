@@ -1,19 +1,19 @@
 <style lang="scss" scoped>
-.block-table {
-  text-align: left;
-  .date {
-    width: 250px;
+  .block-table {
+    text-align: left;
+    .date {
+      width: 250px;
+    }
+
+    .block {
+      width: 100px;
+    }
   }
 
-  .block {
-    width: 100px;
+  .hash-table {
+    max-height: 400px;
+    overflow: auto;
   }
-}
-
-.hash-table {
-  max-height: 400px;
-  overflow: auto;
-}
 </style>
 
 
@@ -69,7 +69,8 @@
             <!-- End: box -->
             <Box title="Current Block ">
               <div class="blocks ">
-                <span class="blocks__num ">{{ this.bitmarkdInfo.blocks.local }}/{{ this.bitmarkdInfo.blocks.local || this.bitmarkdInfo.blocks.remote }}</span>
+                <span class="blocks__num ">{{ this.bitmarkdInfo.blocks.local }}/{{ this.bitmarkdInfo.blocks.local || this.bitmarkdInfo.blocks.remote
+                  }}</span>
                 <span class="blocks__label ">
                   <template v-if="this.bitmarkdInfo.mode === 'Resynchronise'">Updating blockchain</template>
                   <template v-else-if="this.bitmarkdInfo.mode === 'Normal'">Latest block</template>
@@ -146,8 +147,7 @@
         </div>
       </div>
       <div class="divider "></div>
-      <PaymentPopUp v-if="showPaymentConfig" v-on:saved="saveConfig" v-on:close="closeConfig"
-        :initBtcAddr="paymentAddrs.btc" :initLtcAddr="paymentAddrs.ltc"></PaymentPopUp>
+
     </div>
     <!-- End: content-body -->
   </div>
@@ -158,20 +158,21 @@
   import moment from "moment"
 
   import {
-    getCookie,
-    setCookie
+    getCookie
   } from "../utils"
   import Box from './box.vue'
-  import PaymentPopUp from '../components/paymentPopUp.vue'
 
   export default {
     components: {
-      Box: Box,
-      PaymentPopUp: PaymentPopUp
+      Box: Box
     },
 
     props: {
-      nodeInfo: Object
+      nodeInfo: Object,
+      paymentAddrs: {
+        btc: "",
+        ltc: ""
+      },
     },
 
     computed: {
@@ -192,7 +193,7 @@
       },
 
       startBitmarkd() {
-        if (!this.paymentAddrs.btc || !this.paymentAddrs.ltc) {
+        if (!this.paymentAddrs || !this.paymentAddrs.btc || !this.paymentAddrs.ltc) {
           this.openConfig()
           return;
         }
@@ -249,43 +250,11 @@
           })
       },
 
-      getConfig() {
-        return axios
-          .get("/api/config")
-          .then((response) => {
-            let {
-              btcAddr,
-              ltcAddr
-            } = response.data.result
 
-            this.paymentAddrs.btc = btcAddr
-            this.paymentAddrs.ltc = ltcAddr
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-      },
       openConfig() {
-        this.showPaymentConfig = true
-      },
-      closeConfig() {
-        this.showPaymentConfig = false
+        this.$emit("openPaymentConfig")
       },
 
-      saveConfig(paymentAddrs) {
-        axios.post("/api/config", {
-            btcAddr: paymentAddrs.btcAddr,
-            ltcAddr: paymentAddrs.ltcAddr
-          })
-          .then(() => {
-            this.paymentAddrs.btc = paymentAddrs.btcAddr
-            this.paymentAddrs.ltc = paymentAddrs.ltcAddr
-            this.showPaymentConfig = false
-          })
-          .catch((e) => {
-            this.$emit('error', e)
-          })
-      },
 
       getBitmarkdConnectionStatus() {
         if (!this.bitmarkd.status.started) {
@@ -348,14 +317,7 @@
     },
 
     created() {
-      this.getConfig()
-        .then(() => {
-          let lastRun = this.lastRun
-          if (!lastRun && (!this.paymentAddrs.btc || !this.paymentAddrs.ltc)) {
-            this.showPaymentConfig = true;
-            setCookie("lastRun", Date(), 30)
-          }
-        })
+
     },
 
     mounted() {
@@ -391,13 +353,7 @@
 
     data() {
       return {
-        lastRun: getCookie("lastRun"),
-
         showPaymentConfig: false,
-        paymentAddrs: {
-          btc: "",
-          ltc: ""
-        },
 
         network: "",
         periodicalTasks: [],

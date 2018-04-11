@@ -1,6 +1,6 @@
 <template>
   <!-- POP UP - payment address -->
-  <div class="pop-up-box" >
+  <div class="pop-up-box fullscreen" >
     <div class="pop-up-box__content">
       <div class="pop-up-box__header">
         <h1>Please enter your payment addresses.</h1>
