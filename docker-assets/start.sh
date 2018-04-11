@@ -5,11 +5,13 @@ bitmarkd --config-file=/.config/bitmark-node/bitmarkd/bitmark/bitmarkd.conf gen-
 bitmarkd --config-file=/.config/bitmark-node/bitmarkd/bitmark/bitmarkd.conf gen-rpc-cert
 bitmarkd --config-file=/.config/bitmark-node/bitmarkd/bitmark/bitmarkd.conf gen-proof-identity
 recorderd --config-file=/.config/bitmark-node/recorderd/bitmark/recorderd.conf generate-identity
+rm /.config/bitmark-node/bitmarkd/bitmark/proof.sign
 
 bitmarkd --config-file=/.config/bitmark-node/bitmarkd/testing/bitmarkd.conf gen-peer-identity
 bitmarkd --config-file=/.config/bitmark-node/bitmarkd/testing/bitmarkd.conf gen-rpc-cert
 bitmarkd --config-file=/.config/bitmark-node/bitmarkd/testing/bitmarkd.conf gen-proof-identity
 recorderd --config-file=/.config/bitmark-node/recorderd/testing/recorderd.conf generate-identity
+rm /.config/bitmark-node/bitmarkd/testing/proof.sign
 
 # Set the proof public key inot recorderd config
 sed -ie "s/@BITMARKD-PROOF-PUBLIC-KEY@/$(cat /.config/bitmark-node/bitmarkd/bitmark/proof.public | cut -d":" -f2)/g" /.config/bitmark-node/recorderd/bitmark/recorderd.conf
