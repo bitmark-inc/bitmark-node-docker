@@ -341,7 +341,7 @@
 
     filters: {
       moment: function (timestamp) {
-        return moment(timestamp).format('MMMM Do YYYY, hh:mm:ss');
+        return moment(timestamp).format('MMMM Do YYYY, HH:mm:ss');
       }
     },
 
