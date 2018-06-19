@@ -29,12 +29,6 @@
   .error .item input {
     color: red;
   }
-
-  .pop-up-box__content {
-    top: 10%;
-    left: calc(50% - 300px);
-    width: 600px;
-  }
 </style>
 
 <template>
