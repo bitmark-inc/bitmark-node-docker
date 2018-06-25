@@ -2,7 +2,8 @@
    position: fixed;
    left: 0;
    right: 0;
-   top: 128px;
+  //  top: 128px;
+  top: 0px;
    bottom: 0;
    background: rgba(black, 0.6);
 }
@@ -24,7 +25,8 @@
   width: 700px;
   padding: $gutter;
   max-height: 70vh;
-  overflow: scroll;
+  // overflow: scroll;
+  overflow: auto;
 }
 
 .wallet-address {
