@@ -7,8 +7,8 @@ RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/
 
 FROM bitmark/go-env as go-env
 
-ENV VERSION v0.91
-ENV BITMARKD_VERSION v7.2
+ENV VERSION v0.92
+ENV BITMARKD_VERSION v7.5
 ENV PATH=/go/src/github.com/bitmark-inc/bitmarkd/c-libraries/:${PATH}
 
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
