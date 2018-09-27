@@ -51,3 +51,9 @@
     }
   }
 }
+@include respond-to (mobile) {
+  .pop-up-box__content {
+    width: calc(100% - 60px);
+    left: 30px;
+  }
+}

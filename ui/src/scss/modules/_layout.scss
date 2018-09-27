@@ -379,6 +379,7 @@ a {
   padding: $gutter/6 $gutter;
   background: $brand-primary;
   color: white;
+  border: 1px solid $brand-primary;
   &.disable {
     background: $silver-bg;
   }
@@ -442,20 +443,6 @@ input[type="text"] {
       margin-left: 0;
       margin-bottom: $gutter;
     }
-  }
-  .box__body ul li {
-    display: block;
-    span {display: block;}
-  }
-  .blocks {
-    display: block;
-    .blocks__num {
-    }
-    .blocks__label {
-    }
-  }
-  .btc-address, .ltc-address {
-    display: block;
   }
   .chain-opt p {display: none}
 }
