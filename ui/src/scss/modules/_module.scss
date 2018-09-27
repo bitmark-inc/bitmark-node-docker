@@ -57,3 +57,10 @@
     left: 30px;
   }
 }
+@include respond-to (mobile-xs) {
+  .pop-up-box__content {
+    width: calc(100% - 30px);
+    left: 15px;
+    padding: 30px;
+  }
+}

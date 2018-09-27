@@ -452,5 +452,7 @@ input[type="text"] {
 }
 
 @include respond-to (mobile-xs) {
-  
+  .container-center, .header__top, .header__bottom, .row {
+    margin: 0 15px;
+  }
 }
