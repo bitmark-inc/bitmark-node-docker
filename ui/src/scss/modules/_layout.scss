@@ -426,9 +426,9 @@ input[type="text"] {
   // .header__bottom, .header__top {
   //   display: block;
   // }
-  .header-blockchain {
-    margin-left: 30px;
-  }
+  // .header-blockchain {
+  //   margin-left: 30px;
+  // }
   .box {
     width: 100%;
     .box__header {
@@ -444,5 +444,13 @@ input[type="text"] {
       margin-bottom: $gutter;
     }
   }
+  .header-blockchain,
+  .user span {
+    display: none;
+  }
   .chain-opt p {display: none}
+}
+
+@include respond-to (mobile-xs) {
+  
 }
