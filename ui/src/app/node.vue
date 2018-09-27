@@ -24,7 +24,7 @@
         <h3 class="paragraph-title">Bitmark node status</h3>
         <div class="row__box">
           <Box :class="{'running': this.bitmarkd.status.started, 'stop-running': !this.bitmarkd.status.started}" title="Bitmark Node (bitmarkd)">
-            <button slot="header-button" class="btn-default" @click="toggleBitmarkd">{{ this.bitmarkd.status.started ? 'Stop' : 'Start' }}</button>
+            <button slot="header-button" class="btn-start" @click="toggleBitmarkd">{{ this.bitmarkd.status.started ? 'Stop' : 'Start' }}</button>
             <ul>
               <li v-if="!this.bitmarkd.status.error">
                 <span class="label">Status:</span>
@@ -47,7 +47,7 @@
           </Box>
           <!-- End: box -->
           <Box :class="{'running': this.recorderd.status.started, 'stop-running': !this.recorderd.status.started}" title="Recorder Node (recorderd)">
-            <button slot="header-button" class="btn-default" @click="toggleRecorderd">{{ this.recorderd.status.started ? 'Stop' : 'Start' }}</button>
+            <button slot="header-button" class="btn-start" @click="toggleRecorderd">{{ this.recorderd.status.started ? 'Stop' : 'Start' }}</button>
             <ul>
               <li>
                 <span class="label ">Status:</span>
@@ -117,7 +117,7 @@
             </Box>
           </div>
         </div>
-        <div class="divider "></div>
+        <!-- <div class="divider "></div> -->
       </template>
       <div class="row ">
         <h3 class="paragraph-title ">Bitmark wallet</h3>
@@ -146,7 +146,7 @@
           <!-- End: box -->
         </div>
       </div>
-      <div class="divider "></div>
+      <!--<div class="divider "></div>-->
 
     </div>
     <!-- End: content-body -->

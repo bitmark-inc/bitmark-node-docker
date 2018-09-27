@@ -26,12 +26,18 @@ a {
 //
 // Header
 //
+.header {
+  -webkit-box-shadow: 0px 0px 0px 4px rgba(0,0,0,0.05);
+  -moz-box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.05);
+  box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.05);
+}
 .header__top {
   @extend .container-center;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $gutter/2 0 0 0;
+  padding: 0;
+  
   //border-bottom: solid 1px $silver-bg;
 }
 .header__bottom {
@@ -57,7 +63,7 @@ a {
   //width: $grid*4;
   padding-bottom: $gutter/2;
   img {
-    width: 139px;
+    width: 108px;
     display: block;
   }
 }
@@ -174,21 +180,39 @@ a {
   }
   p {
     margin: 2px 0 0 $gutter/2;
-    color: $silverChalice-bg;
+    color: $silver-bg;
     font-size: $font-size-medium;
   }
 }
+//New UI
 .bitmark-version {
   //width: $grid*3;
-  text-align: right;
+  text-align: left;
 }
+.headr-left-side {
+  display: flex;
+}
+
+.header-blockchain {
+  text-align: left;
+  margin-left: 65px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
 .bitmark-node-version {
   font-weight: bold;
 }
 .bitmark-node-update {
   font-size: $font-size-xxsmall;
 }
-
+.bitmark-network {
+  color: #A4B5CD;
+  font-size: 16px;
+  margin-left: 10px;
+  font-weight: 700;
+}
 //
 // Content
 //
@@ -222,14 +246,20 @@ a {
     margin: 0;
   }
   &.running {
-    .box__header {background: $color-active;}
+    .box__header {
+      background: $color-active;
+      color: #fff;
+    }
   }
   &.stop-running {
-    .box__header {background: $color-error;}
+    .box__header {
+      background: $color-error;
+      color: #fff;
+    }
   }
 }
 .box__header {
-  color: white;
+  color: #000000;
   background: $color-dark-gray;
   margin: 0 (-($gutter/2)) $gutter/2 (-($gutter/2));
   padding: $gutter/6 $gutter/2;
@@ -325,24 +355,38 @@ a {
 .btn-default {
   @extend .pointer;
   @include border-radius(0px);
-  border: solid 1px $light-gray;
+  // border: solid 1px $color-base;
   font-size: $font-size-medium;
   padding: $gutter/6 $gutter /2;
   outline: 0;
+  background: none;
+  color: #000000;
 }
-
+.btn-start {
+  @extend .pointer;
+  @include border-radius(0px);
+  border: solid 1px $color-start;
+  font-size: $font-size-medium;
+  padding: $gutter/6 $gutter /2;
+  outline: 0;
+  background: none;
+  color: $color-start;
+}
 .btn-default-fill {
-  @extend .btn-default;
+  @extend .pointer;
+  @include border-radius(0px);
+  font-size: $font-size-medium;
+  padding: $gutter/6 $gutter;
   background: $brand-primary;
   color: white;
   &.disable {
-    background: $silverChalice-bg;
+    background: $silver-bg;
   }
 }
 
 button[disabled], button:disabled {
   &.btn-default-fill {
-    background: $silverChalice-bg;
+    background: $silver-bg;
   }
 }
 
@@ -375,18 +419,28 @@ input[type="text"] {
 }
 
 @include respond-to (mobile) {
-  .header__bottom, .header__top {
-    display: block;
+  .row {
+    padding: $gutter 0 0;
   }
-  .bitmark-version {
-    text-align: left;
-    margin-top: $gutter;
+  // .header__bottom, .header__top {
+  //   display: block;
+  // }
+  .header-blockchain {
+    margin-left: 30px;
   }
   .box {
+    width: 100%;
     .box__header {
-      display: block;
       span {display: block;}
       span.btn { text-align: left;}
+    }
+    &:nth-child(2n-1) {
+      margin-right: 0;
+      margin-bottom: $gutter;
+    }
+    &:nth-child(2n+0) {
+      margin-left: 0;
+      margin-bottom: $gutter;
     }
   }
   .box__body ul li {

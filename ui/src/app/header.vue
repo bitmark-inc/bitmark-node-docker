@@ -1,9 +1,21 @@
 <template>
   <div class="header">
     <div class="header__top">
-      <div class="logo">
-        <img src="assets/img/bitmark-logo.svg" alt="Bitmark logo">
+      <div class="headr-left-side">
+        <div class="logo">
+          <img src="assets/img/bitmark-logo.svg" alt="Bitmark logo">
+        </div>
+        <div class="header-blockchain">
+          <div class="bitmark-version">
+            <div class="bitmark-node-version">Bitmark node {{ nodeInfo.version }}</div>
+            <div class="network">
+              <span>Network:</span><span class="bitmark-network">{{ nodeInfo.network }}</span>
+            </div>
+          </div>
+        </div>
       </div>
+      
+      
       <div class="account">
         <div class="user">
           <span>Account: {{ abbrAccount }}</span>
@@ -49,8 +61,8 @@
         </div>
       </div>
     </div>
-    <div class="divider"></div>
-    <div class="header__bottom">
+    <!--<div class="divider"></div>
+     <div class="header__bottom">
       <div class="blockchain">
         <div class="chain-title">Blockchain:</div>
         <div class="chain-select">
@@ -72,8 +84,8 @@
           <a href="https://hub.docker.com/r/bitmark/bitmark-node/tags/" target="_blank" v-if="(latestVersion > nodeInfo.version)">New update available</a>
         </div>
       </div>
-    </div>
-    <div class="divider"></div>
+    </div> 
+    <div class="divider"></div>-->
   </div>
 </template>
 

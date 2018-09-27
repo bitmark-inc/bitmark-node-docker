@@ -42,7 +42,9 @@ h3, h4, h5, h6 {
   margin-bottom: $base-line-height;
   text-transform: initial;
 }
-
+.pop-up-box__header h1 {
+  text-transform: inherit;
+}
 .font-andale {
   font-family: $font-andale;
   font-size: $default-font-size - 1px;
