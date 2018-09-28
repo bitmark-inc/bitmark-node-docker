@@ -10,12 +10,17 @@ type BlockCounts struct {
 	Remote uint64 `json:"remote"`
 }
 
+type PeerCounts struct {
+	Incoming uint64 `json:"incoming"`
+	Outgoing uint64 `json:"outgoing"`
+}
+
 type DetailReply struct {
 	Chain               string      `json:"chain"`
 	Mode                string      `json:"mode"`
 	Blocks              BlockCounts `json:"blocks"`
 	RPCs                uint64      `json:"rpcs"`
-	Peers               BlockCounts `json:"peers"`
+	Peers               PeerCounts  `json:"peers"`
 	TransactionCounters Counters    `json:"transactionCounters"`
 	Difficulty          float64     `json:"difficulty"`
 	Version             string      `json:"version"`
