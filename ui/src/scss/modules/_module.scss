@@ -23,7 +23,7 @@
   top: 15%;
   left: calc(50% - 350px);
   width: 700px;
-  padding: $gutter;
+  padding: $gutter $gutter * 2;
   max-height: 70vh;
   // overflow: scroll;
   overflow: auto;
@@ -49,5 +49,18 @@
       border: none;
       outline: none;
     }
+  }
+}
+@include respond-to (mobile) {
+  .pop-up-box__content {
+    width: calc(100% - 60px);
+    left: 30px;
+  }
+}
+@include respond-to (mobile-xs) {
+  .pop-up-box__content {
+    width: calc(100% - 30px);
+    left: 15px;
+    padding: 30px;
   }
 }
