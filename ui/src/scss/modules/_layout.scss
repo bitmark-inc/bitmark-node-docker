@@ -129,9 +129,11 @@ a {
   }
 }
 .menu.account__menu {
-  right: -70px;
+  // right: -70px;
+  right: -39px;
   &:before {
-    right: 32%;
+    // right: 32%;
+    right: 45px;
   }
   li:after {
     content: '»';
@@ -139,9 +141,11 @@ a {
   }
 }
 .menu.hambuger__menu {
-  left: -70px;
+  // left: -70px; The code change here
+  right: 0;
   &:before {
-    left: 51%;
+    // left: 51%;
+    right: 7px;
   }
 }
 .lan-opt {
