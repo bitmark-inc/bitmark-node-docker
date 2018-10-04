@@ -104,6 +104,9 @@ func main() {
 	r := gin.New()
 
 	r.Use(static.Serve("/", static.LocalFile(uiPath, true)))
+	r.GET("/", func(c *gin.Context) {
+		c.Writer.Header().Set("Cache-Control", "no-cache")
+	})
 	apiRouter := r.Group("/api")
 	apiRouter.GET("/info", webserver.NodeInfo)
 	apiRouter.GET("/config", webserver.GetConfig)
