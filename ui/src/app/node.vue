@@ -36,7 +36,7 @@
               </li>
               <li v-if="!this.bitmarkd.status.error">
                 <span class="label">Connection:</span>
-                <span class="status" v-if="bitmarkdConnStat !== null">You have {{ this.bitmarkdConnStat.incoming }} nodes and {{ this.bitmarkdConnStat.incoming }} outgoing nodes.
+                <span class="status" v-if="bitmarkdConnStat !== null">You’re connected to {{ this.bitmarkdConnStat.connections }} nodes.
                   <span v-if="!bitmarkdConnStat.port_state.listening">
                     <br> Listening port (2136) is not accessible.</span>
                 </span>

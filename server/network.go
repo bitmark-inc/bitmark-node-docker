@@ -24,10 +24,10 @@ func connCheck(host, port string) bool {
 	}
 }
 
-func getPeers() (int, int) {
+func getConnectors() int {
 	resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/details")
 	if err != nil {
-		return 0, 0
+		return 0
 	}
 	defer resp.Body.Close()
 
@@ -35,26 +35,25 @@ func getPeers() (int, int) {
 	io.Copy(&buf, resp.Body)
 
 	if resp.StatusCode != 200 {
-		return 0, 0
+		return 0
 	}
 
 	var reply DetailReply
 	d := json.NewDecoder(&buf)
 	err = d.Decode(&reply)
 	if err != nil {
-		return 0, 0
+		return 0
 	}
 
-	return int(reply.Peers.Incoming), int(reply.Peers.Outgoing)
+	return int(reply.Peers.Local)
 }
 
 func (ws *WebServer) ConnectionStatus(c *gin.Context) {
 
 	publicIP := os.Getenv("PUBLIC_IP")
-	incoming, outgoing := getPeers()
+
 	c.JSON(200, map[string]interface{}{
-		"incoming": incoming,
-		"outgoing": outgoing,
+		"connections": getConnectors(),
 		"port_state": map[string]interface{}{
 			"listening": connCheck(publicIP, "2136"),
 		},
