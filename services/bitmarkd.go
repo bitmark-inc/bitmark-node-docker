@@ -143,6 +143,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 	bitmarkd.started = true
 
 	go func() {
+		var runCounter uint64
 		for bitmarkd.started {
 			// start bitmarkd as sub process
 			configs, err := nodeConfig.Get()
@@ -156,6 +157,10 @@ func (bitmarkd *Bitmarkd) Start() error {
 			}
 			if v, ok := configs["ltcAddr"]; ok && v != "" {
 				ltcAddr = v
+			}
+
+			if runCounter < 65535 {
+				runCounter++
 			}
 
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
@@ -215,8 +220,9 @@ func (bitmarkd *Bitmarkd) Start() error {
 			if err := cmd.Wait(); nil != err {
 				if bitmarkd.started {
 					bitmarkd.log.Errorf("bitmarkd has terminated unexpectedly. failed: %v", err)
-					bitmarkd.log.Errorf("bitmarkd will be restarted in 5 second...")
-					time.Sleep(5 * time.Second)
+					delayTime := 5 * runCounter * runCounter
+					bitmarkd.log.Errorf("bitmarkd will be restarted in  %v second...", delayTime)
+					time.Sleep(time.Duration(delayTime) * time.Second)
 				} else {
 					bitmarkd.cmdErr = ""
 				}
@@ -225,7 +231,6 @@ func (bitmarkd *Bitmarkd) Start() error {
 			bitmarkd.running = false
 		}
 	}()
-
 	// wait for 1 second if cmd has no error then return nil
 	time.Sleep(time.Second * 1)
 	return nil
