@@ -7,9 +7,41 @@ import (
 	"io"
 	"net"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
+
+const retryDelay = time.Duration(200 * time.Millisecond)
+
+var connectionStatus = false
+
+func connCheckRoutine(host, port string, checkDelay, retryTimes int, done <-chan bool) <-chan bool {
+	status := make(chan bool)
+	go func() {
+		for {
+			connected := true
+			for retry := 0; retry < retryTimes; retry++ {
+				connected = connCheck(host, port)
+				if !connected {
+					retry++
+					time.Sleep(retryDelay)
+				} else {
+					retry = retryTimes + 1
+				}
+			}
+			select {
+			case <-done:
+				return
+			case status <- connected:
+			}
+
+			time.Sleep(time.Duration(checkDelay) * time.Millisecond)
+		}
+	}()
+
+	return status
+}
 
 func connCheck(host, port string) bool {
 	if host == "" {
