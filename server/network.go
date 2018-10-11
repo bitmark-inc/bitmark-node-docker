@@ -6,23 +6,35 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-const retryDelay = time.Duration(200 * time.Millisecond)
+const retryDelay = time.Duration(500 * time.Millisecond)
 
-var connectionStatus = false
+//CheckPortReachableRoutine is a Connection Check Routine
+func (ws *WebServer) CheckPortReachableRoutine(host, port string) {
+	stop := make(chan bool)
+	defer close(stop)
+	for {
+		connStat := connCheck(host, port, 1000, 3, stop)
+		for {
+			ws.peerPortReachable = <-connStat
+		}
 
-func connCheckRoutine(host, port string, checkDelay, retryTimes int, done <-chan bool) <-chan bool {
+	}
+}
+
+func connCheck(host, port string, checkInterMs, retryTimes int, done <-chan bool) <-chan bool {
 	status := make(chan bool)
+	defer close(status)
+
 	go func() {
 		for {
 			connected := true
 			for retry := 0; retry < retryTimes; retry++ {
-				connected = connCheck(host, port)
+				connected = connToPort(host, port)
 				if !connected {
 					retry++
 					time.Sleep(retryDelay)
@@ -35,15 +47,13 @@ func connCheckRoutine(host, port string, checkDelay, retryTimes int, done <-chan
 				return
 			case status <- connected:
 			}
-
-			time.Sleep(time.Duration(checkDelay) * time.Millisecond)
+			time.Sleep(time.Duration(checkInterMs) * time.Millisecond)
 		}
 	}()
-
 	return status
 }
 
-func connCheck(host, port string) bool {
+func connToPort(host, port string) bool {
 	if host == "" {
 		return false
 	}
@@ -80,14 +90,18 @@ func getConnectors() int {
 	return int(reply.Peers.Local)
 }
 
+//IsPeerPortReachable returns current status if current peer port is reachable
+func (ws *WebServer) IsPeerPortReachable() bool {
+	return ws.peerPortReachable
+}
+
+//ConnectionStatus return connected node number and Peer port reachability
 func (ws *WebServer) ConnectionStatus(c *gin.Context) {
-
-	publicIP := os.Getenv("PUBLIC_IP")
-
+	//
 	c.JSON(200, map[string]interface{}{
 		"connections": getConnectors(),
 		"port_state": map[string]interface{}{
-			"listening": connCheck(publicIP, "2136"),
+			"listening": ws.IsPeerPortReachable(),
 		},
 	})
 	return

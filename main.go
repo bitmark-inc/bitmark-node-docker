@@ -100,6 +100,7 @@ func main() {
 	}
 
 	webserver := server.NewWebServer(nodeConfig, rootPath, bitmarkdService, recorderdService)
+	go webserver.CheckPortReachableRoutine(os.Getenv("PUBLIC_IP"), "2136")
 
 	r := gin.New()
 

@@ -10,6 +10,7 @@ import (
 
 	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/services"
+	"github.com/bitmark-inc/logger"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,16 +30,19 @@ type ServiceOptionRequest struct {
 }
 
 type WebServer struct {
-	nodeConfig *config.BitmarkNodeConfig
-	rootPath   string
-	Bitmarkd   services.Service
-	Recorderd  services.Service
+	nodeConfig        *config.BitmarkNodeConfig
+	rootPath          string
+	log               *logger.L
+	peerPortReachable bool
+	Bitmarkd          services.Service
+	Recorderd         services.Service
 }
 
 func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recorderd services.Service) *WebServer {
 	return &WebServer{
 		nodeConfig: nc,
 		rootPath:   rootPath,
+		log:        logger.New("webserver"),
 		Bitmarkd:   bitmarkd,
 		Recorderd:  recorderd,
 	}
