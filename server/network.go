@@ -28,7 +28,6 @@ func (ws *WebServer) CheckPortReachableRoutine(host, port string) {
 
 func connCheck(host, port string, checkInterMs, retryTimes int, done <-chan bool) <-chan bool {
 	status := make(chan bool)
-	defer close(status)
 
 	go func() {
 		for {
