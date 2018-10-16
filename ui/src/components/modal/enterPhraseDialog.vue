@@ -1,34 +1,45 @@
 <style lang="scss" scoped>
-  .items {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    height: 475px;
-  }
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  height: 475px;
+}
 
-  .items .item {
-    flex: 1;
-    box-sizing: border-box;
-    margin: 8px 20px 8px 0;
-    color: #171e42;
-  }
+.possible-list {
+  z-index: 10;
+  position: fixed;
+  background: red;
+}
 
-  .item input {
-    border: none;
-    outline: none;
-    color: blue;
-    border-bottom: solid 1px black;
-  }
+.item-selected {
+  background: #41B883;
+  color: #FFF
+}
 
-  p.error {
-    color: red;
-    font-weight: bold;
-  }
+.items .item {
+  flex: 1;
+  box-sizing: border-box;
+  margin: 8px 20px 8px 0;
+  color: #171e42;
+}
 
-  .error .item input {
-    color: red;
-  }
+.item input {
+  border: none;
+  outline: none;
+  color: blue;
+  border-bottom: solid 1px black;
+}
+
+p.error {
+  color: red;
+  font-weight: bold;
+}
+
+.error .item input {
+  color: red;
+}
 </style>
 
 <template>
@@ -45,7 +56,24 @@
         <template v-for="(word, index) in words">
           <div class="item">
             {{ 1 + parseInt(index) + '.' }}
-            <input type="text" v-model='words[index]'>
+            <input
+              type="text"
+              v-model='words[index]'
+              @keyup.down="calMatchListIndex(1)"
+              @keyup.up="calMatchListIndex(-1)"
+              @keyup.enter="updateValue(index)"
+              @input="onChange($event.target.value, index)"
+              />
+            <div v-if="focusIdx === index" class="possible-list">
+              <li v-for="(item, matchIdx) in matchList">
+                <p
+                  :class="{'item-selected': isSelected(matchIdx)}"
+                  v-on:click="updateValue(index, matchIdx)"
+                  >
+                  {{item}}
+                </p>
+              </li>
+            </div>
           </div>
         </template>
       </form>
@@ -60,37 +88,126 @@
 </template>
 
 <script>
-  import axios from "axios"
+import axios from "axios";
 
-  export default {
-    methods: {
-      recoverAccount() {
-        let phrase = this.words.join(" ")
-        axios.post("/api/account/phrase", {
-            "phrase": phrase
-          })
-          .then(resp => {
-            this.$emit('accountRecovered', )
-          })
-          .catch(err => {
-            this.errMsg = err.response.data.message
-          })
-      },
+export default {
+  props: {
+    maxList: {
+      type: Number,
+      default: 5
+    },
+    minChars: {
+      type: Number,
+      default: 1
+    },
+    presetList: Array
+  },
 
-      backToWelcome() {
-        this.$emit('backToWelcome')
+  computed: {
+    dataList() {
+      return [
+        'abc', 'def', 'aaa', 'abb', 'acc'
+      ]
+    }
+  },
+
+  methods: {
+    recoverAccount() {
+      let phrase = this.words.join(" ");
+      axios
+        .post("/api/account/phrase", {
+          phrase: phrase
+        })
+        .then(resp => {
+          this.$emit("accountRecovered");
+        })
+        .catch(err => {
+          this.errMsg = err.response.data.message;
+        });
+    },
+
+    backToWelcome() {
+      this.$emit("backToWelcome");
+    },
+
+    calMatchListIndex(nextElement) {
+      if (this.matchListIndex === null) {
+        this.matchListIndex = 0;
+        return;
+      }
+
+      if (this.matchListIndex + nextElement >= this.matchList.length) {
+        this.matchListIndex = null;
+        return;
+      }
+
+      if (this.matchListIndex + nextElement < 0) {
+        this.matchListIndex = 0;
+        return;
+      }
+
+      this.matchListIndex = this.matchListIndex + nextElement;
+    },
+
+    isSelected(index) {
+      return index === this.matchListIndex
+    },
+
+    resetMatchList() {
+      this.matchListIndex = null;
+      this.matchList = [];
+    },
+
+    clearMatchList() {
+      this.matchList = [];
+    },
+
+    onChange(word, index) {
+      // know which input is typing
+      this.focusIdx = index;
+
+      // update only if words fix criteria
+      if (word.length && word.length >= this.minChars) {
+        const len = word.length;
+        if (this.matchListIndex === null) {
+          if (this.words[index] ===  '') {
+            this.clearMatchList();
+            return
+          }
+          let matchData = this.dataList.filter(v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word);
+          this.matchList = matchData.slice(0, this.maxCount);
+        }
+      } else {
+        this.clearMatchList();
       }
     },
 
-    data() {
-      let words = [];
-      for (let i = 0; i < 24; i++) {
-        words[i] = ""
+    updateValue(index, matchIdx) {
+      // default set to first element, if user has ever select, choose by that
+      let targetIdx = this.matchListIndex || 0;
+
+      // if user clicks by mouse, use matchIdx
+      if (matchIdx !== undefined) {
+        targetIdx = matchIdx;
       }
-      return {
-        words: words,
-        errMsg: "",
-      }
+
+      this.words[index] = this.matchList[targetIdx];
+      this.resetMatchList();
     }
+  },
+
+  data() {
+    let words = [];
+    for (let i = 0; i < 24; i++) {
+      words[i] = "";
+    }
+    return {
+      words: words,
+      errMsg: "",
+      matchList: [],
+      matchListIndex: null,
+      focusIdx: null
+    };
   }
+};
 </script>
