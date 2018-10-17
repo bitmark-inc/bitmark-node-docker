@@ -120,8 +120,7 @@ export default {
     minChars: {
       type: Number,
       default: 1
-    },
-    presetList: Array
+    }
   },
 
   methods: {
