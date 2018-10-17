@@ -146,12 +146,12 @@ export default {
       }
 
       if (this.matchListIndex + nextElement >= this.matchList.length) {
-        this.matchListIndex = null;
+        this.matchListIndex = 0;
         return;
       }
 
       if (this.matchListIndex + nextElement < 0) {
-        this.matchListIndex = 0;
+        this.matchListIndex = this.matchList.length - 1;
         return;
       }
 
