@@ -97,7 +97,7 @@ p.error {
 
 <script>
 import axios from "axios";
-import wordList from './wordListEng';
+import wordList from "./wordListEng";
 
 export default {
   props: {
@@ -158,7 +158,7 @@ export default {
     },
 
     isSelected(index) {
-      return index === this.matchListIndex
+      return index === this.matchListIndex;
     },
 
     resetMatchList() {
@@ -178,11 +178,13 @@ export default {
       if (word.length && word.length >= this.minChars) {
         const len = word.length;
         if (this.matchListIndex === null) {
-          if (this.words[index] ===  '') {
+          if (this.words[index] === "") {
             this.clearMatchList();
-            return
+            return;
           }
-          let matchData = wordList.filter(v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word);
+          let matchData = wordList.filter(
+            v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word
+          );
           this.matchList = matchData.slice(0, this.maxCount);
         }
       } else {
