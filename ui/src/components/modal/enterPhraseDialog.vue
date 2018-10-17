@@ -140,16 +140,23 @@ export default {
     },
 
     calMatchListIndex(nextElement) {
+      // do nothing for empty list
+      if (!this.matchList.length) {
+        return;
+      }
+
       if (this.matchListIndex === null) {
         this.matchListIndex = 0;
         return;
       }
 
+      // select to end of list, go back to first one
       if (this.matchListIndex + nextElement >= this.matchList.length) {
         this.matchListIndex = 0;
         return;
       }
 
+      // select to beginning of list, go to last one
       if (this.matchListIndex + nextElement < 0) {
         this.matchListIndex = this.matchList.length - 1;
         return;
@@ -192,6 +199,10 @@ export default {
     },
 
     updateValue(index, matchIdx) {
+      // do nothing for empty list
+      if (!this.matchList.length) {
+        return;
+      }
       // default set to first element, if user has ever select, choose by that
       let targetIdx = this.matchListIndex || 0;
 
