@@ -74,6 +74,7 @@ p.error {
               @input="onChange($event.target.value, index)"
               />
             <div v-if="focusIdx === index" class="list-area">
+            <div v-if="focusIdx === index && matchList.length" class="list-area">
               <li class="list-item" v-for="(item, matchIdx) in matchList">
                 <p
                   :class="{'item-selected': isSelected(matchIdx)}"
