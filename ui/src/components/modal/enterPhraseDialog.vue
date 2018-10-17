@@ -190,7 +190,7 @@ export default {
       // know which input is typing
       this.focusIdx = index;
 
-      // update only if words fix criteria
+      // update only if words fit criteria
       if (word.length && word.length >= this.minChars) {
         const len = word.length;
         if (this.matchListIndex === null) {
