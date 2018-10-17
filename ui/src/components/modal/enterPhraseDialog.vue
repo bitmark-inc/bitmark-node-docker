@@ -7,30 +7,12 @@
   height: 475px;
 }
 
-.list-area {
-  z-index: 10;
-  position: fixed;
-background: #FFF;
-border-color: #000;
-margin-left: 10px;
-}
-
-.list-item {
-list-style-type: none;
-margin-left: 10px;
-margin-right: 10px;
-}
-
-.item-selected {
-  background: #41B883;
-  color: #FFF
-}
-
 .items .item {
   flex: 1;
   box-sizing: border-box;
   margin: 8px 20px 8px 0;
   color: #171e42;
+  position: relative;
 }
 
 .item input {
@@ -38,6 +20,33 @@ margin-right: 10px;
   outline: none;
   color: blue;
   border-bottom: solid 1px black;
+}
+
+.list-area {
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  margin-left: 10px;
+  border-radius: 5px;
+  position: absolute;
+  width: calc(100% - 80px);
+  left: 5px;
+  top: 21px;
+}
+
+.list-item {
+  list-style-type: none;
+}
+
+.item-word {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.item-selected {
+  height: 100%;
+  background: #dcdcdc;
+  color: #000;
 }
 
 p.error {
@@ -73,15 +82,16 @@ p.error {
               @keyup.esc="resetMatchList()"
               @input="onChange($event.target.value, index)"
               />
-            <div v-if="focusIdx === index" class="list-area">
             <div v-if="focusIdx === index && matchList.length" class="list-area">
               <li class="list-item" v-for="(item, matchIdx) in matchList">
-                <p
+                <div
                   :class="{'item-selected': isSelected(matchIdx)}"
                   v-on:click="updateValue(index, matchIdx)"
                   >
-                  {{item}}
-                </p>
+                  <span class="item-word">
+                    {{item}}
+                  </span>
+                </div>
               </li>
             </div>
           </div>
