@@ -7,10 +7,18 @@
   height: 475px;
 }
 
-.possible-list {
+.list-area {
   z-index: 10;
   position: fixed;
-  background: red;
+background: #FFF;
+border-color: #000;
+margin-left: 10px;
+}
+
+.list-item {
+list-style-type: none;
+margin-left: 10px;
+margin-right: 10px;
 }
 
 .item-selected {
@@ -64,8 +72,8 @@ p.error {
               @keyup.enter="updateValue(index)"
               @input="onChange($event.target.value, index)"
               />
-            <div v-if="focusIdx === index" class="possible-list">
-              <li v-for="(item, matchIdx) in matchList">
+            <div v-if="focusIdx === index" class="list-area">
+              <li class="list-item" v-for="(item, matchIdx) in matchList">
                 <p
                   :class="{'item-selected': isSelected(matchIdx)}"
                   v-on:click="updateValue(index, matchIdx)"
@@ -89,10 +97,11 @@ p.error {
 
 <script>
 import axios from "axios";
+import wordList from './wordListEng';
 
 export default {
   props: {
-    maxList: {
+    maxCount: {
       type: Number,
       default: 5
     },
@@ -174,7 +183,7 @@ export default {
             this.clearMatchList();
             return
           }
-          let matchData = this.dataList.filter(v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word);
+          let matchData = wordList.filter(v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word);
           this.matchList = matchData.slice(0, this.maxCount);
         }
       } else {
