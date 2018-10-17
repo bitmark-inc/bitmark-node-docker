@@ -177,10 +177,6 @@ export default {
       this.matchList = [];
     },
 
-    clearMatchList() {
-      this.matchList = [];
-    },
-
     onChange(word, index) {
       // do nothing for emtpy list
       if (!word.length) {
@@ -194,17 +190,13 @@ export default {
       if (word.length && word.length >= this.minChars) {
         const len = word.length;
         if (this.matchListIndex === null) {
-          if (this.words[index] === "") {
-            this.clearMatchList();
-            return;
-          }
           let matchData = wordList.filter(
             v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word
           );
           this.matchList = matchData.slice(0, this.maxCount);
         }
       } else {
-        this.clearMatchList();
+        this.resetMatchList();
       }
     },
 
