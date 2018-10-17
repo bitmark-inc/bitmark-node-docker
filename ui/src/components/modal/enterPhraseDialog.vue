@@ -112,14 +112,6 @@ export default {
     presetList: Array
   },
 
-  computed: {
-    dataList() {
-      return [
-        'abc', 'def', 'aaa', 'abb', 'acc'
-      ]
-    }
-  },
-
   methods: {
     recoverAccount() {
       let phrase = this.words.join(" ");
