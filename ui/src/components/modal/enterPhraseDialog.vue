@@ -70,6 +70,7 @@ p.error {
               @keyup.down="calMatchListIndex(1)"
               @keyup.up="calMatchListIndex(-1)"
               @keyup.enter="updateValue(index)"
+              @keyup.esc="resetMatchList()"
               @input="onChange($event.target.value, index)"
               />
             <div v-if="focusIdx === index" class="list-area">
