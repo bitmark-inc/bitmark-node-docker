@@ -171,6 +171,11 @@ export default {
     },
 
     onChange(word, index) {
+      // do nothing for emtpy list
+      if (!word.length) {
+        this.resetMatchList();
+        return;
+      }
       // know which input is typing
       this.focusIdx = index;
 
