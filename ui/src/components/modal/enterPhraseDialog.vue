@@ -79,8 +79,8 @@ p.error {
               @keyup.down="calMatchListIndex(1)"
               @keyup.up="calMatchListIndex(-1)"
               @keyup.enter="updateValue(index)"
-              @keyup.esc="resetMatchList()"
               @input="onChange($event.target.value, index)"
+              @blur="resetMatchList()"
               />
             <div v-if="focusIdx === index && matchList.length" class="list-area">
               <li class="list-item" v-for="(item, matchIdx) in matchList">
@@ -193,7 +193,14 @@ export default {
           let matchData = wordList.filter(
             v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word
           );
-          this.matchList = matchData.slice(0, this.maxCount);
+
+          // remove list when exactly one match
+          if (matchData.length === 1 && matchData[0] === word) {
+            this.resetMatchList();
+          } else {
+            this.matchList = matchData.slice(0, this.maxCount);
+          }
+
         }
       } else {
         this.resetMatchList();
