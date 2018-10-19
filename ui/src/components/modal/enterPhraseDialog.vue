@@ -61,7 +61,7 @@ p.error {
 
 <template>
   <!-- POP UP - welcome dialog -->
-  <div class="pop-up-box fullscreen">
+  <div class="pop-up-box fullscreen" @click="resetMatchList()">
     <div class="pop-up-box__content">
       <div class="pop-up-box__header">
         <h1>Enter recovery phrase</h1>
@@ -80,13 +80,12 @@ p.error {
               @keyup.up="calMatchListIndex(-1)"
               @keyup.enter="updateValue(index)"
               @input="onChange($event.target.value, index)"
-              @blur="resetMatchList()"
               />
             <div v-if="focusIdx === index && matchList.length" class="list-area">
               <li class="list-item" v-for="(item, matchIdx) in matchList">
                 <div
                   :class="{'item-selected': isSelected(matchIdx)}"
-                  v-on:click="updateValue(index, matchIdx)"
+                  @click="updateValue(index, matchIdx)"
                   >
                   <span class="item-word">
                     {{item}}
