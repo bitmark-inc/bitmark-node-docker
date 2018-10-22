@@ -1,11 +1,15 @@
 package server
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/bitmark-inc/bitmark-node/config"
@@ -232,4 +236,43 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 
 func (ws *WebServer) DiscoveryStartStop(c *gin.Context) {
 
+}
+
+func (ws *WebServer) GetLog(c *gin.Context) {
+	network := ws.nodeConfig.GetNetwork()
+	logFile := filepath.Join(ws.rootPath, c.Param("serviceName"), network, "log", c.Param("serviceName")+".log")
+
+	file, err := os.Open(logFile)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	lastLine := ""
+	c.Header("X-Content-Type-Options", "nosniff")
+	for {
+		if !scanner.Scan() {
+			fmt.Fprintln(c.Writer, lastLine)
+			c.Writer.Flush()
+			break
+		}
+		lastLine = scanner.Text()
+	}
+
+	reader := bufio.NewReader(file)
+	c.Stream(func(w io.Writer) bool {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				time.Sleep(1 * time.Second)
+			} else {
+				fmt.Fprintf(w, "===== log stopped with error: %s", err.Error())
+				return false
+			}
+		}
+		fmt.Fprint(w, line)
+		return true
+	})
 }
