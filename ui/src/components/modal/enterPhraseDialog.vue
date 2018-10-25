@@ -188,18 +188,15 @@ export default {
       // update only if words fit criteria
       if (word.length && word.length >= this.minChars) {
         const len = word.length;
-        if (this.matchListIndex === null) {
-          let matchData = wordList.filter(
-            v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word
-          );
+        let matchData = wordList.filter(
+          v => v.indexOf(word, 0) > -1 && v.substr(0, len) === word
+        );
 
-          // remove list when exactly one match
-          if (matchData.length === 1 && matchData[0] === word) {
-            this.resetMatchList();
-          } else {
-            this.matchList = matchData.slice(0, this.maxCount);
-          }
-
+        // remove list when exactly one match
+        if (matchData.length === 1 && matchData[0] === word) {
+          this.resetMatchList();
+        } else {
+          this.matchList = matchData.slice(0, this.maxCount);
         }
       } else {
         this.resetMatchList();
