@@ -5,11 +5,13 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/bitmark-inc/bitmark-node/config"
@@ -33,17 +35,26 @@ type ServiceOptionRequest struct {
 	Option string `json:"option"`
 }
 
+type AccountInfo struct {
+	network       string
+	accountNumber string
+	seed          string
+}
+
 type WebServer struct {
+	Mutex             *sync.Mutex
 	nodeConfig        *config.BitmarkNodeConfig
 	rootPath          string
 	log               *logger.L
 	peerPortReachable bool
 	Bitmarkd          services.Service
 	Recorderd         services.Service
+	Accounts          []AccountInfo
 }
 
 func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recorderd services.Service) *WebServer {
 	return &WebServer{
+		Mutex:      &sync.Mutex{},
 		nodeConfig: nc,
 		rootPath:   rootPath,
 		log:        logger.New("webserver"),
@@ -275,4 +286,43 @@ func (ws *WebServer) GetLog(c *gin.Context) {
 		fmt.Fprint(w, line)
 		return true
 	})
+}
+
+func (ws *WebServer) GetAccountNumber(network string) (string, error) {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+	for _, item := range ws.Accounts {
+		if item.network == network && item.accountNumber != "" {
+			return item.accountNumber, nil
+		}
+	}
+
+	return "", errors.New("No account in " + network + " network")
+
+}
+
+func (ws *WebServer) GetSeed(network string) (string, error) {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+	for _, item := range ws.Accounts {
+		if item.network == network && item.seed != "" {
+			return item.seed, nil
+		}
+	}
+	return "", errors.New("No seed of AccountInfo in " + network + " network")
+}
+
+func (ws *WebServer) SetAccount(accountNumber, seed, network string) error {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+	for _, item := range ws.Accounts {
+		if item.network == network {
+			item.accountNumber = accountNumber
+			item.seed = seed
+			return nil
+		}
+	}
+	ws.Accounts = append(ws.Accounts, AccountInfo{accountNumber: accountNumber, seed: seed, network: network})
+	ws.log.Infof("[SetAccount]Append account Item:")
+	return nil
 }
