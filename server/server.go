@@ -1,6 +1,7 @@
 package server
 
 import (
+	"archive/zip"
 	"bufio"
 	"bytes"
 	"crypto/tls"
@@ -8,9 +9,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -20,7 +23,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const CONFIG_BUCKET_NAME = "config"
+const (
+	CONFIG_BUCKET_NAME = "config"
+	SNAPSHOT_FILENAME  = "snapshot.zip"
+)
 
 var client = &http.Client{
 	Timeout: 5 * time.Second,
@@ -50,9 +56,35 @@ type WebServer struct {
 	Bitmarkd          services.Service
 	Recorderd         services.Service
 	Accounts          []AccountInfo
+	versionURL        string
+	SnapshotInfo      *snapshotInfo
 }
 
-func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recorderd services.Service) *WebServer {
+type snapshotInfo struct {
+	Date   string `json:"date"`
+	Block  int    `json:"block"`
+	URL    string `json:"url"`
+	client *http.Client
+}
+
+func (s *snapshotInfo) get(versionURL string) ([]byte, error) {
+	resp, err := s.client.Get(versionURL)
+
+	if nil != err {
+		return []byte{}, errors.New("Unable to get snapshot version info")
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if nil != err {
+		return []byte{}, errors.New("Unable to read snapshot version file")
+	}
+
+	return body, nil
+}
+
+func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recorderd services.Service, versionURL string) *WebServer {
 	return &WebServer{
 		Mutex:      &sync.Mutex{},
 		nodeConfig: nc,
@@ -60,6 +92,13 @@ func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recor
 		log:        logger.New("webserver"),
 		Bitmarkd:   bitmarkd,
 		Recorderd:  recorderd,
+		versionURL: versionURL,
+		SnapshotInfo: &snapshotInfo{
+			Date:   "",
+			Block:  0,
+			URL:    "",
+			client: client,
+		},
 	}
 }
 
@@ -325,4 +364,240 @@ func (ws *WebServer) SetAccount(accountNumber, seed, network string) error {
 	ws.Accounts = append(ws.Accounts, AccountInfo{accountNumber: accountNumber, seed: seed, network: network})
 	ws.log.Infof("[SetAccount]Append account Item:")
 	return nil
+}
+
+// get snapshot info
+func getSnapshotInfo(versionURL string, s *snapshotInfo) error {
+	// no need to get snapshot info if block count is larger than 0
+	if s.Block != 0 {
+		return nil
+	}
+
+	body, err := s.get(versionURL)
+
+	if nil != err {
+		return err
+	}
+
+	err = json.Unmarshal(body, s)
+
+	if nil != err {
+		return errors.New("Unable to decode snapshot version file")
+	}
+
+	return nil
+}
+
+// retrieve snapshot info
+func (ws *WebServer) GetSnapshotInfo(c *gin.Context) {
+	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
+
+	if err != nil {
+		c.JSON(500, map[string]interface{}{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(200, map[string]interface{}{
+		"info": ws.SnapshotInfo,
+	})
+	return
+}
+
+// download snapshot zip file
+func downloadFile(ws *WebServer) error {
+	resp, err := client.Get(ws.SnapshotInfo.URL)
+
+	if nil != err {
+		return fmt.Errorf("Cannot download snapshot from %s", ws.SnapshotInfo.URL)
+	}
+	defer resp.Body.Close()
+
+	bitmarkdDataPath := filepath.Join(ws.Bitmarkd.GetPath(), ws.Bitmarkd.GetNetwork())
+	// create directory if not exist
+	err = os.MkdirAll(bitmarkdDataPath, 0755)
+	if nil != err {
+		return err
+	}
+
+	filePath := filepath.Join(bitmarkdDataPath, SNAPSHOT_FILENAME)
+
+	// create file
+	fo, err := os.Create(filePath)
+	if nil != err {
+		return err
+	}
+	defer fo.Close()
+
+	io.Copy(fo, resp.Body)
+	if nil != err {
+		return err
+	}
+
+	// check if file successfully saved
+	fileInfo, err := os.Stat(filePath)
+	if nil != err {
+		return err
+	}
+
+	if fileInfo.Size() == 0 {
+		return errors.New("Cannot save file")
+	}
+
+	return nil
+}
+
+type processStatus struct {
+}
+
+type bitmarkdStatus struct {
+	started bool
+	running bool
+	error   bool
+}
+
+// return bitmarkd running status
+func isBitmarkdStop(ws *WebServer) bool {
+	stat := ws.Bitmarkd.Status()
+	return !stat["started"].(bool)
+}
+
+// unzip file
+func unzip(src string, dest string) ([]string, error) {
+	var filenames []string
+
+	r, err := zip.OpenReader(src)
+	if err != nil {
+		return filenames, err
+	}
+	defer r.Close()
+
+	for _, f := range r.File {
+		rc, err := f.Open()
+		if err != nil {
+			return filenames, err
+		}
+		defer rc.Close()
+
+		// get filenames in zip
+		fpath := filepath.Join(dest, f.Name)
+
+		// check zip content
+		if !strings.HasPrefix(fpath, filepath.Clean(dest)+string(os.PathSeparator)) {
+			return filenames, fmt.Errorf("%s: illegal file path", fpath)
+		}
+
+		filenames = append(filenames, fpath)
+
+		if f.FileInfo().IsDir() {
+			// create foled
+			os.MkdirAll(fpath, os.ModePerm)
+		} else {
+			// create file
+			if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+				return filenames, err
+			}
+
+			outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			if err != nil {
+				return filenames, err
+			}
+
+			outFile, err = os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			if err != nil {
+				return filenames, err
+			}
+
+			_, err = io.Copy(outFile, rc)
+
+			// close file
+			outFile.Close()
+
+			if err != nil {
+				return filenames, err
+			}
+		}
+	}
+	return filenames, nil
+}
+
+// recover data form zip file
+func recoverData(ws *WebServer) error {
+	bitmarkdDataPath := filepath.Join(
+		ws.Bitmarkd.GetPath(),
+		ws.Bitmarkd.GetNetwork(),
+	)
+
+	oldDir := filepath.Join(bitmarkdDataPath, "data")
+
+	// remove existing backup directory
+	os.RemoveAll(filepath.Join(bitmarkdDataPath, "data-backup"))
+
+	// backup directory if exist
+	if _, err := os.Stat(oldDir); !os.IsNotExist(err) {
+		err := os.Rename(
+			oldDir,
+			filepath.Join(bitmarkdDataPath, "data-backup"))
+
+		if nil != err {
+			return fmt.Errorf("Cannot move existing directory %s", oldDir)
+		}
+	}
+
+	// extract file
+	files, err := unzip(
+		filepath.Join(bitmarkdDataPath, SNAPSHOT_FILENAME),
+		bitmarkdDataPath,
+	)
+
+	if nil != err {
+		return err
+	}
+
+	fmt.Println(files)
+	return nil
+}
+
+// download snapshot
+func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
+	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
+	if nil != err {
+		c.JSON(500, map[string]interface{}{
+			"error": err,
+		})
+		return
+	}
+
+	// download file
+	err = downloadFile(ws)
+	if nil != err {
+		c.JSON(500, map[string]interface{}{
+			"error": err,
+		})
+		return
+	}
+
+	// make sure bitmarkd is not running
+	stopped := isBitmarkdStop(ws)
+	if !stopped {
+		err = ws.Bitmarkd.Stop()
+		if nil != err {
+			c.JSON(500, "Cannot stop bitmarkd")
+		}
+	}
+
+	// overwrite file
+	err = recoverData(ws)
+	if nil != err {
+		c.JSON(500, map[string]interface{}{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, map[string]interface{}{
+		"info": "ok",
+	})
+	return
 }
