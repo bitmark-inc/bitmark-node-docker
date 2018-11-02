@@ -37,6 +37,17 @@ func NewRecorderd() *Recorderd {
 	return &Recorderd{}
 }
 
+func (recorderd *Recorderd) GetPath() string {
+	return recorderd.rootPath
+}
+
+func (recorderd *Recorderd) GetNetwork() string {
+	if (len(recorderd.network) == 0) {
+		return "bitmark"
+	}
+	return recorderd.network
+}
+
 func (recorderd *Recorderd) Initialise(rootPath string) error {
 	recorderd.Lock()
 	defer recorderd.Unlock()

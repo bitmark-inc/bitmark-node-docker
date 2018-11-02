@@ -46,6 +46,17 @@ func NewBitmarkd(localIP string) *Bitmarkd {
 	}
 }
 
+func (bitmarkd *Bitmarkd) GetPath() string {
+	return bitmarkd.rootPath
+}
+
+func (bitmarkd *Bitmarkd) GetNetwork() string {
+	if (len(bitmarkd.network) == 0) {
+		return "bitmark"
+	}
+	return bitmarkd.network
+}
+
 func (bitmarkd *Bitmarkd) Initialise(rootPath string) error {
 	bitmarkd.Lock()
 	defer bitmarkd.Unlock()
