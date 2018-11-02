@@ -1,5 +1,6 @@
 port = 9980
 datadir = "."
+versionURL = "https://s3-ap-northeast-1.amazonaws.com/bitmark-node/version.json"
 
 logging {
     directory = "."
