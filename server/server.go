@@ -390,10 +390,12 @@ func getSnapshotInfo(versionURL string, s *snapshotInfo) error {
 
 // retrieve snapshot info
 func (ws *WebServer) GetSnapshotInfo(c *gin.Context) {
+	const fn = "[GetSnapshotInfo]"
 	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
 
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		ws.log.Errorf("%s: %s", fn, err)
 		return
 	}
 
@@ -559,9 +561,11 @@ func recoverData(ws *WebServer) error {
 
 // download snapshot
 func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
+	const fn = "[DownloadSnapshot]"
 	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
 	if nil != err {
 		c.String(http.StatusInternalServerError, err.Error())
+		ws.log.Errorf("%s: %s", fn, err)
 		return
 	}
 
@@ -569,6 +573,7 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	err = downloadFile(ws)
 	if nil != err {
 		c.String(http.StatusInternalServerError, err.Error())
+		ws.log.Errorf("%s: %s", fn, err)
 		return
 	}
 
@@ -578,6 +583,8 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 		err = ws.Bitmarkd.Stop()
 		if nil != err {
 			c.String(http.StatusInternalServerError, "Cannot stop bitmarkd")
+			ws.log.Errorf("%s: %s", fn, err)
+			return
 		}
 	}
 
@@ -587,6 +594,7 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	// show response
 	if nil != err {
 		c.String(http.StatusInternalServerError, err.Error())
+		ws.log.Errorf("%s: %s", fn, err)
 		return
 	}
 
