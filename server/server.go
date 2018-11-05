@@ -106,7 +106,7 @@ func (ws *WebServer) GetChain(c *gin.Context) {
 	network := ws.nodeConfig.GetNetwork()
 
 	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
-	c.JSON(200, map[string]interface{}{
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"ok":     1,
 		"result": network,
 	})
@@ -136,7 +136,7 @@ func (ws *WebServer) GetChain(c *gin.Context) {
 // 	ws.Bitmarkd.SetNetwork(network)
 // 	ws.Recorderd.SetNetwork(network)
 
-// 	c.JSON(200, map[string]interface{}{
+// 	c.JSON(http.StatusOK, map[string]interface{}{
 // 		"ok": 1,
 // 	})
 // 	return
@@ -145,10 +145,10 @@ func (ws *WebServer) GetChain(c *gin.Context) {
 func (ws *WebServer) GetConfig(c *gin.Context) {
 	config, err := ws.nodeConfig.Get()
 	if err != nil {
-		c.String(500, "can not read bitmark node config. error: %s", err.Error())
+		c.String(http.StatusInternalServerError, "can not read bitmark node config. error: %s", err.Error())
 		return
 	}
-	c.JSON(200, map[string]interface{}{
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"ok":     1,
 		"result": config,
 	})
@@ -170,11 +170,11 @@ func (ws *WebServer) UpdateConfig(c *gin.Context) {
 	err = ws.nodeConfig.Set(newConfig)
 
 	if err != nil {
-		c.String(500, "can not set bitmark node config. error: %s", err.Error())
+		c.String(http.StatusInternalServerError, "can not set bitmark node config. error: %s", err.Error())
 		return
 	}
 
-	c.String(200, "")
+	c.String(http.StatusOK, "")
 	return
 }
 
@@ -193,7 +193,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 	case "stop":
 		err = ws.Bitmarkd.Stop()
 	case "status":
-		c.JSON(200, map[string]interface{}{
+		c.JSON(http.StatusOK, map[string]interface{}{
 			"ok":     1,
 			"result": ws.Bitmarkd.Status(),
 		})
@@ -202,15 +202,15 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 
 		resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/details")
 		if err != nil {
-			c.String(500, "unable to get bitmark info")
+			c.String(http.StatusInternalServerError, "unable to get bitmark info")
 			return
 		}
 		defer resp.Body.Close()
 		bb := bytes.Buffer{}
 		io.Copy(&bb, resp.Body)
 
-		if resp.StatusCode != 200 {
-			c.String(500, "unable to get bitmark info. message: %s", bb.String())
+		if resp.StatusCode != http.StatusOK {
+			c.String(http.StatusInternalServerError, "unable to get bitmark info. message: %s", bb.String())
 			return
 		}
 
@@ -218,14 +218,14 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 		d := json.NewDecoder(&bb)
 
 		if err := d.Decode(&reply); err != nil {
-			c.String(500, "fail to read bitmark info response. error: %s\n", err.Error())
+			c.String(http.StatusInternalServerError, "fail to read bitmark info response. error: %s\n", err.Error())
 			return
 		}
 
 		t, _ := time.ParseDuration(reply.Uptime)
 		reply.Uptime = t.Round(time.Second).String()
 
-		c.JSON(200, map[string]interface{}{
+		c.JSON(http.StatusOK, map[string]interface{}{
 			"ok":     1,
 			"result": reply,
 		})
@@ -236,12 +236,12 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(500, map[string]interface{}{
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"ok":  0,
 			"msg": err.Error(),
 		})
 	} else {
-		c.JSON(200, map[string]interface{}{
+		c.JSON(http.StatusOK, map[string]interface{}{
 			"ok": 1,
 		})
 	}
@@ -262,7 +262,7 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 	case "stop":
 		err = ws.Recorderd.Stop()
 	case "status":
-		c.JSON(200, map[string]interface{}{
+		c.JSON(http.StatusOK, map[string]interface{}{
 			"ok":     1,
 			"result": ws.Recorderd.Status(),
 		})
@@ -273,12 +273,12 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(500, map[string]interface{}{
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"ok":  0,
 			"msg": err.Error(),
 		})
 	} else {
-		c.JSON(200, map[string]interface{}{
+		c.JSON(http.StatusOK, map[string]interface{}{
 			"ok": 1,
 		})
 	}
@@ -294,7 +294,7 @@ func (ws *WebServer) GetLog(c *gin.Context) {
 
 	file, err := os.Open(logFile)
 	if err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -393,13 +393,13 @@ func (ws *WebServer) GetSnapshotInfo(c *gin.Context) {
 	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
 
 	if err != nil {
-		c.JSON(500, map[string]interface{}{
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err,
 		})
 		return
 	}
 
-	c.JSON(200, map[string]interface{}{
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"info": ws.SnapshotInfo,
 	})
 	return
@@ -563,7 +563,7 @@ func recoverData(ws *WebServer) error {
 func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
 	if nil != err {
-		c.JSON(500, map[string]interface{}{
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err,
 		})
 		return
@@ -572,7 +572,7 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	// download file
 	err = downloadFile(ws)
 	if nil != err {
-		c.JSON(500, map[string]interface{}{
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err,
 		})
 		return
@@ -583,20 +583,22 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	if !stopped {
 		err = ws.Bitmarkd.Stop()
 		if nil != err {
-			c.JSON(500, "Cannot stop bitmarkd")
+			c.JSON(http.StatusInternalServerError, "Cannot stop bitmarkd")
 		}
 	}
 
 	// overwrite file
 	err = recoverData(ws)
+
+	// show response
 	if nil != err {
-		c.JSON(500, map[string]interface{}{
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, map[string]interface{}{
+	c.JSON(http.StatusOK, map[string]interface{}{
 		"info": "ok",
 	})
 	return
