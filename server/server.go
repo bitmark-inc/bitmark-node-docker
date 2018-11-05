@@ -393,9 +393,7 @@ func (ws *WebServer) GetSnapshotInfo(c *gin.Context) {
 	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err,
-		})
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -563,18 +561,14 @@ func recoverData(ws *WebServer) error {
 func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	err := getSnapshotInfo(ws.versionURL, ws.SnapshotInfo)
 	if nil != err {
-		c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err,
-		})
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	// download file
 	err = downloadFile(ws)
 	if nil != err {
-		c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err,
-		})
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -583,7 +577,7 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	if !stopped {
 		err = ws.Bitmarkd.Stop()
 		if nil != err {
-			c.JSON(http.StatusInternalServerError, "Cannot stop bitmarkd")
+			c.String(http.StatusInternalServerError, "Cannot stop bitmarkd")
 		}
 	}
 
@@ -592,14 +586,10 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 
 	// show response
 	if nil != err {
-		c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"info": "ok",
-	})
+	c.String(http.StatusOK, "")
 	return
 }
