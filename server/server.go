@@ -580,12 +580,9 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	// make sure bitmarkd is not running
 	stopped := isBitmarkdStop(ws)
 	if !stopped {
-		err = ws.Bitmarkd.Stop()
-		if nil != err {
-			c.String(http.StatusInternalServerError, "Cannot stop bitmarkd")
-			ws.log.Errorf("%s: %s", fn, err)
-			return
-		}
+		c.String(http.StatusInternalServerError, err.Error())
+		ws.log.Errorf("%s: %s", fn, err)
+		return
 	}
 
 	// overwrite file
