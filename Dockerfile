@@ -9,7 +9,7 @@ FROM bitmark/go-env as go-env
 
 # VERSION SHOW ON BITMARK-NODE
 ENV VERSION v0.96
-ENV BITMARKD_VERSION v8.1
+ENV BITMARKD_VERSION v8.0
 ENV PATH=/go/src/github.com/bitmark-inc/bitmarkd/c-libraries/:${PATH}
 
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
