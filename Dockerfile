@@ -22,6 +22,7 @@ RUN go get -d github.com/bitmark-inc/bitmarkd || \
     go get github.com/bitmark-inc/bitmark-sdk-go
 
 RUN cd /go/src/github.com/bitmark-inc/bitmarkd && git checkout "$BITMARKD_VERSION" && \
+    git submodule update && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/... && \
     go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
