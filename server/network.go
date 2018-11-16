@@ -65,10 +65,10 @@ func connToPort(host, port string) bool {
 	}
 }
 
-func getConnectors() int {
+func getPeers() (int, int) {
 	resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/details")
 	if err != nil {
-		return 0
+		return 0, 0
 	}
 	defer resp.Body.Close()
 
@@ -76,17 +76,17 @@ func getConnectors() int {
 	io.Copy(&buf, resp.Body)
 
 	if resp.StatusCode != 200 {
-		return 0
+		return 0, 0
 	}
 
 	var reply DetailReply
 	d := json.NewDecoder(&buf)
 	err = d.Decode(&reply)
 	if err != nil {
-		return 0
+		return 0, 0
 	}
 
-	return int(reply.Peers.Local)
+	return int(reply.Peers.Incoming), int(reply.Peers.Outgoing)
 }
 
 //IsPeerPortReachable returns current status if current peer port is reachable
@@ -96,9 +96,10 @@ func (ws *WebServer) IsPeerPortReachable() bool {
 
 //ConnectionStatus return connected node number and Peer port reachability
 func (ws *WebServer) ConnectionStatus(c *gin.Context) {
-	//
+	incoming, outgoing := getPeers()
 	c.JSON(200, map[string]interface{}{
-		"connections": getConnectors(),
+		"incoming": incoming,
+		"outgoing": outgoing,
 		"port_state": map[string]interface{}{
 			"listening": ws.IsPeerPortReachable(),
 		},

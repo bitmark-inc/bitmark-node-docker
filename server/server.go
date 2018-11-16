@@ -1,11 +1,17 @@
 package server
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/bitmark-inc/bitmark-node/config"
@@ -29,17 +35,26 @@ type ServiceOptionRequest struct {
 	Option string `json:"option"`
 }
 
+type AccountInfo struct {
+	network       string
+	accountNumber string
+	seed          string
+}
+
 type WebServer struct {
+	Mutex             *sync.Mutex
 	nodeConfig        *config.BitmarkNodeConfig
 	rootPath          string
 	log               *logger.L
 	peerPortReachable bool
 	Bitmarkd          services.Service
 	Recorderd         services.Service
+	Accounts          []AccountInfo
 }
 
 func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recorderd services.Service) *WebServer {
 	return &WebServer{
+		Mutex:      &sync.Mutex{},
 		nodeConfig: nc,
 		rootPath:   rootPath,
 		log:        logger.New("webserver"),
@@ -232,4 +247,82 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 
 func (ws *WebServer) DiscoveryStartStop(c *gin.Context) {
 
+}
+
+func (ws *WebServer) GetLog(c *gin.Context) {
+	network := ws.nodeConfig.GetNetwork()
+	logFile := filepath.Join(ws.rootPath, c.Param("serviceName"), network, "log", c.Param("serviceName")+".log")
+
+	file, err := os.Open(logFile)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	lastLine := ""
+	c.Header("X-Content-Type-Options", "nosniff")
+	for {
+		if !scanner.Scan() {
+			fmt.Fprintln(c.Writer, lastLine)
+			c.Writer.Flush()
+			break
+		}
+		lastLine = scanner.Text()
+	}
+
+	reader := bufio.NewReader(file)
+	c.Stream(func(w io.Writer) bool {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				time.Sleep(1 * time.Second)
+			} else {
+				fmt.Fprintf(w, "===== log stopped with error: %s", err.Error())
+				return false
+			}
+		}
+		fmt.Fprint(w, line)
+		return true
+	})
+}
+
+func (ws *WebServer) GetAccountNumber(network string) (string, error) {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+	for _, item := range ws.Accounts {
+		if item.network == network && item.accountNumber != "" {
+			return item.accountNumber, nil
+		}
+	}
+
+	return "", errors.New("No account in " + network + " network")
+
+}
+
+func (ws *WebServer) GetSeed(network string) (string, error) {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+	for _, item := range ws.Accounts {
+		if item.network == network && item.seed != "" {
+			return item.seed, nil
+		}
+	}
+	return "", errors.New("No seed of AccountInfo in " + network + " network")
+}
+
+func (ws *WebServer) SetAccount(accountNumber, seed, network string) error {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+	for _, item := range ws.Accounts {
+		if item.network == network {
+			item.accountNumber = accountNumber
+			item.seed = seed
+			return nil
+		}
+	}
+	ws.Accounts = append(ws.Accounts, AccountInfo{accountNumber: accountNumber, seed: seed, network: network})
+	ws.log.Infof("[SetAccount]Append account Item:")
+	return nil
 }

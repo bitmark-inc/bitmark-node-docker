@@ -121,5 +121,7 @@ func main() {
 	apiRouter.POST("/bitmarkd", webserver.BitmarkdStartStop)
 	apiRouter.GET("/latestVersion", webserver.LatestVersion)
 	apiRouter.POST("/recorderd", webserver.RecorderdStartStop)
+	apiRouter.GET("/log/:serviceName", webserver.GetLog)
+
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
 }

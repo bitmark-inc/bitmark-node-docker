@@ -8,8 +8,8 @@ RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/
 FROM bitmark/go-env as go-env
 
 # VERSION SHOW ON BITMARK-NODE
-ENV VERSION v0.95
-ENV BITMARKD_VERSION v8.0
+ENV VERSION v0.96
+ENV BITMARKD_VERSION v8.1
 ENV PATH=/go/src/github.com/bitmark-inc/bitmarkd/c-libraries/:${PATH}
 
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
@@ -22,6 +22,7 @@ RUN go get -d github.com/bitmark-inc/bitmarkd || \
     go get github.com/bitmark-inc/bitmark-sdk-go
 
 RUN cd /go/src/github.com/bitmark-inc/bitmarkd && git checkout "$BITMARKD_VERSION" && \
+    git submodule update && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/... && \
     go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \

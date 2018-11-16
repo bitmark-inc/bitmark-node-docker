@@ -162,7 +162,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 			if runCounter < 65535 {
 				runCounter++
 			}
-
+			
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
