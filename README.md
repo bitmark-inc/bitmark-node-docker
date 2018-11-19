@@ -8,6 +8,7 @@ The [Bitmark](https://bitmark.com) node software enables any computer on the Int
 
 The Bitmark blockchain is an independent chain, optimized for storing property titles, or *bitmarks*, and does not have its own internal currency (transaction fees are in bitcoin or litecoin). The peer-to-peer network is written in [Go](https://golang.org) and uses the [ZeroMQ distributed messaging library](http://zeromq.org). Consensus is secured using the [Argon2](https://github.com/P-H-C/phc-winner-argon2) hashing algorithm as proof-of-work.
 
+***Read our [Governance policy](https://bitmark.com/governance-policy) to learn how to contribute to this project**
 
 ## Suported Platforms
 
@@ -232,6 +233,7 @@ After restarting the `bitmarkd` node for the first time, the node will go throug
 
 Bitmark 區塊鏈是專門為了資產所有權（稱為 *bitmark* ）所優化的一條獨立的鏈，其本身並不是一種貨幣（交易手續費是用 bitcoin 或 litecoin 支付）。P2P 網路是用 [Go](https://golang.org) 語言寫成，並且使用 [ZeroMQ 分散式訊息庫](http://zeromq.org)。共識是使用 [Argon2](https://github.com/P-H-C/phc-winner-argon2) 的雜湊演算法來作為工作量證明。
 
+***請參閱我們的 [Governance policy](https://bitmark.com/governance-policy) 了解如何參與與貢獻這個計畫**
 
 ## 支援平台
 
