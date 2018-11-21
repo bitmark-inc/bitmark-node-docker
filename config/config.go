@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -81,6 +82,13 @@ func (c *BitmarkNodeConfig) GetNetwork() string {
 		return ""
 	}
 	return n
+}
+
+func (c *BitmarkNodeConfig) GetDB() (*bolt.DB, error) {
+	if nil == c.db {
+		return nil, errors.New("no db exist")
+	}
+	return c.db, nil
 }
 
 func (c *BitmarkNodeConfig) Set(newConfig map[string]string) error {
