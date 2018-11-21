@@ -131,7 +131,7 @@ func (ws *WebServer) GetAccount(c *gin.Context) {
 			"result": number,
 		})
 	}
-
+	// Return AccountNumber if there is a seedFile
 	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
 	seed, err := GetSeedFromFile(seedFile)
 	if err != nil {
@@ -152,6 +152,18 @@ func (ws *WebServer) GetAccount(c *gin.Context) {
 		"ok":     1,
 		"result": a.AccountNumber(),
 	})
+
+	dbPath := filepath.Join(ws.rootPath, "db")
+	seed, err = ws.GetSeedFromDB(dbPath, network)
+	if err != nil {
+		returnError(c, 500, fmt.Sprintf("can not get account from saved account. reason: %s", err.Error()))
+	}
+	ws.SetAccount(a.AccountNumber(), seed, network)
+	c.JSON(200, map[string]interface{}{
+		"ok":     1,
+		"result": a.AccountNumber(),
+	})
+
 }
 
 func (ws *WebServer) SaveAccount(c *gin.Context) {
