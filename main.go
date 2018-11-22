@@ -115,6 +115,7 @@ func main() {
 	apiRouter.GET("/chain", webserver.GetChain)
 	apiRouter.POST("/account/", webserver.NewAccount)
 	apiRouter.GET("/account/", webserver.GetAccount)
+	apiRouter.GET("/account/save", webserver.SaveAccount)
 	apiRouter.POST("/account/phrase", webserver.SetRecoveryPhrase)
 	apiRouter.GET("/account/phrase", webserver.GetRecoveryPhrase)
 	apiRouter.GET("/bitmarkd/conn_stat", webserver.ConnectionStatus)
