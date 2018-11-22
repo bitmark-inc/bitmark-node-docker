@@ -72,6 +72,7 @@ func (ws *WebServer) NodeInfo(c *gin.Context) {
 		return
 	}
 	seed := strings.Trim(strings.Split(buf.String(), ":")[1], "\n")
+	ws.log.Warnf("[Info]seed:%s", seed)
 	a, err := account.PrivateKeyFromBase58Seed(seed)
 	if err != nil {
 		c.String(500, "unable to get your account. error: %s", err.Error())

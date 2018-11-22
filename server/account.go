@@ -28,7 +28,7 @@ func returnError(c *gin.Context, code int, message string) {
 	})
 }
 
-//Get seed string from a bitmarkd seed file
+//GetSeedFromFile: Get seed string from a bitmarkd seed file
 func GetSeedFromFile(seedFile string) (string, error) {
 	f, err := os.Open(seedFile)
 	if err != nil {
@@ -143,35 +143,44 @@ func (ws *WebServer) DelSavedAcct(c *gin.Context) {
 	return
 }
 
-//LoadSavedAcct:Load saved account to memory and seed file
+//LoadSavedAcct: Load saved account to memory and seed file
 func (ws *WebServer) LoadSavedAcct(dbPath, network string) (string, error) {
 	seed, err := ws.GetSeedFromDB(network)
+	ws.log.Warnf("[LoadSavedAcct]Seed from DB: %s", seed)
 	if err != nil { // no saved account return error and make node to create a new Acct
-		ws.log.Errorf("Account:GetAccount GetSeedFromDB %s", err)
+		ws.log.Errorf("Account:GetAccount GetSeedFromDB", err)
 		return "", err
+	}
+	if seed == "" {
+		ws.log.Errorf("Account:GetAccount empty seed")
+		return "", errors.New("empty seed")
 	}
 	//Save to file and load to memory
 	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
+
 	f, err := os.OpenFile(seedFile, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0600)
+
 	if err != nil {
-		ws.log.Warnf("[LoadSavedAcct]%s", "open seed file failed")
+		ws.log.Warnf("[LoadSavedAcct]", "open seed file failed")
 		return "", err
 	}
 	defer f.Close()
-	_, err = f.WriteString(fmt.Sprintf("SEED:%s", seed))
+
+	_, err = f.WriteString(fmt.Sprintf("SEED:", seed))
+
 	if err != nil {
-		ws.log.Warnf("[LoadSavedAcct]%s", "Write string failed")
+		ws.log.Warnf("[LoadSavedAcct]", "Write string failed")
 		return "", err
 	}
 
 	a, err := sdk.AccountFromSeed(seed)
+
 	if err != nil {
 		ws.log.Errorf("[LoadSavedAcct]%s%s", "can not get account from seed:", err.Error())
 		return "", err
 	}
 
 	ws.SetAccount(a.AccountNumber(), seed, network)
-
 	return a.AccountNumber(), nil
 }
 
@@ -228,7 +237,7 @@ func (ws *WebServer) GetAccount(c *gin.Context) {
 		returnError(c, 500, "wrong network configuration")
 		return
 	}
-	// both seed and memory does not exist
+	// get from saved account
 	dbPath := filepath.Join(ws.rootPath, "db")
 	acctNum, err := ws.LoadSavedAcct(dbPath, network)
 	if err == nil {
