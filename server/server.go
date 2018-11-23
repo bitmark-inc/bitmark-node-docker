@@ -361,8 +361,8 @@ func (ws *WebServer) SetAccount(accountNumber, seed, network string) error {
 			return nil
 		}
 	}
+	ws.log.Warnf("Account SetAccount:number:%s seed:%s network:%s", accountNumber, seed, network)
 	ws.Accounts = append(ws.Accounts, AccountInfo{accountNumber: accountNumber, seed: seed, network: network})
-	ws.log.Infof("[SetAccount]Append account Item:")
 	return nil
 }
 
