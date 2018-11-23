@@ -167,6 +167,7 @@ func (ws *WebServer) GetAccount(c *gin.Context) {
 	// get from saved account
 	dbPath := filepath.Join(ws.rootPath, "db")
 	_, err := ws.LoadSavedAcct(dbPath, network)
+
 	// Return AccountNumber if there is a record in memory
 	number, err := ws.GetAccountNumber(network)
 	if err == nil { // If there is a record in AccountInfo, return it
@@ -355,15 +356,16 @@ func (ws *WebServer) SaveAccount(c *gin.Context) {
 		returnError(c, 500, fmt.Sprintf("fail to save seed file from: %s", seedFile))
 		return
 	}
+
 	_, err = f.WriteString(fmt.Sprintf("SEED:%s", seed))
+
 	//verify
-	saved, err := ws.GetSeedFromDB(network)
+	_, err = ws.GetSeedFromDB(network)
 	if err != nil {
 		ws.log.Errorf("[SaveAccount]%s", "get Seed FromDB failed")
 	}
 	c.JSON(200, map[string]interface{}{
-		"ok":   1,
-		"seed": saved,
+		"ok": 1,
 	})
 	return
 }
