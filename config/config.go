@@ -83,6 +83,10 @@ func (c *BitmarkNodeConfig) GetNetwork() string {
 	return n
 }
 
+func (c *BitmarkNodeConfig) GetDB() *bolt.DB {
+	return c.db
+}
+
 func (c *BitmarkNodeConfig) Set(newConfig map[string]string) error {
 	if !c.initialised {
 		return ErrNotInitialised

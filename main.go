@@ -21,9 +21,10 @@ import (
 var version string = "v0.1" // do not change this value
 
 type MasterConfiguration struct {
-	Port    int                  `hcl:"port"`
-	DataDir string               `hcl:"datadir"`
-	Logging logger.Configuration `hcl:"logging"`
+	Port       int                  `hcl:"port"`
+	DataDir    string               `hcl:"datadir"`
+	Logging    logger.Configuration `hcl:"logging"`
+	VersionURL string               `hcl:"versionURL"`
 }
 
 func (c *MasterConfiguration) Parse(filename string) error {
@@ -99,7 +100,13 @@ func main() {
 		recorderdService.SetNetwork(network)
 	}
 
-	webserver := server.NewWebServer(nodeConfig, rootPath, bitmarkdService, recorderdService)
+	webserver := server.NewWebServer(
+		nodeConfig,
+		rootPath,
+		bitmarkdService,
+		recorderdService,
+		masterConfig.VersionURL,
+	)
 	go webserver.CheckPortReachableRoutine(os.Getenv("PUBLIC_IP"), "2136")
 
 	r := gin.New()
@@ -115,6 +122,7 @@ func main() {
 	apiRouter.GET("/chain", webserver.GetChain)
 	apiRouter.POST("/account/", webserver.NewAccount)
 	apiRouter.GET("/account/", webserver.GetAccount)
+	apiRouter.GET("/account/save", webserver.SaveAccount)
 	apiRouter.POST("/account/phrase", webserver.SetRecoveryPhrase)
 	apiRouter.GET("/account/phrase", webserver.GetRecoveryPhrase)
 	apiRouter.GET("/bitmarkd/conn_stat", webserver.ConnectionStatus)
@@ -122,6 +130,8 @@ func main() {
 	apiRouter.GET("/latestVersion", webserver.LatestVersion)
 	apiRouter.POST("/recorderd", webserver.RecorderdStartStop)
 	apiRouter.GET("/log/:serviceName", webserver.GetLog)
+	apiRouter.POST("/snapshot", webserver.DownloadSnapshot)
+	apiRouter.GET("/snapshot-info", webserver.GetSnapshotInfo)
 
 	r.Run(fmt.Sprintf(":%d", masterConfig.Port))
 }

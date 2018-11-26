@@ -8,4 +8,6 @@ type Service interface {
 	Status() map[string]interface{}
 	Start() error
 	Stop() error
+	GetPath() string
+	GetNetwork() string
 }

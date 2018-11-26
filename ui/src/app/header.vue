@@ -34,6 +34,9 @@
             <li>
               <a href="#" @click="copyAccount">Copy account address</a>
             </li>
+            <li>
+              <a href="#" @click="saveAcct">Save account</a>
+            </li>
           </ul>
         </div>
         <div class="hambuger">
@@ -133,7 +136,13 @@
         document.execCommand("copy");
         i.remove();
       },
-
+      saveAcct() {
+        axios.get("/api/account/" + "save", {
+          })
+          .catch((err, resp) => {
+            this.recorderd.errorMsg = err.response.data.msg
+          })
+      },
       openRecoveryAlert () {
         this.$emit("openRecoveryAlert")
       }
