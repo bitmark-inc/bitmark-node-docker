@@ -78,18 +78,6 @@ Each script contains an option to check for updates every time the script is run
      * [Ensure that Hyper-V is turned on](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
      * Download the setup script and run it by right-clicking on it, and selecting ```Run as administrator```.
      [bitmarkNode-HyperV.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-HyperV.bat)
-- Windows Users Running Docker in Toolbox (Windows 8 and 10 Home)
-  * Setup port forwarding in Docker VirtualMachine:
-      * Open Oracle VM VirtualBox and navigate to the docker virtual machine titled ```default```. Right-click on the virtual machine and navigate to ```Settings```. 
-      * Go to ```Network``` and select an adapter that is not currently enabled. Click on the checkbox that says ```Enable Network Adapter``` and select the drop-down box called '''Attached To:''' and select ```NAT```. Enable ```Advanced``` settings by clicking the arrow to the left of the text and click on the box that says ```Port Forwarding```.
-      * You're able to add a new rule by selecting the + sign on the right. Add the following 4 ports:
-      
-        | Name       | Protocol | Host IP  | Host Port | Guest IP | Guest Port |
-        | ---------- | -------- | -------- | --------- | -------- | ---------- |
-        |  Docker #1 | TCP      |          | 9980      |          | 9980
-        |  Docker #2 | TCP      |          | 2136      |          | 2136	
-        |  Docker #3 | TCP      |          | 2135      |          | 2135
-        |  Docker #4 | TCP      |          | 2130      |          | 2130
        
   * Prepare the setup script:
     * Begin by downloading the script.
@@ -110,7 +98,7 @@ Each script contains an option to check for updates every time the script is run
 The Docker container must be restarted after everytime the computer is turned off. To restart the container, simply re-run the setup script as you did the first time. You can also manually restart the container as described below. Note, if you do have auto-update enabled in the script, manually starting the container will not check for updates.
 
 
-###### Manual Setup
+##### Manual Setup
 
 All of the following commands will be run in the appropriate command-line interface described [below](#Terminals). Before running the bitmark-node container, you should check container status:
 
@@ -327,6 +315,24 @@ After restarting the `bitmarkd` node for the first time, the node will go throug
 #### Listening port (2136) is not accessible.
 *  If you did not provide your IP address correctly, or your IP address has changed since setup, this issue can arise. You must stop the node through Terminal (MacOS/Linux), ```cmd.exe``` (Windows 10 Pro and Enterprise), or through the ```Docker Quickstart Terminal``` (Windows 8 or 10 Home) by typing ```docker stop bitmarkNode```. Then you must remove the container by typing ```docker rm bitmarkNode```. Now re-run the setup script (for users using the Docker Toolbox setup script, you must find your public IP address again by visiting [ipinfo.io/ip](ipinfo.io/ip) and re-entering your IP address in the setup script).
 * This can also be caused by your router's NAT (Network Address Translation) not allowing you to access port 2136, the port used to connect to other bitmarkd nodes. To allow the node software to access this port, you must enable port forwarding on your router and forward port 2136. A good guide on how to do this is linked [here](https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router).
+
+
+#### Using Docker Toolbox in Windows
+- Docker Toolbox in Windows is not officially supported, but you can try the steps below
+- Windows Users Running Docker in Toolbox (Windows 8 and 10 Home)
+  * Docker in Toolbox is not official supported but 
+  * Setup port forwarding in Docker VirtualMachine:
+      * Open Oracle VM VirtualBox and navigate to the docker virtual machine titled ```default```. Right-click on the virtual machine and navigate to ```Settings```. 
+      * Go to ```Network``` and select an adapter that is not currently enabled. Click on the checkbox that says ```Enable Network Adapter``` and select the drop-down box called '''Attached To:''' and select ```NAT```. Enable ```Advanced``` settings by clicking the arrow to the left of the text and click on the box that says ```Port Forwarding```.
+      * You're able to add a new rule by selecting the + sign on the right. Add the following 4 ports:
+      
+        | Name       | Protocol | Host IP  | Host Port | Guest IP | Guest Port |
+        | ---------- | -------- | -------- | --------- | -------- | ---------- |
+        |  Docker #1 | TCP      |          | 9980      |          | 9980
+        |  Docker #2 | TCP      |          | 2136      |          | 2136	
+        |  Docker #3 | TCP      |          | 2135      |          | 2135
+        |  Docker #4 | TCP      |          | 2130      |          | 2130
+
 
 #### Current Block Stuck at 1/1
 * Once the Bitmark Node software successfully starts, it will remain at 1/1 blocks for a short period of time. If the node is successfully connected to at least 3 other nodes and remains stuck at 1/1 for a long period of time, restart the Docker container. If the issue persists, remove the container by typing ```docker rm bitmarkNode``` and re-run the setup script. 
