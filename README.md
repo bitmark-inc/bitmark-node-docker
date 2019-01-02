@@ -68,11 +68,11 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 #### Prepare Public IP
 
-Public IP is the IP which people in Internet can reach your bitmark-node. Our script will automatically find your public IP for you. However, network setting are various, we can not guarentee that auto-generate IP is acurate or correct. To get your accurate public IP, please consult your ISP. 
+Public IP is the IP which people in Internet can reach your bitmark-node. Our script will automatically find your public IP for you. However, network configurations are various, we can not guarentee that the auto-generated IP is acurate or not. To get your accurate public IP, please consult your ISP. 
 
 #### Prepare Network Environment
 
-- The following ports must be accessible from Internet.
+- User must ensure the following ports to be accessible from Internet.
 
     | PORT  | DESCRIPTION  |
     |:---|:---|
@@ -81,7 +81,7 @@ Public IP is the IP which people in Internet can reach your bitmark-node. Our sc
     | `2135` | Port for publishing blockchain events |
     | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
 
-    After running bitmark-node, you can check by the following commands to make sure ports are opened. 
+    When running bitmark-node, user can make sure ports are opened with the following commands.
 
     ```netcat -v [Your Public IP] 2136```
 
@@ -90,7 +90,7 @@ Public IP is the IP which people in Internet can reach your bitmark-node. Our sc
     ```netcat -v [Your Public IP] 2130```
 
 
-- WebUI is an interface to control bitmark-node. You should be able to access it through local network and due to security reason, you should not make port public.
+- WebUI is an interface to control bitmark-node. User can only access WebUI through local network. Please notice that user can not access the port due to security reason.
 
     | PORT  | DESCRIPTION  |
     |:---|:---|
