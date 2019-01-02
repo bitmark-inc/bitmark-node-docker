@@ -310,7 +310,7 @@ After restarting the `bitmarkd` node for the first time, the node will go throug
 
 
 #### Using Docker Toolbox in Windows
-- Docker Toolbox in Windows is not officially supported, but you can try the steps below
+- Docker Toolbox in Windows is NOT officially supported, but you can try the steps below
 - Windows Users Running Docker in Toolbox (Windows 8 and 10 Home)
   * Docker in Toolbox is not official supported but 
   * Setup port forwarding in Docker VirtualMachine:
@@ -325,6 +325,14 @@ After restarting the `bitmarkd` node for the first time, the node will go throug
         |  Docker #3 | TCP      |          | 2135      |          | 2135
         |  Docker #4 | TCP      |          | 2130      |          | 2130
 
+  * Prepare the setup script:
+      * Begin by downloading the script.
+      [bitmarkNode-Toolbox.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Toolbox.sh)
+      * Open the script in a text editor by right-clicking on the script and selection ```Open With...``` and then select notepad or your preferred text editor. 
+      * Add your public IP Address to ```line 25``` by replacing the text ```XXX.XX.XX.XX```. This can be found on the website [ipinfo.io/ip](http://ipinfo.io/ip).
+      * If you would like to change the directory in which the Bitmark node stores its data, do so on ```line 26```. By default, it is ```/c/```. During setup, it will create a folder ```bitmark-node-data``` in this directory. Do not include user directories if the path is changed (i.e. do not use /c/Users/yourname).
+      * Save the script and move it to the Docker Toolbox file path (by default this is C:\Program Files\Docker Toolbox). Note that this is not the same path as the one you were given the option to change in the last step, instead it is something chosen during Docker setup.
+      * Open ```Docker Quickstart Terminal``` and run the setup script by typing ```sh bitmarkNode-Toolbox.sh```.
 
 #### Current Block Stuck at 1/1
 * Once the Bitmark Node software successfully starts, it will remain at 1/1 blocks for a short period of time. If the node is successfully connected to at least 3 other nodes and remains stuck at 1/1 for a long period of time, restart the Docker container. If the issue persists, remove the container by typing ```docker rm bitmarkNode``` and re-run the setup script. 
