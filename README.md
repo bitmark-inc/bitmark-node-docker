@@ -79,14 +79,6 @@ Each script contains an option to check for updates every time the script is run
      * Download the setup script and run it by right-clicking on it, and selecting ```Run as administrator```.
      [bitmarkNode-HyperV.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-HyperV.bat)
        
-  * Prepare the setup script:
-    * Begin by downloading the script.
-    [bitmarkNode-Toolbox.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Toolbox.sh)
-    * Open the script in a text editor by right-clicking on the script and selection ```Open With...``` and then select notepad or your preferred text editor. 
-    * Add your public IP Address to ```line 25``` by replacing the text ```XXX.XX.XX.XX```. This can be found on the website [ipinfo.io/ip](http://ipinfo.io/ip).
-    * If you would like to change the directory in which the Bitmark node stores its data, do so on ```line 26```. By default, it is ```/c/```. During setup, it will create a folder ```bitmark-node-data``` in this directory. Do not include user directories if the path is changed (i.e. do not use /c/Users/yourname).
-    * Save the script and move it to the Docker Toolbox file path (by default this is C:\Program Files\Docker Toolbox). Note that this is not the same path as the one you were given the option to change in the last step, instead it is something chosen during Docker setup.
-    * Open ```Docker Quickstart Terminal``` and run the setup script by typing ```sh bitmarkNode-Toolbox.sh```.
 
 - MacOS Users
   * Download the setup script and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```), and running the script by typing ```bash bitmarkNode-Linux-MacOS.sh```.
