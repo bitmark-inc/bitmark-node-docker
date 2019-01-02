@@ -6,17 +6,17 @@
 
 The [Bitmark](https://bitmark.com) node software enables any computer on the Internet to join the Bitmark network as a fully-validating peer. Unlike conventional property systems that rely on a handful of trusted government officials to act as centralized gatekeepers, the Bitmark blockchain is an open and transparent property system that is strengthened through the active participation of anyone on the Internet. The integrity of Bitmark’s open-source blockchain is ensured by a peer-to-peer network of voluntary participants running the Bitmark node software. These participants are incentivized to participate in verifying Bitmark property transactions through the possibility of winning monetary and property rewards.
 
-The Bitmark blockchain is an independent chain, optimized for storing property titles, or *bitmarks*, and does not have its own internal currency (transaction fees are in bitcoin or litecoin). The peer-to-peer network is written in [Go](https://golang.org) and uses the [ZeroMQ distributed messaging library](http://zeromq.org). Consensus is secured using the [Argon2](https://github.com/P-H-C/phc-winner-argon2) hashing algorithm as proof-of-work.
+The Bitmark blockchain is an independent chain, optimized for storing property titles, or *bitmarks*, and does not have its own internal currency (transaction fees are in bitcoin or litecoin). The peer-to-peer network is written in [Go](https://golang.org) and uses the [ZeroMQ distributed messaging library](http://zeromq.org). The consensus is secured using the [Argon2](https://github.com/P-H-C/phc-winner-argon2) hashing algorithm as proof-of-work.
 
 ***Read our [Governance policy](https://bitmark.com/governance-policy) to learn how to contribute to this project**
 
-## Suported Platforms
+## Supported Platforms
 
 The Bitmark node software is distributed as a standalone [Docker container](https://www.docker.com/what-container), which supports easy installation on all major platforms including:
 
-- **desktop devices**, such as [Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac) and [Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
+- **Desktop devices**, such as [Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac) and [Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
 - **Linux servers**, such as [CentOS](https://store.docker.com/editions/community/docker-ce-server-centos), [Debian](https://store.docker.com/editions/community/docker-ce-server-debian), [Fedora](https://store.docker.com/editions/community/docker-ce-server-fedora), and [Ubuntu](https://store.docker.com/editions/community/docker-ce-server-ubuntu)
-- **cloud providers**, such as [AWS](https://store.docker.com/editions/community/docker-ce-aws) and [Azure](https://store.docker.com/editions/community/docker-ce-azure)
+- **Cloud providers**, such as [AWS](https://store.docker.com/editions/community/docker-ce-aws) and [Azure](https://store.docker.com/editions/community/docker-ce-azure)
 
 
 ## Contents
@@ -38,18 +38,19 @@ The Bitmark node consists of the following software programs:
 The Bitmark node software is distributed as a standalone [Docker container](https://www.docker.com/what-container) which requires you to first install Docker for your operating system:
 
 
-- [Get Docker for MacOS](https://store.docker.com/editions/community/docker-ce-desktop-mac)
-- [Get Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
-- [Get Docker for CentOS](https://store.docker.com/editions/community/docker-ce-server-centos)
-- [Get Docker for Debian](https://store.docker.com/editions/community/docker-ce-server-debian)
-- [Get Docker for Fedora](https://store.docker.com/editions/community/docker-ce-server-fedora)
-- [Get Docker for Ubuntu](https://store.docker.com/editions/community/docker-ce-server-ubuntu)
-- [Get Docker for AWS](https://store.docker.com/editions/community/docker-ce-aws)
-- [Get Docker for Azure](https://store.docker.com/editions/community/docker-ce-azure)
+- [Get Docker CE for Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
+- [Get Docker Toolbox for Windows 10 Home and Windows 8](https://docs.docker.com/toolbox/toolbox_install_windows)
+- [Get Docker CE for Windows 10 Pro, Education, and Enterprise](https://store.docker.com/editions/community/docker-ce-desktop-windows)
+- [Get Docker CE for CentOS](https://store.docker.com/editions/community/docker-ce-server-centos)
+- [Get Docker CE for Debian](https://store.docker.com/editions/community/docker-ce-server-debian)
+- [Get Docker CE for Fedora](https://store.docker.com/editions/community/docker-ce-server-fedora)
+- [Get Docker CE for Ubuntu](https://store.docker.com/editions/community/docker-ce-server-ubuntu)
+- [Get Docker CE for AWS](https://store.docker.com/editions/community/docker-ce-aws)
+- [Get Docker CE for Azure](https://store.docker.com/editions/community/docker-ce-azure)
 
 ### 2. Download the Bitmark Node
 
-After successfully installing Docker, you can download the Bitmark node software. To do so, first open a command-line terminal or shell application, such as Terminal on the Mac or `cmd.exe` on Windows. Then enter the following command to download the Bitmark node software:
+After successfully installing Docker, you can download the Bitmark node software. To do so, first open a command-line terminal or shell application, such as Terminal on the MacOS or Linux, or `cmd.exe` on Windows. Then enter the following command to download the Bitmark node software:
 
 ```
 docker pull bitmark/bitmark-node
@@ -63,34 +64,141 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 ```
 
 
-### 3. Run Bitmark Node
+### 3. Run the Bitmark Node
 
-After the Bitmark node software has successfully downloaded, copy and paste the following command into the command-line terminal to run the Bitmark node:
+#### Prepare Public IP
+
+Public IP is the IP which people in Internet can reach your bitmark-node. Our script will automatically find your public IP for you. However, network setting are various, we can not guarentee that auto-generate IP is acurate or correct. To get your accurate public IP, please consult your ISP. 
+
+#### Prepare Network Environment
+
+- The following ports must be accessible from Internet.
+
+    | PORT  | DESCRIPTION  |
+    |:---|:---|
+    | `9980` | Web server port for web UI |
+    | `2136` | Port for connecting to other peer bitmarkd nodes |
+    | `2135` | Port for publishing blockchain events |
+    | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
+
+    After running bitmark-node, you can check by the following commands to make sure ports are opened. 
+
+    ```netcat -v [Your Public IP] 2136```
+
+    ```netcat -v [Your Public IP] 2135```
+
+    ```netcat -v [Your Public IP] 2130```
+
+
+- WebUI is an interface to control bitmark-node. You should be able to access it through local network and due to security reason, you should not make port public.
+
+    | PORT  | DESCRIPTION  |
+    |:---|:---|
+    | `9980` | Web server port for web UI |
+
+#### Auto Update
+
+Each script contains an option to check for updates every time the script is run. This is enabled by default and can be turned off by opening the script in a text editor and replacing the ```true``` text in ```AUTO_UPDATE=true``` with ```false```. This can be founded in a section at the top of the script titled ```User Defined Variables```. Be sure to keep quotation as it is currently in the script.
+
+#### Setup Scripts
+
+- Linux Users
+    * Download the setup script   [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. This can be accomplished by right-clicking on it, selecting open ```Open With Terminal```.
+  
+    * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```
+        
+        ie. ```bash bitmarkNode-Linux-MacOS.sh 117.166.111.123```
+    
+    * If the script does not run, right-click on it, select properties, go to the permissions tab, and click on the box to "Allow this file to run as a program".
+
+- Windows Users Running Docker in Hyper-V (Windows 10 Pro and Enterprise)
+     * [Ensure that Hyper-V is turned on](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
+     * Download the setup script and run it by right-clicking on it, and selecting ```Run as administrator```.
+     [bitmarkNode-HyperV.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-HyperV.bat)
+    
+- MacOS Users
+  * Download the setup script  [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```) 
+    
+  * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```   
+     ie. ```bash bitmarkNode-Linux-MacOS.sh 117.166.111.123```
+
+
+#### Future Setup
+
+The Docker container must be restarted after everytime the computer is turned off. To restart the container, simply re-run the setup script as you did the first time. You can also manually restart the container as described below. Note, if you do have auto-update enabled in the script, manually starting the container will not check for updates.
+
+
+#### Manual Setup
+
+All of the following commands will be run in the appropriate command-line interface described [below](#Terminals). Before running the bitmark-node container, you should check container status:
+
+1. Run ```docker ps -a``` to check if bitmarkNode container exist.
+
+2. Check "Status"
+    * Status: Up to [time] : 
+    bitmarkNode is running. You may either leave this container running or you can stop it using ```docker stop bitmarkNode```. You may then delete the container using ```docker rm bitmarkNode```.
+    * Status: Exit: 
+    bitmarkNode is not running but the container exists. In this case, you can start the container by using ``` docker start bitmarkNode ```, or you can use ``` docker rm bitmarkNode``` to delete the container. To start the container again, you must re-run the first time setup script for your operating system.
+
+---
+
+#### General Information
+
+Once the Bitmark node has successfully started, it will return a 64-character hexadecimal string that represents the Bitmark node's Docker container ID, such as:
+
+```
+dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
+```
+
+When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you, including your public and private key pairs.
+
+#### Docker Run Command Options
+
+Various Bitmark node environmental settings, such as ports and IP addresses, can be configured using the Docker `run` command when running the Bitmark node from the command-line terminal:
 
 ```
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-e NETWORK=[YOUR_NETWORK] \
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
 -v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
-Please remember to replace `[YOUR_PUBLIC_IP]` to your node public ip. Once the Bitmark node has successfully started, it will return a 64-character hexidecimal string that represents the Bitmark node's Docker container ID, such as:
+##### Note that ```YOUR_PUBLIC_IP``` should be replaced with your own public IP address and ```[YOUR_NETWORK] should be replaced with a network as described [here](#Current-Blockchain).
 
-```
-dc78231837f2d320f24ed70c9f8c431abf52e7556bbdec257546f3acdbda5cd2
-```
+The following table describes the various configuration options for the Bitmark node `run` command:
 
 
-When the Bitmark node software is started up for the first time, it will generate a Bitmark account for you, including your public and private keypairs.
+| OPTION  | DEFAULT  | DESCRIPTION  |
+|:---|:---|:---|
+| `-name`  | `bitmarkNode` | Assigns a name to the Bitmark node Docker container. |
+| `-p`  | `9980` | Web server port for web UI |
+| `-p`  | `2136` | Port for connecting to other peer bitmarkd nodes |
+| `-p`  | `2135` | Port for publishing blockchain events |
+| `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
+| `-e`  | `PUBLIC_IP=[YOUR_PUBLIC_IP]` | Environment variable for register your public IP address.  |
+| `-e`  | `NETWORK=[YOUR_NETWORK]` | Either ```bitmark``` or ```testing```. Learn more about the two networks [here](#Current-Blockchain)  |
 
-For an explanation of each of the above `run` command options, please enter the following command into the terminal:
+For an explanation of each of the `run` command options, please enter the following command into the terminal:
 
 ```
 docker run --help
- ```
+```
+
+
+#### Terminals
+
+Each version of Docker will use a different command-line interpreter (CLI) depending on the Operating System. See below to find the correct one for your Operating System and Docker pairing:
+
+| Operating System (Docker Version)                 | CLI                       |
+| ------------------------------------------------- | ------------------------- |
+| Linux (Docker for Linux)                          | Terminal                  |
+| Windows 8 or 10 Home (Docker Toolbox)             | Docker Quickstart Toolbox |
+| Windows 10 Pro or Enterprise (Docker for Windows) | ```cmd.exe```             |
+| MacOS (Docker for Mac)                            | Terminal                  |
 
 
 
@@ -102,13 +210,45 @@ On most computer systems, the web UI can be accessed on port `9980` of the `loca
 
 > [http://127.0.0.1:9980](http://127.0.0.1:9980).
 
-After loading web UI, you should use it to start the two main Bitmark node software programs:
+After loading the web UI, you should use it to start the two main Bitmark node software programs:
 
 1. `bitmarkd` — responsible for verifying Bitmark transactions and recording them in the Bitmark blockchain (required for all Bitmark nodes)
 2. `recorderd` — required for solving the Bitmark blockchain's proof-of-work algorithm, which qualifies nodes to win blocks and receive monetary compensation (optional)
 
 After starting the `bitmarkd` node for the first time, the node will go through an initial `Resynchronizing` phase in which a copy of the current Bitmark blockchain will be downloaded to your Bitmark node. Once the blockchain resynchronization has completed, your Bitmark node will begin verifying and recording transactions for the current block.
 
+## User Interface Walkthrough
+
+### 1. Login Screen
+![](https://i.imgur.com/rVLzYj1.png)
+
+On the login screen, you can either enter your 24-word recovery phrase to log in to an existing account or you're able to create a new account. When you create a new account, you will be assigned a 24-word recovery phrase that will allow you to login to the same account after restarting the Docker container. You will also be prompted to enter a Bitcoin and Litecoin wallet address to allow you to receive any monetary awards for verifying Bitmark property transactions (these address can be changed at any time). If you do not have a bitcoin or litecoin wallet, see [here](#Payment-Addresses) for more information.
+
+### 2. Startup Screen
+![](https://i.imgur.com/g0OXQwH.png)
+
+On this screen, you can start up the two parts of the Bitmark Node software, ```bitmarkd``` and ```recorderd```. By clicking on the person icon on the top of the screen you can: view your blocks won, write down your recovery phrase, and copy down your account address. By clicking on the three bar drop-down menu you can change your language, and view the Bitmark Node documentation. You can also change your cryptocurrency wallet addresses in the ```Bitmark Wallet``` section.
+
+### 3. Running Screen
+![](https://i.imgur.com/nS0lrJO.png)
+This full-sized menu appears once you start the ```bitmarkd``` software.
+
+* Bitmark Node (bitmarkd):
+  * ```Status```: Either ```Stopped``` or ```Running```. Describes the state of the ```bitmarkd``` software.
+  * ```Connection```: When starting up, it displays ```Checking connection…```. After connecting to the network, it will show the number of nodes that it is connected to. A connection of three nodes is required to successfully run the Bitmark Node software.
+* Recorder Node (recorderd)
+  * ```Status```: Either ```Stopped``` or ```Running```. Describes the state of the ```recorderd``` software.
+* Network ID
+  * This is your bitmark-node public key
+* Current Block
+  * This displays what the current block your system is on. This can either be the latest block, or the block that it is currently downloading.
+* Transaction Counter
+  * ```Pending```: The pending transcations count
+  * ```Verified```: The verified transcations count
+* Uptime
+  * This describes the total time that the Docker container has been active for.
+* Your Blocks
+  * Each block in this section is for a block that your account has solved, including the date and time it was solved on, the block number, and the hash, the "solution" for that block. 
 
 ## Configuration Options
 
@@ -119,73 +259,30 @@ The Bitmark node allows participants to verify and record transactions on two di
 - `bitmark` — the official version of the Bitmark blockchain
 - `testing` — a `testnet` version of the blockchain used solely for development testing
 
-Node participants can select which blockchain they are currently working on via the web UI. Note that switching to a different blockchain will require you to restart the `bitmarkd` and `recorderd` programs in the web UI for the new blockchain.
+Node participants can select which blockchain they are currently working on via the web UI. Note that switching to a different blockchain will require you to restart the Docker container, selecting the new network.
 
 The Bitmark system offers monetary rewards to block winners for both the `bitmark` and `testing` blockchains.
 
 ### Payment Addresses
 
+[comment]: <> (TODO: Update description to describe how people actually get paid.)
+
 Bitmark node participants running both `bitmarkd` and `recorderd` are awarded monetary payments for winning blocks on both the `bitmark` and `testing` blockchains. These payments are delivered as either bitcoin or litecoin payments (depending on current cryptocurrency prices and confirmation times) and are delivered to a node's designated bitcoin and litecoin payment addresses.
 
-When the Bitmark node software is first started up, the installation program automatically generates default bitcoin and litecoin payment addresses. These payment addresses can be viewed and configured in the Bitmark node web UI.
-
-
-### Docker Run Command Options
-
-Various Bitmark node environmental settings, such as ports and IP addresses, can be configured using the Docker `run` command when running the Bitmark node from the command-line terminal:
-
-```
-docker run -d --name bitmarkNode -p 9980:9980 \
--p 2136:2136 -p 2130:2130 \
--e PUBLIC_IP=[YOUR_PUBLIC_IP] \
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
-```
-
-The following table describes the various configuration options for the Bitmark node `run` command:
-
-
-| OPTION  | DEFAULT  | DESCRIPTION  |
-|:---|:---|:---|
-| `-name`  | `bitmarkNode` | Assigns a name to the Bitmark node Docker container. |
-| `-p`  | `9980` | Web server port for web UI |
-| `-p`  | `2136` | Port for connecting to other peer bitmarkd nodes |
-| `-p`  | `2135` | Port for connecting to other peer bitmarkd nodes |
-| `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
-| `-e`  | `PUBLIC_IP=[YOUR_PUBLIC_IP]` | Environment variable for register your public IP address |
-
-### Docker Compose Settings
-
-Participants familiar with [Docker Compose](https://docs.docker.com/compose/) can use the included `docker-compose.yml` file as an example for how to configure Bitmark node services.
-
-Configurable options are:
-
-  - Environments:
-    - PUBLIC_IP: Your public IP address
-  - Ports:
-    - 2130: Port of RPC server
-    - 2135 & 2136: Port of peering
-    - 9980: Port of web server
-    _(Note: Please make sure that you setup port forwarding with TCP in order to let others connect you via public network)_
-  - Volumes:
-    - /.config/bitmark-node/bitmarkd/bitmark/data - block data for `bitmark` blockchain
-    - /.config/bitmark-node/bitmarkd/testing/data - block data for `testing` blockchain
+When the Bitmark node software is first started up, it requires the user to provide a bitcoin and litecoin account address. If you do not have a bitcoin or litecoin wallet, there are many ways to easily get one online. A simple, online solution is [coinbase](https://coinbase.com), though any wallet will work.
 
 
 ## Updates
 
-**To update the Bitmark node software, please complete the following 3 steps:**
+**If you turned off automatic updates in your setup script, you can update the Bitmark node software with the following 3 steps:**
 
 ### 1. Download Latest Node Version
 
-To update your version of the Bitmark node software, open a command-line terminal or shell application, such as Terminal on the Mac or `cmd.exe` on Windows, then enter the following command to download the software update:
+To update your version of the Bitmark node software, open a command-line terminal or shell application, such as Terminal on the Mac or Linux, `cmd.exe` on Windows 10 Pro or Enterprise, or ```Docker Quickstart Terminal``` on Windows 8 or 10 Home, then enter the following command to download the software update:
 
 ```
 docker pull bitmark/bitmark-node
 ```
-
 
 After entering the pull command, the download sequence should begin in the terminal. You will receive the following message after the download is completed successfully:
 
@@ -193,22 +290,22 @@ After entering the pull command, the download sequence should begin in the termi
 Status: Downloaded newer image for bitmark/bitmark-node:latest
 ```
 
-
 ### 2. Run Bitmark Node
 
-After the software update has successfully downloaded, you need remove the previous container and start a new one via command-line terminal:
+After the software update has successfully downloaded, you need to remove the previous container and start a new one via command-line terminal:
 
 ```
 docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
+-e NETWORK=[YOUR_NETWORK]
 -v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
 -v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
 -v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
-
+Please remember to replace `[YOUR_PUBLIC_IP]` to your node public ip and ```[YOUR_NETWORK``` with ```bitmark``` or ```testing```.
 
 
 ### 3. Restart Services in Web Interface
@@ -219,10 +316,57 @@ Finally, restart the `bitmarkd` and optional `recorderd` programs via the web UI
 
 After loading web UI, you should use it to start the two main Bitmark node software programs:
 
-1. `bitmarkd` — reponsible for verifying Bitmark transactions and recording them in the Bitmark blockchain (required for all Bitmark nodes)
+1. `bitmarkd` — responsible for verifying Bitmark transactions and recording them in the Bitmark blockchain (required for all Bitmark nodes)
 2. `recorderd` — required for solving the Bitmark blockchain's proof-of-work algorithm, which qualifies nodes to win blocks and receive monetary compensation (optional)
 
 After restarting the `bitmarkd` node for the first time, the node will go through an initial `Resynchronizing` phase in which a copy of the current Bitmark blockchain will be downloaded to your Bitmark node. Once the blockchain resynchronization has completed, your Bitmark node will begin verifying and recording transactions for the current block.
+
+## Troubleshooting
+
+#### Listening port (2136) is not accessible.
+*  If you did not provide your IP address correctly, or your IP address has changed since setup, this issue can arise. You must stop the node through Terminal (MacOS/Linux), ```cmd.exe``` (Windows 10 Pro and Enterprise), or through the ```Docker Quickstart Terminal``` (Windows 8 or 10 Home) by typing ```docker stop bitmarkNode```. Then you must remove the container by typing ```docker rm bitmarkNode```. Now re-run the setup script (for users using the Docker Toolbox setup script, you must find your public IP address again by visiting [ipinfo.io/ip](ipinfo.io/ip) and re-entering your IP address in the setup script).
+* This can also be caused by your router's NAT (Network Address Translation) not allowing you to access port 2136, the port used to connect to other bitmarkd nodes. To allow the node software to access this port, you must enable port forwarding on your router and forward port 2136. A good guide on how to do this is linked [here](https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router).
+
+
+#### Using Docker Toolbox in Windows
+- Docker Toolbox in Windows is NOT officially supported, but you can try the steps below
+- Windows Users Running Docker in Toolbox (Windows 8 and 10 Home)
+  * Docker in Toolbox is not official supported but 
+  * Setup port forwarding in Docker VirtualMachine:
+      * Open Oracle VM VirtualBox and navigate to the docker virtual machine titled ```default```. Right-click on the virtual machine and navigate to ```Settings```. 
+      * Go to ```Network``` and select an adapter that is not currently enabled. Click on the checkbox that says ```Enable Network Adapter``` and select the drop-down box called '''Attached To:''' and select ```NAT```. Enable ```Advanced``` settings by clicking the arrow to the left of the text and click on the box that says ```Port Forwarding```.
+      * You're able to add a new rule by selecting the + sign on the right. Add the following 4 ports:
+      
+        | Name       | Protocol | Host IP  | Host Port | Guest IP | Guest Port |
+        | ---------- | -------- | -------- | --------- | -------- | ---------- |
+        |  Docker #1 | TCP      |          | 9980      |          | 9980
+        |  Docker #2 | TCP      |          | 2136      |          | 2136	
+        |  Docker #3 | TCP      |          | 2135      |          | 2135
+        |  Docker #4 | TCP      |          | 2130      |          | 2130
+
+  * Prepare the setup script:
+      * Begin by downloading the script.
+      [bitmarkNode-Toolbox.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Toolbox.sh)
+      * Open the script in a text editor by right-clicking on the script and selection ```Open With...``` and then select notepad or your preferred text editor. 
+      * Add your public IP Address to ```line 25``` by replacing the text ```XXX.XX.XX.XX```. This can be found on the website [ipinfo.io/ip](http://ipinfo.io/ip).
+      * If you would like to change the directory in which the Bitmark node stores its data, do so on ```line 26```. By default, it is ```/c/```. During setup, it will create a folder ```bitmark-node-data``` in this directory. Do not include user directories if the path is changed (i.e. do not use /c/Users/yourname).
+      * Save the script and move it to the Docker Toolbox file path (by default this is C:\Program Files\Docker Toolbox). Note that this is not the same path as the one you were given the option to change in the last step, instead it is something chosen during Docker setup.
+      * Open ```Docker Quickstart Terminal``` and run the setup script by typing ```sh bitmarkNode-Toolbox.sh```.
+
+#### Current Block Stuck at 1/1
+* Once the Bitmark Node software successfully starts, it will remain at 1/1 blocks for a short period of time. If the node is successfully connected to at least 3 other nodes and remains stuck at 1/1 for a long period of time, restart the Docker container. If the issue persists, remove the container by typing ```docker rm bitmarkNode``` and re-run the setup script. 
+
+#### HTTP: TLS Handshake Error
+* To solve this error, restart the docker container. 
+
+#### Storage Initialise Error
+* To solve this error, restart the docker container. 
+
+#### Windows Login failed
+* You need to login docker hub at first time to pull images. If you login but still get the below message, the possible cause is that you use email to login but not your username.
+
+  ```Error response from daemon: Get https://registry-1.docker.io/v2/bitmark/bitmark-node/manifests/latest: unauthorized: incorrect username or password```
+
 
 
 # Bitmark節點說明
