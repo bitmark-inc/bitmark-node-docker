@@ -337,6 +337,13 @@ After restarting the `bitmarkd` node for the first time, the node will go throug
 #### Storage Initialise Error
 * To solve this error, restart the docker container. 
 
+#### Windows Login failed
+* You need to login docker hub at first time to pull images. If you login but still get the below message, the possible cause is that you use email to login but not your username.
+
+  ```Error response from daemon: Get https://registry-1.docker.io/v2/bitmark/bitmark-node/manifests/latest: unauthorized: incorrect username or password```
+
+
+
 # Bitmark節點說明
 
 ## 簡介
