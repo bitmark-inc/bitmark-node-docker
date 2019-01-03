@@ -65,24 +65,61 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 ### 3. Run the Bitmark Node
 
+#### Prepare Public IP
+
+Public IP is the IP which people in Internet can reach your bitmark-node. Our script will automatically find your public IP for you. However, network setting are various, we can not guarentee that auto-generate IP is acurate or correct. To get your accurate public IP, please consult your ISP. 
+
+#### Prepare Network Environment
+
+- The following ports must be accessible from Internet.
+
+    | PORT  | DESCRIPTION  |
+    |:---|:---|
+    | `9980` | Web server port for web UI |
+    | `2136` | Port for connecting to other peer bitmarkd nodes |
+    | `2135` | Port for publishing blockchain events |
+    | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
+
+    After running bitmark-node, you can check by the following commands to make sure ports are opened. 
+
+    ```netcat -v [Your Public IP] 2136```
+
+    ```netcat -v [Your Public IP] 2135```
+
+    ```netcat -v [Your Public IP] 2130```
+
+
+- WebUI is an interface to control bitmark-node. You should be able to access it through local network and due to security reason, you should not make port public.
+
+    | PORT  | DESCRIPTION  |
+    |:---|:---|
+    | `9980` | Web server port for web UI |
+
 #### Auto Update
+
 Each script contains an option to check for updates every time the script is run. This is enabled by default and can be turned off by opening the script in a text editor and replacing the ```true``` text in ```AUTO_UPDATE=true``` with ```false```. This can be founded in a section at the top of the script titled ```User Defined Variables```. Be sure to keep quotation as it is currently in the script.
 
 #### Setup Scripts
 
 - Linux Users
-     * Download the setup script and run it. This can be accomplished by right-clicking on it, selecting open ```Open With Terminal```.
-     [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh)
-     * If the script does not run, right-click on it, select properties, go to the permissions tab, and click on the box to "Allow this file to run as a program".
+    * Download the setup script   [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. This can be accomplished by right-clicking on it, selecting open ```Open With Terminal```.
+  
+    * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```
+        
+        ie. ```bash bitmarkNode-Linux-MacOS.sh 117.166.111.123```
+    
+    * If the script does not run, right-click on it, select properties, go to the permissions tab, and click on the box to "Allow this file to run as a program".
+
 - Windows Users Running Docker in Hyper-V (Windows 10 Pro and Enterprise)
      * [Ensure that Hyper-V is turned on](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
      * Download the setup script and run it by right-clicking on it, and selecting ```Run as administrator```.
      [bitmarkNode-HyperV.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-HyperV.bat)
-       
-
+    
 - MacOS Users
-  * Download the setup script and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```), and running the script by typing ```bash bitmarkNode-Linux-MacOS.sh```.
-     [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh)
+  * Download the setup script  [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```) 
+    
+  * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```   
+     ie. ```bash bitmarkNode-Linux-MacOS.sh 117.166.111.123```
 
 
 #### Future Setup
@@ -90,7 +127,7 @@ Each script contains an option to check for updates every time the script is run
 The Docker container must be restarted after everytime the computer is turned off. To restart the container, simply re-run the setup script as you did the first time. You can also manually restart the container as described below. Note, if you do have auto-update enabled in the script, manually starting the container will not check for updates.
 
 
-##### Manual Setup
+#### Manual Setup
 
 All of the following commands will be run in the appropriate command-line interface described [below](#Terminals). Before running the bitmark-node container, you should check container status:
 
@@ -201,12 +238,12 @@ This full-sized menu appears once you start the ```bitmarkd``` software.
 * Recorder Node (recorderd)
   * ```Status```: Either ```Stopped``` or ```Running```. Describes the state of the ```recorderd``` software.
 * Network ID
-  * TODO
+  * This is your bitmark-node public key
 * Current Block
   * This displays what the current block your system is on. This can either be the latest block, or the block that it is currently downloading.
 * Transaction Counter
-  * ```Pending```: TODO - Not 100% sure what this counts as it seems to be broken.
-  * ```Verified```: TODO - Not 100% sure what this counts as it seems to be broken.
+  * ```Pending```: The pending transcations count
+  * ```Verified```: The verified transcations count
 * Uptime
   * This describes the total time that the Docker container has been active for.
 * Your Blocks
@@ -232,25 +269,6 @@ The Bitmark system offers monetary rewards to block winners for both the `bitmar
 Bitmark node participants running both `bitmarkd` and `recorderd` are awarded monetary payments for winning blocks on both the `bitmark` and `testing` blockchains. These payments are delivered as either bitcoin or litecoin payments (depending on current cryptocurrency prices and confirmation times) and are delivered to a node's designated bitcoin and litecoin payment addresses.
 
 When the Bitmark node software is first started up, it requires the user to provide a bitcoin and litecoin account address. If you do not have a bitcoin or litecoin wallet, there are many ways to easily get one online. A simple, online solution is [coinbase](https://coinbase.com), though any wallet will work.
-
-
-### Docker Compose Settings
-
-Participants familiar with [Docker Compose](https://docs.docker.com/compose/) can use the included `docker-compose.yml` file as an example of how to configure Bitmark node services.
-
-Configurable options are:
-
-  - Environments:
-    - PUBLIC_IP: Your public IP address
-    - NETWORK: The blockchain you would like to access
-  - Ports:
-    - 2130: Port of RPC server
-    - 2135 & 2136: Port of peering
-    - 9980: Port of web server
-    _(Note: Please make sure that you setup port forwarding with TCP in order to let others connect you via public network)_
-  - Volumes:
-    - /.config/bitmark-node/bitmarkd/bitmark/data - block data for `bitmark` blockchain
-    - /.config/bitmark-node/bitmarkd/testing/data - block data for `testing` blockchain
 
 
 ## Updates
