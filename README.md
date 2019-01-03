@@ -115,6 +115,10 @@ Each script contains an option to check for updates every time the script is run
      * [Ensure that Hyper-V is turned on](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
      * Download the setup script and run it by right-clicking on it, and selecting ```Run as administrator```.
      [bitmarkNode-HyperV.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-HyperV.bat)
+     * execute bitmarkNode-HyperV.bat [Your Public IP]
+  
+        ```ie. bitmarkNode-HyperV.bat 117.166.111.123 ```
+  
     
 - MacOS Users
   * Download the setup script  [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```) 
