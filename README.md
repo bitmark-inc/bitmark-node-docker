@@ -89,7 +89,7 @@ Public IP is the IP which people in Internet can reach your bitmark-node. Our sc
     ```netcat -v [Your Public IP] 2130```
 
 
-- WebUI is an interface to control bitmark-node. User can only access WebUI through local network. Please notice that user can not access the port due to security reason.
+- WebUI is an interface to control bitmark-node. User can only access WebUI through local network. Please notice that user can not access the port from internet due to security reason.
 
     | PORT  | DESCRIPTION  |
     |:---|:---|
