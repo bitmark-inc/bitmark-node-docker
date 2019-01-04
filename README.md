@@ -76,7 +76,6 @@ Public IP is the IP which people in Internet can reach your bitmark-node. Our sc
 
     | PORT  | DESCRIPTION  |
     |:---|:---|
-    | `9980` | Web server port for web UI |
     | `2136` | Port for connecting to other peer bitmarkd nodes |
     | `2135` | Port for publishing blockchain events |
     | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
