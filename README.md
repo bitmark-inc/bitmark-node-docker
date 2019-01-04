@@ -104,26 +104,46 @@ Each script contains an option to check for updates every time the script is run
 - Linux Users
     * Download the setup script   [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. This can be accomplished by right-clicking on it, selecting open ```Open With Terminal```.
   
-    * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```
+    * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```.  When run the script without providing [Your Public IP], the script find your IP from Internet
         
-        ie. ```bash bitmarkNode-Linux-MacOS.sh 117.166.111.123```
-    
+        ie. 
+        ```
+        bash bitmarkNode-Linux-MacOS.sh 117.166.111.123
+        
+        bash bitmarkNode-Linux-MacOS.sh
+        ```
+
+      
+
     * If the script does not run, right-click on it, select properties, go to the permissions tab, and click on the box to "Allow this file to run as a program".
 
 - Windows Users Running Docker in Hyper-V (Windows 10 Pro and Enterprise)
      * [Ensure that Hyper-V is turned on](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
      * Download the setup script and run it by right-clicking on it, and selecting ```Run as administrator```.
      [bitmarkNode-HyperV.bat](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-HyperV.bat)
-     * execute bitmarkNode-HyperV.bat [Your Public IP]
-  
-        ```ie. bitmarkNode-HyperV.bat 117.166.111.123 ```
+     * Execute bitmarkNode-HyperV.bat [Your Public IP].   When run the script without providing [Your Public IP], the script find your IP from Internet
+             
+        ie.
+          
+        ```
+        bitmarkNode-HyperV.bat 117.166.111.123
+    
+        bitmarkNode-HyperV.bat
+        ```
   
     
 - MacOS Users
-  * Download the setup script  [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```) 
+    * Download the setup script  [bitmarkNode-Linux-MacOS.sh](https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker-scripts/bitmarkNode-Linux-MacOS.sh) and run it. You can run the script by opening a ```Terminal```, moving to your download directory within the terminal (if your download directory is Downloads, this can be accomplished by typing ```cd Downloads```) 
     
-  * execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```   
-     ie. ```bash bitmarkNode-Linux-MacOS.sh 117.166.111.123```
+    * Execute  ```bash bitmarkNode-Linux-MacOS.sh [Your Public IP]```. When run the script without providing [Your Public IP], the script find your IP from Internet
+        
+        ie.
+
+        ``` 
+        bash bitmarkNode-Linux-MacOS.sh 117.166.111.123
+        
+        bash bitmarkNode-Linux-MacOS.sh        
+        ```
 
 
 #### Future Setup
