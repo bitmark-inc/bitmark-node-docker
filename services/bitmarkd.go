@@ -51,7 +51,7 @@ func (bitmarkd *Bitmarkd) GetPath() string {
 }
 
 func (bitmarkd *Bitmarkd) GetNetwork() string {
-	if (len(bitmarkd.network) == 0) {
+	if len(bitmarkd.network) == 0 {
 		return "bitmark"
 	}
 	return bitmarkd.network
@@ -173,11 +173,18 @@ func (bitmarkd *Bitmarkd) Start() error {
 			if runCounter < 65535 {
 				runCounter++
 			}
-			
+			bitmarkDPublicIP := os.Getenv("PUBLIC_IP")
+
+			if isIPv6(bitmarkDPublicIP) {
+				if !hasBracket(bitmarkDPublicIP) {
+					bitmarkDPublicIP = fmt.Sprintf("%s%s%s", "[", bitmarkDPublicIP, "]")
+				}
+			}
 			cmd := exec.Command("bitmarkd", "--config-file="+bitmarkd.configFile)
+
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
-				fmt.Sprintf("PUBLIC_IP=%s", os.Getenv("PUBLIC_IP")),
+				fmt.Sprintf("PUBLIC_IP=%s", bitmarkDPublicIP),
 				fmt.Sprintf("BTC_ADDR=%s", btcAddr),
 				fmt.Sprintf("LTC_ADDR=%s", ltcAddr),
 			}

@@ -8,11 +8,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/bitmark-inc/logger"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
+
+	"github.com/bitmark-inc/logger"
 )
 
 type GenericError string
@@ -104,4 +106,18 @@ func checkRequireStringParameters(params ...string) error {
 		}
 	}
 	return nil
+}
+
+func isIPv6(address string) bool {
+	return strings.Count(address, ":") >= 2
+}
+
+func hasBracket(address string) bool {
+	if strings.Count(address, "[") != 1 {
+		return false
+	}
+	if strings.Count(address, "]") != 1 {
+		return false
+	}
+	return true
 }
