@@ -143,9 +143,24 @@
             this.recorderd.errorMsg = err.response.data.msg
           })
       },
+
       openRecoveryAlert () {
         this.$emit("openRecoveryAlert")
-      }
+      },
+      saveAcct() {
+        axios.post("/api/account/" + "save", {
+          })
+          .catch((err, resp) => {
+            this.recorderd.errorMsg = err.response.data.msg
+          })
+      },
+      delSavedAcct() {
+        axios.post("/api/account/" + "delsave", {
+          })
+          .catch((err, resp) => {
+            this.recorderd.errorMsg = err.response.data.msg
+          })
+      },
     },
 
     data() {
