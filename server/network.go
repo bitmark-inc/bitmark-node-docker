@@ -11,44 +11,45 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const retryDelay = time.Duration(500 * time.Millisecond)
+const retryDelay = time.Duration(200 * time.Millisecond)
+const checkInterMs = 1000
 
 //CheckPortReachableRoutine is a Connection Check Routine
 func (ws *WebServer) CheckPortReachableRoutine(host, port string) {
 	stop := make(chan bool)
 	defer close(stop)
 	for {
-		connStat := connCheck(host, port, 1000, 3, stop)
-		for {
-			ws.peerPortReachable = <-connStat
-		}
+		connStat := <-connCheck(host, port, 2, stop)
+		ws.peerPortReachable = connStat
+		time.Sleep(time.Duration(checkInterMs) * time.Millisecond)
 
 	}
 }
 
-func connCheck(host, port string, checkInterMs, retryTimes int, done <-chan bool) <-chan bool {
+func connCheck(host, port string, retryTimes int, done <-chan bool) <-chan bool {
 	status := make(chan bool)
 
 	go func() {
-		for {
-			connected := true
-			for retry := 0; retry < retryTimes; retry++ {
-				connected = connToPort(host, port)
-				if !connected {
-					retry++
-					time.Sleep(retryDelay)
-				} else {
-					retry = retryTimes + 1
-				}
+		connected := true
+		for retry := 0; retry < retryTimes; retry++ {
+			connected = connToPort(host, port)
+			if !connected {
+				retry++
+				time.Sleep(retryDelay)
+			} else {
+				retry = retryTimes + 1
 			}
-			select {
-			case <-done:
-				return
-			case status <- connected:
-			}
-			time.Sleep(time.Duration(checkInterMs) * time.Millisecond)
 		}
+		status <- connected
+		select {
+		case <-done:
+			return
+		case <-status:
+			return
+		}
+
 	}()
+
 	return status
 }
 
