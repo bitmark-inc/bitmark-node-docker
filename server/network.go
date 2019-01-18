@@ -12,25 +12,15 @@ import (
 )
 
 const retryDelay = time.Duration(500 * time.Millisecond)
+const retryTimes = 3
+const checkInterMs = 1000
+const dialTimeout = 2 * time.Second
 
 //CheckPortReachableRoutine is a Connection Check Routine
 func (ws *WebServer) CheckPortReachableRoutine(host, port string) {
-	stop := make(chan bool)
-	defer close(stop)
-	for {
-		connStat := connCheck(host, port, 1000, 3, stop)
-		for {
-			ws.peerPortReachable = <-connStat
-		}
-
-	}
-}
-
-func connCheck(host, port string, checkInterMs, retryTimes int, done <-chan bool) <-chan bool {
 	status := make(chan bool)
-
-	go func() {
-		for {
+	for {
+		go func(updateStatus chan<- bool) {
 			connected := true
 			for retry := 0; retry < retryTimes; retry++ {
 				connected = connToPort(host, port)
@@ -41,26 +31,24 @@ func connCheck(host, port string, checkInterMs, retryTimes int, done <-chan bool
 					retry = retryTimes + 1
 				}
 			}
-			select {
-			case <-done:
-				return
-			case status <- connected:
-			}
-			time.Sleep(time.Duration(checkInterMs) * time.Millisecond)
-		}
-	}()
-	return status
+			updateStatus <- connected
+
+		}(status)
+
+		ws.peerPortReachable = <-status
+		time.Sleep(time.Duration(checkInterMs) * time.Millisecond)
+	}
 }
 
 func connToPort(host, port string) bool {
 	if host == "" {
 		return false
 	}
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", host, port))
+	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", host, port), dialTimeout)
 	if err != nil {
 		return false
 	} else {
-		defer conn.Close()
+		conn.Close()
 		return true
 	}
 }
