@@ -28,7 +28,7 @@ func returnError(c *gin.Context, code int, message string) {
 	})
 }
 
-//Get seed string from a bitmarkd seed file
+// GetSeedFromFile Get seed string from a bitmarkd seed file
 func GetSeedFromFile(seedFile string) (string, error) {
 	f, err := os.Open(seedFile)
 	if err != nil {
@@ -45,7 +45,7 @@ func GetSeedFromFile(seedFile string) (string, error) {
 	return seed, nil
 }
 
-//GetSeedFromDB is to get Seed from DB
+// GetSeedFromDB is to get Seed from DB
 func (ws *WebServer) GetSeedFromDB(network string) (seed string, err error) {
 	if network == "" {
 		ws.log.Warnf("GetSeedFromDB", "no network")
@@ -75,7 +75,7 @@ func (ws *WebServer) GetSeedFromDB(network string) (seed string, err error) {
 	return seed, nil
 }
 
-//SaveSeedToDB is to get Seed from DB
+// SaveSeedToDB is to get Seed from DB
 func (ws *WebServer) SaveSeedToDB(seed, dbPath, network string) error {
 	if network == "" {
 		ws.log.Errorf("SaveSeedToDB%s", "wrong network configuration")
@@ -120,12 +120,12 @@ func (ws *WebServer) SaveSeedToDB(seed, dbPath, network string) error {
 	return nil
 }
 
-//LoadSavedAcct:Load saved account to memory and seed file
+// LoadSavedAcct load saved account to memory and seed file
 func (ws *WebServer) LoadSavedAcct(dbPath, network string) (string, error) {
 	seed, err := ws.GetSeedFromDB(network)
 	ws.log.Warnf("[LoadSavedAcct]Seed from DB: %s", seed)
 	if err != nil { // no saved account return error and make node to create a new Acct
-		ws.log.Errorf("GetAccount GetSeedFromDB", err)
+		ws.log.Errorf("GetAccount GetSeedFromDB Error:%v", err)
 		return "", err
 	}
 	if seed == "" {
@@ -156,7 +156,7 @@ func (ws *WebServer) LoadSavedAcct(dbPath, network string) (string, error) {
 	return a.AccountNumber(), nil
 }
 
-//Get the current account which is set in the bitmarkd proofing file
+// Get the current account which is set in the bitmarkd proofing file
 func (ws *WebServer) GetAccount(c *gin.Context) {
 	network := ws.nodeConfig.GetNetwork()
 	if network == "" {
@@ -243,11 +243,16 @@ func (ws *WebServer) NewAccount(c *gin.Context) {
 	}
 	ws.SetAccount(a.AccountNumber(), seed, network) // Record in AccountInfo in memory
 	ws.log.Infof("Create a NewAccount", a.AccountNumber())
+	err = ws.saveAcct()
+	if nil != err {
+		returnError(c, 500, fmt.Sprintf("Auto save failed becuase %s", err))
+	}
 	c.JSON(200, map[string]interface{}{
 		"ok": 1,
 	})
 }
 
+// GetRecoveryPhrase get recoveryPhrase of current account
 func (ws *WebServer) GetRecoveryPhrase(c *gin.Context) {
 	network := ws.nodeConfig.GetNetwork()
 	if network == "" {
@@ -283,6 +288,7 @@ func (ws *WebServer) GetRecoveryPhrase(c *gin.Context) {
 	})
 }
 
+// SetRecoveryPhrase set recovery phrase
 func (ws *WebServer) SetRecoveryPhrase(c *gin.Context) {
 	network := ws.nodeConfig.GetNetwork()
 	if network == "" {
@@ -321,30 +327,42 @@ func (ws *WebServer) SetRecoveryPhrase(c *gin.Context) {
 		return
 	}
 	ws.SetAccount(a.AccountNumber(), seed, network)
+	err = ws.saveAcct()
+	if nil != err {
+		returnError(c, 500, fmt.Sprintf("Account create but not saved. Error-%s", err))
+	}
 	ws.log.Infof("Set Account by Recovery Phrase")
 	c.JSON(200, map[string]interface{}{
 		"ok": 1,
 	})
 }
 
+// SaveAccount save current account to db and file
 func (ws *WebServer) SaveAccount(c *gin.Context) {
+
+	err := ws.saveAcct()
+	if nil != err {
+		returnError(c, 500, fmt.Sprintf("%s", err))
+	}
+	c.JSON(200, map[string]interface{}{
+		"ok": 1,
+	})
+	return
+}
+
+func (ws *WebServer) saveAcct() error {
 	network := ws.nodeConfig.GetNetwork()
 	if network == "" {
-		ws.log.Errorf("[SaveAccount]", "wrong network configuration")
-		returnError(c, 500, "wrong network configuration")
-		return
+		return errors.New("wrong network configuration")
 	}
 	seed, err := ws.GetSeed(network)
 	if err != nil {
-		ws.log.Errorf("[SaveAccount]%s", "fail to get seed from webserver")
-		returnError(c, 500, "fail to get seed from webserver")
-		return
+		return errors.New("fail to get seed from webserver")
 	}
 	dbPath := filepath.Join(ws.rootPath, "db")
 	err = ws.SaveSeedToDB(seed, dbPath, network)
 	if err != nil {
-		returnError(c, 500, "save to db failed")
-		return
+		return errors.New("save to db failed")
 	}
 	//also save to file
 	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
@@ -352,9 +370,7 @@ func (ws *WebServer) SaveAccount(c *gin.Context) {
 	defer f.Close()
 
 	if err != nil {
-		ws.log.Errorf("[SaveAccount]", "fail to save seedfile", err)
-		returnError(c, 500, fmt.Sprintf("fail to save seed file from: %s", seedFile))
-		return
+		return errors.New("fail to save seedfile")
 	}
 
 	_, err = f.WriteString(fmt.Sprintf("SEED:%s", seed))
@@ -362,10 +378,7 @@ func (ws *WebServer) SaveAccount(c *gin.Context) {
 	//verify
 	_, err = ws.GetSeedFromDB(network)
 	if err != nil {
-		ws.log.Errorf("[SaveAccount]%s", "get Seed FromDB failed")
+		return errors.New("get Seed FromDB failed")
 	}
-	c.JSON(200, map[string]interface{}{
-		"ok": 1,
-	})
-	return
+	return nil
 }
