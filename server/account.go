@@ -123,7 +123,6 @@ func (ws *WebServer) SaveSeedToDB(seed, dbPath, network string) error {
 // LoadSavedAcct load saved account to memory and seed file
 func (ws *WebServer) LoadSavedAcct(dbPath, network string) (string, error) {
 	seed, err := ws.GetSeedFromDB(network)
-	ws.log.Warnf("[LoadSavedAcct]Seed from DB: %s", seed)
 	if err != nil { // no saved account return error and make node to create a new Acct
 		ws.log.Errorf("GetAccount GetSeedFromDB Error:%v", err)
 		return "", err
