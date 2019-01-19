@@ -13,7 +13,7 @@ import (
 
 const retryDelay = time.Duration(500 * time.Millisecond)
 const retryTimes = 3
-const checkInterMs = 1000
+const checkInterMs = 2000
 const dialTimeout = 2 * time.Second
 
 //CheckPortReachableRoutine is a Connection Check Routine
