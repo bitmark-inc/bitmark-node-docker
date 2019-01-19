@@ -108,6 +108,7 @@ func main() {
 		masterConfig.VersionURL,
 	)
 	go webserver.CheckPortReachableRoutine(os.Getenv("PUBLIC_IP"), "2136")
+	go webserver.ClearCmdErrorRoutine(bitmarkdService)
 
 	r := gin.New()
 

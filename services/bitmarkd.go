@@ -6,7 +6,9 @@ package services
 
 import (
 	"bufio"
+	"crypto/tls"
 	"fmt"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -24,6 +26,18 @@ var (
 	ErrBitmarkdIsNotRunning = fault.InvalidError("Bitmarkd is not running")
 	ErrBitmarkdIsRunning    = fault.InvalidError("Bitmarkd is running")
 )
+
+// a http client
+var client = &http.Client{
+	Timeout: 5 * time.Second,
+	Transport: &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	},
+}
+
+const clearErrorIntervalSec = 5 * time.Second
 
 type Bitmarkd struct {
 	sync.RWMutex
@@ -280,4 +294,9 @@ func (bitmarkd *Bitmarkd) Stop() error {
 	}
 	bitmarkd.started = false
 	return nil
+}
+
+// Clear Command Error
+func (bitmarkd *Bitmarkd) ClearCmdError() {
+	bitmarkd.cmdErr = ""
 }

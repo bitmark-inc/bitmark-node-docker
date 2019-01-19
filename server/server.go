@@ -598,3 +598,15 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 	c.String(http.StatusOK, "")
 	return
 }
+
+func (ws *WebServer) ClearCmdErrorRoutine(bitmarkd *services.Bitmarkd) {
+
+	for {
+		incomming, outgoing := getPeers()
+		if incomming > 0 && outgoing > 0 {
+			bitmarkd.ClearCmdError()
+		}
+		time.Sleep(5 * time.Second)
+	}
+
+}
