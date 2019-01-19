@@ -25,7 +25,6 @@ func (ws *WebServer) CheckPortReachableRoutine(host, port string) {
 			for retry := 0; retry < retryTimes; retry++ {
 				connected = connToPort(host, port)
 				if !connected {
-					retry++
 					time.Sleep(retryDelay)
 				} else {
 					retry = retryTimes + 1

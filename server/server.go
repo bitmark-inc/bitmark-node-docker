@@ -71,14 +71,14 @@ func (s *snapshotInfo) get(versionURL string) ([]byte, error) {
 	resp, err := s.client.Get(versionURL)
 
 	if nil != err {
-		return []byte{}, errors.New("Unable to get snapshot version info")
+		return []byte{}, ErrorGetSnapshotInfo
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if nil != err {
-		return []byte{}, errors.New("Unable to read snapshot version file")
+		return []byte{}, ErrorReadSnapshot
 	}
 
 	return body, nil
@@ -145,7 +145,7 @@ func (ws *WebServer) GetChain(c *gin.Context) {
 func (ws *WebServer) GetConfig(c *gin.Context) {
 	config, err := ws.nodeConfig.Get()
 	if err != nil {
-		c.String(http.StatusInternalServerError, "can not read bitmark node config. error: %s", err.Error())
+		c.String(http.StatusInternalServerError, ErrCombind(ErrorReadConfigFile, err).Error())
 		return
 	}
 	c.JSON(http.StatusOK, map[string]interface{}{
@@ -163,14 +163,14 @@ func (ws *WebServer) UpdateConfig(c *gin.Context) {
 
 	err := c.BindJSON(&newConfig)
 	if err != nil {
-		c.String(400, "can not parse action option")
+		c.String(400, ErrorInvalidArgument.Error())
 		return
 	}
 
 	err = ws.nodeConfig.Set(newConfig)
 
 	if err != nil {
-		c.String(http.StatusInternalServerError, "can not set bitmark node config. error: %s", err.Error())
+		c.String(http.StatusInternalServerError, ErrCombind(ErrorSetConfigFile, err).Error())
 		return
 	}
 
@@ -210,7 +210,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 		io.Copy(&bb, resp.Body)
 
 		if resp.StatusCode != http.StatusOK {
-			c.String(http.StatusInternalServerError, "unable to get bitmark info. message: %s", bb.String())
+			c.String(http.StatusInternalServerError, "%s message: %s", ErrorGetBitmarkdInfo.Error(), bb.String())
 			return
 		}
 
@@ -231,7 +231,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 		})
 		return
 	default:
-		c.String(400, "invalid option")
+		c.String(400, ErrorInvalidOption.Error())
 		return
 	}
 
@@ -251,7 +251,7 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 	var req ServiceOptionRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.String(400, "can not parse action option")
+		c.String(400, ErrorParseOption.Error())
 		return
 	}
 
@@ -268,7 +268,7 @@ func (ws *WebServer) RecorderdStartStop(c *gin.Context) {
 		})
 		return
 	default:
-		c.String(400, "invalid option")
+		c.String(400, ErrorInvalidOption.Error())
 		return
 	}
 
@@ -410,7 +410,7 @@ func downloadFile(ws *WebServer) error {
 	resp, err := client.Get(ws.SnapshotInfo.URL)
 
 	if nil != err {
-		return fmt.Errorf("Cannot download snapshot from %s", ws.SnapshotInfo.URL)
+		return fmt.Errorf("%s from %s", ErrorDownloadSnapshot.Error(), ws.SnapshotInfo.URL)
 	}
 	defer resp.Body.Close()
 
@@ -442,7 +442,7 @@ func downloadFile(ws *WebServer) error {
 	}
 
 	if fileInfo.Size() == 0 {
-		return errors.New("Cannot save file")
+		return ErrorSaveSnapshot
 	}
 
 	return nil
@@ -541,7 +541,7 @@ func recoverData(ws *WebServer) error {
 			filepath.Join(bitmarkdDataPath, "data-backup"))
 
 		if nil != err {
-			return fmt.Errorf("Cannot move existing directory %s", oldDir)
+			return fmt.Errorf("%s from oldDir: %s", ErrorMoveDirFail.Error(), oldDir)
 		}
 	}
 

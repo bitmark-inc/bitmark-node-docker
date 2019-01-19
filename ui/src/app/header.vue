@@ -34,6 +34,9 @@
             <li>
               <a href="#" @click="copyAccount">Copy account address</a>
             </li>
+            <li>
+              <a href="#" @click="deleteSavedAcct">Remove saved account</a>
+            </li>
           </ul>
         </div>
         <div class="hambuger">
@@ -143,8 +146,8 @@
             this.recorderd.errorMsg = err.response.data.msg
           })
       },
-      delSavedAcct() {
-        axios.post("/api/account/" + "delsave", {
+      deleteSavedAcct() {
+        axios.post("/api/account/" + "delete", {
           })
           .catch((err, resp) => {
             this.recorderd.errorMsg = err.response.data.msg

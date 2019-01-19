@@ -50,17 +50,18 @@ func latestVersion() string {
 	return fmt.Sprintf("v%0.1f", newVersion)
 }
 
+// NodeInfo Return NodeInformation
 func (ws *WebServer) NodeInfo(c *gin.Context) {
 	network := ws.nodeConfig.GetNetwork()
 	if network == "" {
-		c.String(500, "wrong network configuration")
+		c.String(500, ErrorNoNetwork.Error())
 		return
 	}
 
 	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
 	f, err := os.Open(seedFile)
 	if err != nil {
-		c.String(500, "fail to open seed file from: %s", seedFile)
+		c.String(500, ErrorOpenSeedFile.Error()+seedFile)
 		return
 	}
 	defer f.Close()
@@ -68,13 +69,13 @@ func (ws *WebServer) NodeInfo(c *gin.Context) {
 	var buf bytes.Buffer
 	_, err = io.Copy(&buf, f)
 	if err != nil {
-		c.String(500, "can not read config file")
+		c.String(500, ErrorReadConfigFile.Error())
 		return
 	}
 	seed := strings.Trim(strings.Split(buf.String(), ":")[1], "\n")
 	a, err := account.PrivateKeyFromBase58Seed(seed)
 	if err != nil {
-		c.String(500, "unable to get your account. error: %s", err.Error())
+		c.String(500, ErrCombind(ErrorSetAccount, err).Error())
 		return
 	}
 	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
