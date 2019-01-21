@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,9 @@ const retryDelay = time.Duration(500 * time.Millisecond)
 const retryTimes = 3
 const checkInterMs = 2000
 const dialTimeout = 2 * time.Second
+const bitmarkdDetailApi = "bitmarkd/details"
+const bitmarkdDetailHost = "127.0.0.1"
+const bitmarkdDetailPort = "2131"
 
 //CheckPortReachableRoutine is a Connection Check Routine
 func (ws *WebServer) CheckPortReachableRoutine(host, port string) {
@@ -52,8 +56,8 @@ func connToPort(host, port string) bool {
 	}
 }
 
-func getPeers() (int, int) {
-	resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/details")
+func getPeers(api string) (int, int) {
+	resp, err := client.Get(api)
 	if err != nil {
 		return 0, 0
 	}
@@ -83,7 +87,7 @@ func (ws *WebServer) IsPeerPortReachable() bool {
 
 //ConnectionStatus return connected node number and Peer port reachability
 func (ws *WebServer) ConnectionStatus(c *gin.Context) {
-	incoming, outgoing := getPeers()
+	incoming, outgoing := getPeers(ws.GetBitmarkdDetailApi())
 	c.JSON(200, map[string]interface{}{
 		"incoming": incoming,
 		"outgoing": outgoing,
@@ -92,4 +96,13 @@ func (ws *WebServer) ConnectionStatus(c *gin.Context) {
 		},
 	})
 	return
+}
+
+// GetBitmarkdDetailApi get bitmarkd detail api
+func (ws *WebServer) GetBitmarkdDetailApi() string {
+	httpRPCPort := os.Getenv("HTTP_RPC_PORT")
+	if len(httpRPCPort) == 0 {
+		httpRPCPort = bitmarkdDetailPort
+	}
+	return fmt.Sprintf("https://%s:%s/%s", bitmarkdDetailHost, httpRPCPort, bitmarkdDetailApi)
 }

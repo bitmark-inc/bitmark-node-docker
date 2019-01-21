@@ -37,6 +37,7 @@
     "vueify": "^9.4.1"
   },
   "dependencies": {
+    "all": "0.0.0",
     "moment": "^2.21.0",
     "watchify": "^3.9.0"
   }

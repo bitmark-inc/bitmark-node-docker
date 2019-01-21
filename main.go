@@ -107,7 +107,11 @@ func main() {
 		recorderdService,
 		masterConfig.VersionURL,
 	)
-	go webserver.CheckPortReachableRoutine(os.Getenv("PUBLIC_IP"), "2136")
+	peerport := os.Getenv("PeerPort")
+	if len(peerport) == 0 {
+		peerport = "2136"
+	}
+	go webserver.CheckPortReachableRoutine(os.Getenv("PUBLIC_IP"), peerport)
 	go webserver.ClearCmdErrorRoutine(bitmarkdService)
 
 	r := gin.New()

@@ -38,7 +38,7 @@
                 <span class="label">Connection:</span>
                 <span class="status" v-if="bitmarkdConnStat !== null">You have {{ this.bitmarkdConnStat.incoming }} incomming nodes and {{ this.bitmarkdConnStat.outgoing }} outgoing nodes.
                   <span v-if="!bitmarkdConnStat.port_state.listening">
-                    <br> Listening port (2136) is not accessible.</span>
+                    <br> Listening peer port (default:2136) is not accessible.</span>
                 </span>
                 <span class="status" v-else-if="this.bitmarkd.status.started">Checking connection…</span>
                 <span class="status" v-else>Not connected</span>

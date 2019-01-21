@@ -200,7 +200,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 		return
 	case "info":
 
-		resp, err := client.Get("https://127.0.0.1:2131/bitmarkd/details")
+		resp, err := client.Get(ws.GetBitmarkdDetailApi())
 		if err != nil {
 			c.String(http.StatusInternalServerError, "unable to get bitmark info")
 			return
@@ -602,7 +602,7 @@ func (ws *WebServer) DownloadSnapshot(c *gin.Context) {
 func (ws *WebServer) ClearCmdErrorRoutine(bitmarkd *services.Bitmarkd) {
 
 	for {
-		incomming, outgoing := getPeers()
+		incomming, outgoing := getPeers(ws.GetBitmarkdDetailApi())
 		if incomming > 0 && outgoing > 0 {
 			bitmarkd.ClearCmdError()
 		}
