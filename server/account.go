@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -336,37 +337,32 @@ func (ws *WebServer) SaveAccount(c *gin.Context) {
 func (ws *WebServer) saveAcct() error {
 	network := ws.nodeConfig.GetNetwork()
 	if network == "" {
-		ws.log.Warnf("saveAcct:%s", ErrorNoNetwork)
-		return ErrorNoNetwork
-		seed, err := ws.GetSeed(network)
-		if err != nil {
-			ws.log.Warnf("saveAcct:%s", ErrorGetSeed)
-			return ErrorGetSeed
-		}
-		dbPath := filepath.Join(ws.rootPath, "db")
-		err = ws.SaveSeedToDB(seed, dbPath, network)
-		if err != nil {
-			ws.log.Warnf("saveAcct:%s", ErrorSaveSeedToDB)
-			return ErrorSaveSeedToDB
-		}
-		//also save to file
-		seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
-		f, err := os.OpenFile(seedFile, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0600)
-		defer f.Close()
+		return errors.New("wrong network configuration")
+	}
+	seed, err := ws.GetSeed(network)
+	if err != nil {
+		return errors.New("fail to get seed from webserver")
+	}
+	dbPath := filepath.Join(ws.rootPath, "db")
+	err = ws.SaveSeedToDB(seed, dbPath, network)
+	if err != nil {
+		return errors.New("save to db failed")
+	}
+	//also save to file
+	seedFile := filepath.Join(ws.rootPath, "bitmarkd", network, "proof.sign")
+	f, err := os.OpenFile(seedFile, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0600)
+	defer f.Close()
 
-		if err != nil {
-			ws.log.Warnf("saveAcct:%s", ErrorToWriteSeedFile)
-			return ErrorToWriteSeedFile
-		}
+	if err != nil {
+		return errors.New("fail to save seedfile")
+	}
 
-		_, err = f.WriteString(fmt.Sprintf("SEED:%s", seed))
+	_, err = f.WriteString(fmt.Sprintf("SEED:%s", seed))
 
-		//verify
-		_, err = ws.GetSeedFromDB(network)
-		if err != nil {
-			ws.log.Warnf("saveAcct:%s", ErrorBoltDBGetSeed)
-			return ErrorBoltDBGetSeed
-		}
+	//verify
+	_, err = ws.GetSeedFromDB(network)
+	if err != nil {
+		return errors.New("get Seed FromDB failed")
 	}
 	return nil
 }
