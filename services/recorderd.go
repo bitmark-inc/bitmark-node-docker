@@ -6,14 +6,16 @@ package services
 
 import (
 	"bufio"
-	"github.com/bitmark-inc/bitmark-node/fault"
-	"github.com/bitmark-inc/bitmark-node/utils"
-	"github.com/bitmark-inc/logger"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"sync"
 	"time"
+
+	"github.com/bitmark-inc/bitmark-node/fault"
+	"github.com/bitmark-inc/bitmark-node/utils"
+	"github.com/bitmark-inc/logger"
 )
 
 var (
@@ -42,7 +44,7 @@ func (recorderd *Recorderd) GetPath() string {
 }
 
 func (recorderd *Recorderd) GetNetwork() string {
-	if (len(recorderd.network) == 0) {
+	if len(recorderd.network) == 0 {
 		return "bitmark"
 	}
 	return recorderd.network
@@ -141,10 +143,21 @@ func (recorderd *Recorderd) Start() error {
 	recorderd.running = true
 	stopped := make(chan bool, 1)
 
+	bitmarkDPublicIP := os.Getenv("PUBLIC_IP")
+	proofPubPortEnv := os.Getenv("PROOF_PUB_PORT")
+	proofSubPortEnv := os.Getenv("PROOF_SUB_PORT")
+
 	go func() {
 		for recorderd.running {
 			// start recorderd as sub process
 			cmd := exec.Command("recorderd", "--config-file="+recorderd.configFile)
+
+			cmd.Env = []string{
+				fmt.Sprintf("PUBLIC_IP=%s", bitmarkDPublicIP),
+				fmt.Sprintf("PROOF_PUB_PORT=%s", proofPubPortEnv),
+				fmt.Sprintf("PROOF_SUB_PORT=%s", proofSubPortEnv),
+			}
+
 			// start recorderd as sub process
 			stderr, err := cmd.StderrPipe()
 			if err != nil {

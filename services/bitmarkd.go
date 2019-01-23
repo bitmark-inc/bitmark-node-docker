@@ -188,6 +188,12 @@ func (bitmarkd *Bitmarkd) Start() error {
 				runCounter++
 			}
 			bitmarkDPublicIP := os.Getenv("PUBLIC_IP")
+			rpcPortEnv := os.Getenv("RPC_PORT")
+			httRpcPortEnv := os.Getenv("HTTP_RPC_PORT")
+			peerPortEnv := os.Getenv("PEER_PORT")
+			blockPubPortEnv := os.Getenv("BLOCK_PUB_PORT")
+			proofPubPortEnv := os.Getenv("PROOF_PUB_PORT")
+			proofSubPortEnv := os.Getenv("PROOF_SUB_PORT")
 
 			if isIPv6(bitmarkDPublicIP) {
 				if !hasBracket(bitmarkDPublicIP) {
@@ -199,6 +205,12 @@ func (bitmarkd *Bitmarkd) Start() error {
 			cmd.Env = []string{
 				fmt.Sprintf("CONTAINER_IP=%s", bitmarkd.localIP),
 				fmt.Sprintf("PUBLIC_IP=%s", bitmarkDPublicIP),
+				fmt.Sprintf("RPC_PORT=%s", rpcPortEnv),
+				fmt.Sprintf("HTTP_RPC_PORT=%s", httRpcPortEnv),
+				fmt.Sprintf("PEER_PORT=%s", peerPortEnv),
+				fmt.Sprintf("BLOCK_PUB_PORT=%s", blockPubPortEnv),
+				fmt.Sprintf("PROOF_PUB_PORT=%s", proofPubPortEnv),
+				fmt.Sprintf("PROOF_SUB_PORT=%s", proofSubPortEnv),
 				fmt.Sprintf("BTC_ADDR=%s", btcAddr),
 				fmt.Sprintf("LTC_ADDR=%s", ltcAddr),
 			}

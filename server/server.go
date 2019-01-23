@@ -201,6 +201,7 @@ func (ws *WebServer) BitmarkdStartStop(c *gin.Context) {
 	case "info":
 
 		resp, err := client.Get(ws.GetBitmarkdDetailApi())
+		ws.log.Debugf("GetBitmarkdDetailApi:%s", ws.GetBitmarkdDetailApi())
 		if err != nil {
 			c.String(http.StatusInternalServerError, "unable to get bitmark info")
 			return

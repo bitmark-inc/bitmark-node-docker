@@ -104,5 +104,6 @@ func (ws *WebServer) GetBitmarkdDetailApi() string {
 	if len(httpRPCPort) == 0 {
 		httpRPCPort = bitmarkdDetailPort
 	}
+
 	return fmt.Sprintf("https://%s:%s/%s", bitmarkdDetailHost, httpRPCPort, bitmarkdDetailApi)
 }
