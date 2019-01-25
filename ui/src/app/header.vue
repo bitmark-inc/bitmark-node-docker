@@ -31,12 +31,15 @@
             <li>
               <a href="#" @click="openRecoveryAlert">Write down recovery phrase</a>
             </li>
+
             <li>
               <a href="#" @click="copyAccount">Copy account address</a>
             </li>
+            <!--
             <li>
               <a href="#" @click="deleteSavedAcct">Remove saved account</a>
             </li>
+            -->
           </ul>
         </div>
         <div class="hambuger">
