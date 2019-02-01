@@ -12,21 +12,22 @@ ENV VERSION v0.97
 ENV BITMARKD_VERSION v8.1
 ENV PATH=/go/src/github.com/bitmark-inc/bitmarkd/c-libraries/:${PATH}
 
-RUN go get -d github.com/bitmark-inc/bitmarkd || \
-    cd /go/src/github.com/bitmark-inc/bitmarkd && \
-    cd /go/src/github.com/bitmark-inc/bitmarkd/c-libraries/ && \
-    make all && \
-    go get -d github.com/bitmark-inc/go-argon2 && \
+RUN go get -d github.com/bitmark-inc/go-argon2 && \
     go get -d github.com/bitmark-inc/go-libucl && \
     go get github.com/bitmark-inc/exitwithstatus && \
     go get github.com/bitmark-inc/bitmark-sdk-go
 
-RUN cd /go/src/github.com/bitmark-inc/bitmarkd && git checkout "$BITMARKD_VERSION" && \
-    git submodule update && \
+RUN go get -d github.com/bitmark-inc/bitmarkd || \
+    cd /go/src/github.com/bitmark-inc/bitmarkd && \
+    git checkout "$BITMARKD_VERSION" && \
+    git submodule update --init && \
+    cd /go/src/github.com/bitmark-inc/bitmarkd/c-libraries/ && \
+    make all && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/... && \
     go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
     go install github.com/bitmark-inc/bitmark-wallet
+
 
 RUN go get github.com/gin-gonic/gin && go get github.com/gin-gonic/contrib/static && \
     go get github.com/coreos/bbolt
