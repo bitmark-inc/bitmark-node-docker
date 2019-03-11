@@ -8,6 +8,6 @@ logging {
     size = 1048576
     count = 10
     levels {
-        DEFAULT = "debug"
+        DEFAULT = "info"
     }
 }

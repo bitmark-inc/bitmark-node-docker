@@ -281,12 +281,13 @@ func (ws *WebServer) SetRecoveryPhrase(c *gin.Context) {
 		return
 	}
 	var args RecoveryPhraseArguments
+
 	err := c.BindJSON(&args)
 	if err != nil {
 		ReturnError(c, 400, ErrorInvalidArgument.Error())
 		return
 	}
-
+	ws.log.Warnf("Set RecoveryPhrase", args.Phrase)
 	a, err := sdk.AccountFromRecoveryPhrase(args.Phrase)
 	if err != nil {
 		ReturnError(c, 400, ErrorRecoveryFromPhrase.Error())

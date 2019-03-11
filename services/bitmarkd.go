@@ -214,6 +214,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 				fmt.Sprintf("BTC_ADDR=%s", btcAddr),
 				fmt.Sprintf("LTC_ADDR=%s", ltcAddr),
 			}
+			bitmarkd.log.Infof("Bitmarkd Use BTC_ADDR=%s LTC_ADDR=%s \n", btcAddr, ltcAddr)
 			// start bitmarkd as sub process
 			stderr, err := cmd.StderrPipe()
 			if err != nil {
