@@ -6,11 +6,11 @@ RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/
 # Dockerfile after bitmarkd v0.9.0 for adapting go module
 #--
 
-FROM bitmark/go-env:ubuntu1804 as go-env
+FROM bitmark/go-env:go12 as go-env
 
 # VERSION SHOW ON BITMARK-NODE
 ENV VERSION v1.0
-ENV BITMARKD_VERSION v0.10.1
+ENV BITMARKD_VERSION v0.10.5
 
 RUN apt-get install libargon2-0-dev
 
