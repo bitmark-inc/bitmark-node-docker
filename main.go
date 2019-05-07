@@ -1,41 +1,38 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 
 	"github.com/bitmark-inc/bitmark-node/config"
 	"github.com/bitmark-inc/bitmark-node/server"
 	"github.com/bitmark-inc/bitmark-node/services"
+	luaconf "github.com/bitmark-inc/bitmarkd/configuration"
 	"github.com/bitmark-inc/exitwithstatus"
 	"github.com/bitmark-inc/logger"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/hashicorp/hcl"
 )
 
 var version string = "v0.1" // do not change this value
+var log *logger.L
 
+// MasterConfiguration is a bitmark-Node Configuration file
 type MasterConfiguration struct {
-	Port       int                  `hcl:"port"`
-	DataDir    string               `hcl:"datadir"`
-	Logging    logger.Configuration `hcl:"logging"`
-	VersionURL string               `hcl:"versionURL"`
+	Port       int                  `gluamapper:"port" json:"port"`
+	DataDir    string               `gluamapper:"datadir" json:"datadir"`
+	Logging    logger.Configuration `gluamapper:"logging" json:"logging"`
+	VersionURL string               `gluamapper:"versionURL" json:"versionURL"`
 }
 
-func (c *MasterConfiguration) Parse(filename string) error {
-	f, err := os.Open(filename)
-	if err != nil {
-		return err
+// Parse take the filepath and parse the configure
+func (c *MasterConfiguration) Parse(filepath string) error {
+	if err := luaconf.ParseConfigurationFile(filepath, c); err != nil {
+		panic(fmt.Sprintf("config file read failed: %s", err))
 	}
-
-	var buf bytes.Buffer
-	io.Copy(&buf, f)
-	return hcl.Unmarshal(buf.Bytes(), c)
+	return nil
 }
 
 func init() {
@@ -63,6 +60,11 @@ func main() {
 	if err != nil {
 		exitwithstatus.Message(err.Error())
 	}
+	log = logger.New("bitmark-node")
+	log.Info(fmt.Sprintf("DataDirectory:%s", masterConfig.DataDir))
+	log.Info(fmt.Sprintf("Port:%d", masterConfig.Port))
+	log.Info(fmt.Sprintf("VersionURL:%s", masterConfig.VersionURL))
+
 	defer logger.Finalise()
 	var rootPath string
 	if filepath.IsAbs(masterConfig.DataDir) {
