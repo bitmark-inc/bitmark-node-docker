@@ -9,7 +9,7 @@ RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/
 FROM bitmark/go-env:go12 as go-env
 
 # VERSION SHOW ON BITMARK-NODE
-ENV VERSION v1.0.2
+ENV VERSION v1.1.0
 ENV BITMARKD_VERSION v0.10.6
 
 RUN apt-get install libargon2-0-dev
