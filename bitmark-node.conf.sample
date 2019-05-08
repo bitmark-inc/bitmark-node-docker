@@ -11,9 +11,9 @@ M.logging = {
     file = "bitmark-node.log",
     size = 1048576,
     count = 10,
-    console = true, -- set false in PRODUCTION
+    console = false, -- set false in PRODUCTION
     levels = {
-        DEFAULT = "info",
+        DEFAULT = "info"
     }
 }
 
