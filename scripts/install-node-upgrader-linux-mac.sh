@@ -30,6 +30,33 @@
 #CURR_PUBLIC_IP="118.163.120.180"
 
 DEBUG="true"
+## GLOGAL VARIABLES (needs to be outside the function becasue it will be reuse by updater)
+## FLOW CONTROL
+EXIT_NODE_SETUP="false"
+NEW_UPGRADER_IMAGE="false"
+EXIT_UPGRADER_SETUP="false"
+
+##  CONTAINER
+NODE_CONTAINER_NAME="bitmarkNode"
+NODE_DOCKER_IMAGE_NAME="bitmark/bitmark-node"
+UPGRADER_CONTAINER_NAME="bitmarkNodeUpgrader"
+UPGRADER_DOCKER_IMAGE_NAME="bitmark/bitmark-node-upgrader"
+
+## UPGRADER ENV
+LINUX_MAC_DOCKER_HOST="unix:///var/run/docker.sock"
+LINUX_MAC_DOCKER_SOCKET_CONTAINER="/var/run/docker.sock"
+LINUX_MAC_DOCKER_SOCKET_LOCAL="/var/run/docker.sock"
+
+## DIRCTORY
+NODEDIR=$HOME/bitmark-node-data
+DB=$NODEDIR/db
+DATA=$NODEDIR/data
+DATATEST=$NODEDIR/data-test
+LOG=$NODEDIR/log
+LOGTEST=$NODEDIR/log-test
+
+## MESSAGE
+ERRORM_MSG=""
 
 # Check to make sure bash was used
 if [ ! "$BASH_VERSION" ]; 
@@ -234,13 +261,6 @@ function setup_chain {
 
 
 function set_node_dirs {
-    NODEDIR=$HOME/bitmark-node-data
-    DB=$NODEDIR/db
-    DATA=$NODEDIR/data
-    DATATEST=$NODEDIR/data-test
-    LOG=$NODEDIR/log
-    LOGTEST=$NODEDIR/log-test
-
     # Check to see if the needed directories are present, if not create them
     if [[ ! -d $NODEDIR ]];
     then 
@@ -309,6 +329,8 @@ function print_useful_env {
     echo "LOGTEST:$LOGTEST"
 }
 
+
+
 ## NODE FLOW
 process_update_image
 if [[ "$DEBUG" == "true" ]];
@@ -319,7 +341,7 @@ fi
 if [[ "$EXIT_NODE_SETUP" != "true" ]];
 then
     # Create the docker container
-    docker run -d --name bitmarkNode -p 9980:9980 \
+    docker run -d --name $NODE_CONTAINER_NAME -p 9980:9980 \
     -p 2136:2136 -p 2130:2130 \
     -e PUBLIC_IP=$CURR_PUBLIC_IP \
     -e NETWORK=$NODE_NETWORK \
@@ -328,7 +350,7 @@ then
     -v $DATATEST:/.config/bitmark-node/bitmarkd/testing/data \
     -v $LOG:/.config/bitmark-node/bitmarkd/bitmark/log \
     -v $LOGTEST:/.config/bitmark-node/bitmarkd/testing/log \
-    bitmark/bitmark-node
+    $NODE_DOCKER_IMAGE_NAME
 fi
 
 #######################################
@@ -417,21 +439,28 @@ function setup_upgrader {
 
 ## UPGRADER FLOW
 setup_upgrader
-echo "EXIT_UPGRADER_SETUP=$EXIT_UPGRADER_SETUP"
+#if [[ "$DEBUG" == "true" ]];then echo "EXIT_UPGRADER_SETUP=$EXIT_UPGRADER_SETUP , USER_NODE_BASE_DIR=$NODEDIR"; fi
+
 if [[ "$EXIT_UPGRADER_SETUP" == "true" ]]; 
 then
     echo "upgrader is set. Exit the script"
     exit 0
 else
-    docker run -d --name bitmarkNodeUpgrader \
-    -e DOCKER_HOST="unix:///var/run/docker.sock" \
-    -e NODE_IMAGE="bitmark/bitmark-node" \
-    -e NODE_NAME="bitmarkNode" \
+    echo "start a new $UPGRADER_CONTAINER_NAME container ... "
+    docker run -d --name $UPGRADER_CONTAINER_NAME \
+    -e DOCKER_HOST=$LINUX_MAC_DOCKER_HOST \
+    -e NODE_IMAGE=$NODE_DOCKER_IMAGE_NAME \
+    -e NODE_NAME=$NODE_CONTAINER_NAME \
     -e USER_NODE_BASE_DIR=$NODEDIR \
-    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v $LINUX_MAC_DOCKER_SOCKET_CONTAINER:$LINUX_MAC_DOCKER_SOCKET_LOCAL \
     -v $NODEDIR/data:/.config/bitmark-node/bitmarkd/bitmark/data \
     -v $NODEDIR/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-    bitmark/bitmark-node-upgrader
+    $UPGRADER_DOCKER_IMAGE_NAME
 fi
 
+## Recheck MEssage
+echo ""
+echo "You have installed bitmarkNode and bitmarkNodeUpgrader!"
+echo "Type docker ps to verify you have successfully install bitmarkNode and bitmarkNodeUpgrader."
+echo ""
 
