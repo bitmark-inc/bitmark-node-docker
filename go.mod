@@ -3,7 +3,7 @@ module github.com/bitmark-inc/bitmark-node
 go 1.12
 
 require (
-	github.com/bitmark-inc/bitmark-sdk-go v0.0.0-20181009083816-45498fbf631b
+	github.com/bitmark-inc/bitmark-sdk-go v0.1.0
 	github.com/bitmark-inc/bitmarkd v0.10.6
 	github.com/bitmark-inc/exitwithstatus v0.1.2
 	github.com/bitmark-inc/logger v0.3.4
