@@ -3,43 +3,41 @@ FROM bitmark/nodejs-env as build-client
 COPY ui /go/src/github.com/bitmark-inc/bitmark-node/ui
 RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
 
-# Dockerfile after bitmarkd v0.9.0 for adapting go module
-#--
-
 FROM bitmark/go-env:go12 as go-env
 
 # VERSION SHOW ON BITMARK-NODE
 ENV VERSION v1.1.1
 ENV BITMARKD_VERSION v0.10.6
 
+# Install argon2 for OS
 RUN apt-get install libargon2-0-dev
 
+# Get Bitmarkd and corresponding version
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
-    cd /go/src/github.com/bitmark-inc/bitmarkd && \
-    git checkout "$BITMARKD_VERSION"
-
-ENV GO111MODULE on
-
-RUN cd /go/src/github.com/bitmark-inc/bitmarkd && \
-    go mod download && \
-    go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/...
-
-ENV GO111MODULE off
-
-RUN go get -d github.com/bitmark-inc/go-argon2 && \
-    go get -d github.com/bitmark-inc/go-libucl && \
-    go get github.com/bitmark-inc/exitwithstatus && \
-    go get github.com/bitmark-inc/bitmark-sdk-go
+    cd /go/src/github.com/bitmark-inc/bitmarkd
 
 RUN go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
     go install github.com/bitmark-inc/bitmark-wallet
 
-RUN go get github.com/gin-gonic/gin && go get github.com/gin-gonic/contrib/static && \
-    go get github.com/coreos/bbolt
+# Install and build bitmark-cli  bitmark-dumpdb  bitmark-info  bitmarkd  recorderd
+ENV GO111MODULE on
+RUN cd /go/src/github.com/bitmark-inc/bitmarkd && \
+    git checkout "$BITMARKD_VERSION" && \
+    go mod download && \
+    go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/...
 
 COPY . /go/src/github.com/bitmark-inc/bitmark-node
 RUN go install -ldflags "-X main.version=$VERSION" github.com/bitmark-inc/bitmark-node
+COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
+
+RUN cd /go/src/github.com/bitmark-inc/bitmark-node && \
+    go mod download && \
+    go install -ldflags "-X main.version=$VERSION" github.com/bitmark-inc/bitmark-node
+
+ENV GO111MODULE off
+
+# COPY static ui to bitmark-node
 COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
 
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
@@ -53,3 +51,4 @@ ENV NETWORK bitmark
 
 EXPOSE 2130 2131 2135 2136
 CMD ["/start.sh"]
+ㄕ
