@@ -14,9 +14,7 @@ RUN apt-get install libargon2-0-dev
 
 # Get Bitmarkd and corresponding version
 RUN go get -d github.com/bitmark-inc/bitmarkd || \
-    cd /go/src/github.com/bitmark-inc/bitmarkd
-
-RUN go get github.com/bitmark-inc/discovery && \
+    go get github.com/bitmark-inc/discovery && \
     go get -d github.com/bitmark-inc/bitmark-wallet && \
     go install github.com/bitmark-inc/bitmark-wallet
 
@@ -28,12 +26,9 @@ RUN cd /go/src/github.com/bitmark-inc/bitmarkd && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/...
 
 COPY . /go/src/github.com/bitmark-inc/bitmark-node
-RUN go install -ldflags "-X main.version=$VERSION" github.com/bitmark-inc/bitmark-node
-COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
-
 RUN cd /go/src/github.com/bitmark-inc/bitmark-node && \
     go mod download && \
-    go install -ldflags "-X main.version=$VERSION" github.com/bitmark-inc/bitmark-node
+    go install github.com/bitmark-inc/bitmark-node
 
 ENV GO111MODULE off
 
@@ -50,4 +45,8 @@ ADD docker-assets/start.sh /
 ENV NETWORK bitmark
 
 EXPOSE 2130 2131 2135 2136
+<<<<<<< HEAD
 CMD ["/start.sh"]
+=======
+CMD ["/start.sh"]
+>>>>>>> [Dockerfile]Remove send into main.version of bitmark-node
