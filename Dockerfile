@@ -13,24 +13,23 @@ ENV BITMARKD_VERSION v0.10.6
 RUN apt-get install libargon2-0-dev
 
 # Get Bitmarkd and corresponding version
-RUN go get -d github.com/bitmark-inc/bitmarkd || \
-    go get github.com/bitmark-inc/discovery && \
-    go get -d github.com/bitmark-inc/bitmark-wallet && \
-    go install github.com/bitmark-inc/bitmark-wallet
+
 
 # Install and build bitmark-cli  bitmark-dumpdb  bitmark-info  bitmarkd  recorderd
 ENV GO111MODULE on
-RUN cd /go/src/github.com/bitmark-inc/bitmarkd && \
-    git checkout "$BITMARKD_VERSION" && \
-    go mod download && \
-    go install -ldflags "-X main.version=$BITMARKD_VERSION" github.com/bitmark-inc/bitmarkd/command/...
 
-COPY . /go/src/github.com/bitmark-inc/bitmark-node
-RUN cd /go/src/github.com/bitmark-inc/bitmark-node && \
-    go mod download && \
-    go install github.com/bitmark-inc/bitmark-node
+RUN cd /go/src && \
+    git clone --branch="$BITMARKD_VERSION" https://github.com/bitmark-inc/bitmarkd.git && \
+    git clone https://github.com/bitmark-inc/discovery && \
+    git clone https://github.com/bitmark-inc/bitmark-wallet
 
-ENV GO111MODULE off
+RUN mkdir /go/src/bitmark-node
+COPY . /go/src/bitmark-node
+
+RUN cd /go/src/bitmarkd && \
+    go install -ldflags "-X main.version=$BITMARKD_VERSION" ./command/... && \
+    cd /go/src/bitmark-node && \
+    go install 
 
 # COPY static ui to bitmark-node
 COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
