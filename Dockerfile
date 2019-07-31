@@ -44,8 +44,4 @@ ADD docker-assets/start.sh /
 ENV NETWORK bitmark
 
 EXPOSE 2130 2131 2135 2136
-<<<<<<< HEAD
 CMD ["/start.sh"]
-=======
-CMD ["/start.sh"]
->>>>>>> [Dockerfile]Remove send into main.version of bitmark-node
