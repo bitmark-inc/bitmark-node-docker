@@ -6,8 +6,8 @@ RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/
 FROM bitmark/go-env:go12 as go-env
 
 # VERSION SHOW ON BITMARK-NODE
-ENV VERSION v1.1.1
-ENV BITMARKD_VERSION v0.10.6
+ENV VERSION v1.2.0
+ENV BITMARKD_VERSION v0.11.0-rc.1 
 
 # Install argon2 for OS
 RUN apt-get install libargon2-0-dev
