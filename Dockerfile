@@ -1,7 +1,7 @@
 FROM bitmark/nodejs-env as build-client
 
-COPY ui /go/src/github.com/bitmark-inc/bitmark-node/ui
-RUN cd /go/src/github.com/bitmark-inc/bitmark-node/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
+COPY ui /go/src/bitmark-node/ui
+RUN cd /go/src/bitmark-node/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
 
 FROM bitmark/go-env:go12 as go-env
 
@@ -32,7 +32,7 @@ RUN cd /go/src/bitmarkd && \
     go install 
 
 # COPY static ui to bitmark-node
-COPY --from=build-client /go/src/github.com/bitmark-inc/bitmark-node/ui/public/ /go/src/github.com/bitmark-inc/bitmark-node/ui/public/
+COPY --from=build-client /go/src/bitmark-node/ui/public/ /go/src/bitmark-inc/bitmark-node/ui/public/
 
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
 ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/bitmark/
