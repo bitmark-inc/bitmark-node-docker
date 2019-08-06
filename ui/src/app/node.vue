@@ -69,7 +69,7 @@
             <!-- End: box -->
             <Box title="Current Block ">
               <div class="blocks ">
-                <span class="blocks__num ">{{ this.bitmarkdInfo.blocks.local }}/{{ this.bitmarkdInfo.blocks.local || this.bitmarkdInfo.blocks.remote
+                <span class="blocks__num ">{{ this.bitmarkdInfo.block.count.local }}/{{ this.bitmarkdInfo.block.count.remote
                   }}</span>
                 <span class="blocks__label ">
                   <template v-if="this.bitmarkdInfo.mode === 'Resynchronise'">Updating blockchain</template>

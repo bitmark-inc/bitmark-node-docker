@@ -36,7 +36,10 @@ func (c *MasterConfiguration) Parse(filepath string) error {
 }
 
 func init() {
-	os.Setenv("VERSION", version)
+	if len(os.Getenv("VERSION")) == 0 {
+		log.Warn("Version is set to default")
+		os.Setenv("VERSION", version)
+	}
 }
 
 func main() {

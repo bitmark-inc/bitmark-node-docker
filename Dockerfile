@@ -10,7 +10,7 @@ ENV VERSION v1.2.0
 ENV BITMARKD_VERSION v0.11.0-rc.1 
 
 # Install argon2 for OS
-RUN apt-get install libargon2-0-dev
+RUN apt-get install libargon2-0-dev && apt-get install -y jq
 
 # Get Bitmarkd and corresponding version
 

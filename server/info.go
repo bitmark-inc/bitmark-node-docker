@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var defaultVersion string = "v0.0.1" // do not change this value
 type DockerTag struct {
 	Name string `json:"name"`
 }
@@ -78,11 +79,16 @@ func (ws *WebServer) NodeInfo(c *gin.Context) {
 		c.String(500, ErrCombind(ErrorSetAccount, err).Error())
 		return
 	}
+	nodeVersion := os.Getenv("VERSION")
+	if len(nodeVersion) == 0 {
+		nodeVersion = defaultVersion
+		ws.log.Warnf("use default  bitmark node version =%s\n", nodeVersion)
+	}
 	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
 	c.JSON(200, map[string]interface{}{
 		"ok": 1,
 		"result": map[string]string{
-			"version": os.Getenv("VERSION"),
+			"version": nodeVersion,
 			"network": network,
 			"account": a.Account().String(),
 		},
