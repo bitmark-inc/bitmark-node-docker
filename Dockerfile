@@ -32,7 +32,7 @@ RUN cd /go/src/bitmarkd && \
     go install 
 
 # COPY static ui to bitmark-node
-COPY --from=build-client /go/src/bitmark-node/ui/public/ /go/src/bitmark-inc/bitmark-node/ui/public/
+COPY --from=build-client /go/src/bitmark-node/ui/public/ /go/src/bitmark-node/ui/public/
 
 ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
 ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/bitmark/

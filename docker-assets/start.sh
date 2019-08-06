@@ -54,4 +54,4 @@ sed -ie 's:@DATA-DIRECTORY@:/.config/bitmark-node/recorderd/testing:' /.config/b
 # Start bitmark node
 export CONTAINER_IP=$(awk 'END{print $1}' /etc/hosts)
 cd /.config/bitmark-node
-bitmark-node -config-file=/.config/bitmark-node/bitmark-node.conf -container-ip=$CONTAINER_IP -ui=/go/src/github.com/bitmark-inc/bitmark-node/ui/public
+bitmark-node -config-file=/.config/bitmark-node/bitmark-node.conf -container-ip=$CONTAINER_IP -ui=/go/src/bitmark-node/ui/public
