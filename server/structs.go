@@ -5,8 +5,11 @@ type Counters struct {
 	Verified int `json:"verified"`
 }
 type BlockCounts struct {
-	Local  uint64 `json:"local"`
-	Remote uint64 `json:"remote"`
+	Count struct {
+		Local  uint64 `json:"local"`
+		Remote uint64 `json:"remote"`
+	} `json:"count"`
+	Hash string `json:"hash"`
 }
 
 type PeerCounts struct {
@@ -17,7 +20,7 @@ type PeerCounts struct {
 type DetailReply struct {
 	Chain               string      `json:"chain"`
 	Mode                string      `json:"mode"`
-	Blocks              BlockCounts `json:"blocks"`
+	Blocks              BlockCounts `json:"block"`
 	RPCs                uint64      `json:"rpcs"`
 	Peers               PeerCounts  `json:"peers"`
 	TransactionCounters Counters    `json:"transactionCounters"`
