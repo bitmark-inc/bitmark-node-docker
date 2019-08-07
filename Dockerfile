@@ -43,5 +43,8 @@ ADD docker-assets/start.sh /
 
 ENV NETWORK bitmark
 
+# fast sync is enabled by default
+ENV ALLOW_FASTSYNC true 
+
 EXPOSE 2130 2131 2135 2136
 CMD ["/start.sh"]

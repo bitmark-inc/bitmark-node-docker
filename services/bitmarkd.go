@@ -194,6 +194,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 			blockPubPortEnv := os.Getenv("BLOCK_PUB_PORT")
 			proofPubPortEnv := os.Getenv("PROOF_PUB_PORT")
 			proofSubPortEnv := os.Getenv("PROOF_SUB_PORT")
+			allowFastsyncEnv := os.Getenv("ALLOW_FASTSYNC")
 
 			if isIPv6(bitmarkDPublicIP) {
 				if !hasBracket(bitmarkDPublicIP) {
@@ -213,6 +214,7 @@ func (bitmarkd *Bitmarkd) Start() error {
 				fmt.Sprintf("PROOF_SUB_PORT=%s", proofSubPortEnv),
 				fmt.Sprintf("BTC_ADDR=%s", btcAddr),
 				fmt.Sprintf("LTC_ADDR=%s", ltcAddr),
+				fmt.Sprintf("ALLOW_FASTSYNC=%s", allowFastsyncEnv),
 			}
 			bitmarkd.log.Infof("Bitmarkd Use BTC_ADDR=%s LTC_ADDR=%s \n", btcAddr, ltcAddr)
 			// start bitmarkd as sub process
