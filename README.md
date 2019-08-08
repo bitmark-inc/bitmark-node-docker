@@ -203,6 +203,7 @@ The following table describes the various configuration options for the Bitmark 
 | `-p`  | `2135` | Port for publishing blockchain events |
 | `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
 | `-e`  | `PUBLIC_IP=[YOUR_PUBLIC_IP]` | Environment variable for register your public IP address.  |
+| `-e`  | `ALLOW_FASTSYNC=fasle`    | Disable fast synchronsation mode. It's enabled by default, which helps bitmark node to sync up with current height speedy.
 | `-e`  | `NETWORK=[YOUR_NETWORK]` | Either ```bitmark``` or ```testing```. Learn more about the two networks [here](#Current-Blockchain)  |
 
 For an explanation of each of the `run` command options, please enter the following command into the terminal:
@@ -815,6 +816,7 @@ Bảng dưới đây mô tả những tùy chọn cấu hình khác nhau cho l�
 | `-p`  | `2135` | Port for publishing blockchain events |
 | `-p`  | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
 | `-e`  | `PUBLIC_IP=[YOUR_PUBLIC_IP]` | Environment variable for register your public IP address.  |
+| `-e`  | `ALLOW_FASTSYNC=fasle`    | Tắt tùy chọn sync nhanh. Được bật mặt định, nó sẽ giúp cho bitmark node có thể sync nhanh hơn tới block hiện tại.
 | `-e`  | `NETWORK=[YOUR_NETWORK]` | Either ```bitmark``` or ```testing```. Learn more about the two networks [here](#Current-Blockchain)  |
 
 Để biết thêm về các tuỳ chọn của lệnh `run`, nhập lệnh sau vào terminal:
