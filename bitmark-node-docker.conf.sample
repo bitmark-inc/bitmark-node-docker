@@ -1,14 +1,14 @@
--- bitmark-node.conf  -*- mode: lua -*-
+-- bitmark-node-docker.conf  -*- mode: lua -*-
 local M = {}
 
 M.port = 9980
 M.datadir = "."
-M.versionURL = "https://s3-ap-northeast-1.amazonaws.com/bitmark-node/version.json"
+M.versionURL = "https://s3-ap-northeast-1.amazonaws.com/bitmark-node-docker/version.json"
 
 -- logging configuration
 M.logging = {
     directory = ".",
-    file = "bitmark-node.log",
+    file = "bitmark-node-docker.log",
     size = 1048576,
     count = 10,
     console = false, -- set false in PRODUCTION

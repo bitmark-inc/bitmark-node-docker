@@ -100,7 +100,7 @@ div
       }
     },
     mounted() {
-      let network = getCookie("bitmark-node-network")
+      let network = getCookie("bitmark-node-docker-network")
       if (!network) {
         this.$router.push("/chain")
         return

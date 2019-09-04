@@ -17,8 +17,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bitmark-inc/bitmark-node/config"
-	"github.com/bitmark-inc/bitmark-node/services"
+	"github.com/bitmark-inc/bitmark-node-docker/config"
+	"github.com/bitmark-inc/bitmark-node-docker/services"
 	"github.com/bitmark-inc/logger"
 	"github.com/gin-gonic/gin"
 )
@@ -105,7 +105,7 @@ func NewWebServer(nc *config.BitmarkNodeConfig, rootPath string, bitmarkd, recor
 func (ws *WebServer) GetChain(c *gin.Context) {
 	network := ws.nodeConfig.GetNetwork()
 
-	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
+	c.SetCookie("bitmark-node-docker-network", network, 0, "", "", false, false)
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"ok":     1,
 		"result": network,

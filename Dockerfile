@@ -1,7 +1,7 @@
 FROM bitmark/nodejs-env as build-client
 
-COPY ui /go/src/bitmark-node/ui
-RUN cd /go/src/bitmark-node/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
+COPY ui /go/src/bitmark-node-docker/ui
+RUN cd /go/src/bitmark-node-docker/ui && bash -c "source ~/.nvm/nvm.sh && npm install && npm run build"
 
 FROM bitmark/go-env:go12 as go-env
 
@@ -23,22 +23,22 @@ RUN cd /go/src && \
     git clone https://github.com/bitmark-inc/discovery && \
     git clone https://github.com/bitmark-inc/bitmark-wallet
 
-RUN mkdir /go/src/bitmark-node
-COPY . /go/src/bitmark-node
+RUN mkdir /go/src/bitmark-node-docker
+COPY . /go/src/bitmark-node-docker
 
 RUN cd /go/src/bitmarkd && \
     go install -ldflags "-X main.version=$BITMARKD_VERSION" ./command/... && \
-    cd /go/src/bitmark-node && \
+    cd /go/src/bitmark-node-docker && \
     go install 
 
-# COPY static ui to bitmark-node
-COPY --from=build-client /go/src/bitmark-node/ui/public/ /go/src/bitmark-node/ui/public/
+# COPY static ui to bitmark-node-docker
+COPY --from=build-client /go/src/bitmark-node-docker/ui/public/ /go/src/bitmark-node-docker/ui/public/
 
-ADD bitmark-node.conf.sample /.config/bitmark-node/bitmark-node.conf
-ADD docker-assets/bitmarkd.conf /.config/bitmark-node/bitmarkd/bitmark/
-ADD docker-assets/recorderd.conf /.config/bitmark-node/recorderd/bitmark/
-ADD docker-assets/bitmarkd-test.conf /.config/bitmark-node/bitmarkd/testing/bitmarkd.conf
-ADD docker-assets/recorderd-test.conf /.config/bitmark-node/recorderd/testing/recorderd.conf
+ADD bitmark-node-docker.conf.sample /.config/bitmark-node-docker/bitmark-node-docker.conf
+ADD docker-assets/bitmarkd.conf /.config/bitmark-node-docker/bitmarkd/bitmark/
+ADD docker-assets/recorderd.conf /.config/bitmark-node-docker/recorderd/bitmark/
+ADD docker-assets/bitmarkd-test.conf /.config/bitmark-node-docker/bitmarkd/testing/bitmarkd.conf
+ADD docker-assets/recorderd-test.conf /.config/bitmark-node-docker/recorderd/testing/recorderd.conf
 ADD docker-assets/start.sh /
 
 ENV NETWORK bitmark

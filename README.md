@@ -53,14 +53,14 @@ The Bitmark node software is distributed as a standalone [Docker container](http
 After successfully installing Docker, you can download the Bitmark node software. To do so, first open a command-line terminal or shell application, such as Terminal on the MacOS or Linux, or `cmd.exe` on Windows. Then enter the following command to download the Bitmark node software:
 
 ```
-docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node-docker
 ```
 
 
 After entering the pull command, the download sequence should begin in the terminal. You will receive the following message after the download is completed successfully:
 
 ```
-Status: Downloaded newer image for bitmark/bitmark-node:latest
+Status: Downloaded newer image for bitmark/bitmark-node-docker:latest
 ```
 
 
@@ -68,7 +68,7 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 #### Prepare Public IP
 
-Public IP is the IP which people in Internet can reach your bitmark-node. Our script will automatically find your public IP for you. However, network configurations are various, we can not guarentee that the auto-generated IP is acurate or not. To get your accurate public IP, please consult your ISP.
+Public IP is the IP which people in Internet can reach your bitmark-node-docker. Our script will automatically find your public IP for you. However, network configurations are various, we can not guarentee that the auto-generated IP is acurate or not. To get your accurate public IP, please consult your ISP.
 
 #### Prepare Network Environment
 
@@ -80,7 +80,7 @@ Public IP is the IP which people in Internet can reach your bitmark-node. Our sc
     | `2135` | Port for publishing blockchain events |
     | `2130` | Port for Bitmark node [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
 
-    When running bitmark-node, user can make sure ports are opened with the following commands.
+    When running bitmark-node-docker, user can make sure ports are opened with the following commands.
 
     ```netcat -v [Your Public IP] 2136```
 
@@ -89,7 +89,7 @@ Public IP is the IP which people in Internet can reach your bitmark-node. Our sc
     ```netcat -v [Your Public IP] 2130```
 
 
-- WebUI is an interface to control bitmark-node. User can only access WebUI through local network. Please notice that user can not access the port from internet due to security reason.
+- WebUI is an interface to control bitmark-node-docker. User can only access WebUI through local network. Please notice that user can not access the port from internet due to security reason.
 
     | PORT  | DESCRIPTION  |
     |:---|:---|
@@ -153,7 +153,7 @@ The Docker container must be restarted after everytime the computer is turned of
 
 #### Manual Setup
 
-All of the following commands will be run in the appropriate command-line interface described [below](#Terminals). Before running the bitmark-node container, you should check container status:
+All of the following commands will be run in the appropriate command-line interface described [below](#Terminals). Before running the bitmark-node-docker container, you should check container status:
 
 1. Run ```docker ps -a``` to check if bitmarkNode container exist.
 
@@ -184,9 +184,9 @@ docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -e NETWORK=[YOUR_NETWORK] \
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
 bitmark/bitmark-node
 ```
 
@@ -262,7 +262,7 @@ This full-sized menu appears once you start the ```bitmarkd``` software.
 * Recorder Node (recorderd)
   * ```Status```: Either ```Stopped``` or ```Running```. Describes the state of the ```recorderd``` software.
 * Network ID
-  * This is your bitmark-node public key
+  * This is your bitmark-node-docker public key
 * Current Block
   * This displays what the current block your system is on. This can either be the latest block, or the block that it is currently downloading.
 * Transaction Counter
@@ -304,13 +304,13 @@ When the Bitmark node software is first started up, it requires the user to prov
 To update your version of the Bitmark node software, open a command-line terminal or shell application, such as Terminal on the Mac or Linux, `cmd.exe` on Windows 10 Pro or Enterprise, or ```Docker Quickstart Terminal``` on Windows 8 or 10 Home, then enter the following command to download the software update:
 
 ```
-docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node-docker
 ```
 
 After entering the pull command, the download sequence should begin in the terminal. You will receive the following message after the download is completed successfully:
 
 ```
-Status: Downloaded newer image for bitmark/bitmark-node:latest
+Status: Downloaded newer image for bitmark/bitmark-node-docker:latest
 ```
 
 ### 2. Run Bitmark Node
@@ -323,10 +323,10 @@ docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -e NETWORK=[YOUR_NETWORK]
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
+bitmark/bitmark-node-docker
 ```
 Please remember to replace `[YOUR_PUBLIC_IP]` to your node public ip and ```[YOUR_NETWORK``` with ```bitmark``` or ```testing```.
 
@@ -388,7 +388,7 @@ After restarting the `bitmarkd` node for the first time, the node will go throug
 #### Windows Login failed
 * You need to login docker hub at first time to pull images. If you login but still get the below message, the possible cause is that you use email to login but not your username.
 
-  ```Error response from daemon: Get https://registry-1.docker.io/v2/bitmark/bitmark-node/manifests/latest: unauthorized: incorrect username or password```
+  ```Error response from daemon: Get https://registry-1.docker.io/v2/bitmark/bitmark-node-docker/manifests/latest: unauthorized: incorrect username or password```
 
 
 
@@ -443,13 +443,13 @@ Bitmark 節點軟體是透過獨立運作的 [Docker container](https://www.dock
 成功安裝 Docker 之後，您就可以下載 Bitmark 節點了。請先開啟命令列終端機或是命令提示字元，例如在 Mac 上的 Terminal 或是在 Windows 上的`cmd.exe`。然後輸入以下的指令來下載 Bitmark 節點軟體：
 
 ```
-docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node-docker
 ```
 
 輸入 pull 的指令之後，下載應該就會開始執行。成功下載完成後，您會收到以下訊息：
 
 ```
-Status: Downloaded newer image for bitmark/bitmark-node:latest
+Status: Downloaded newer image for bitmark/bitmark-node-docker:latest
 ```
 
 ### 三、執行 Bitmark 節點
@@ -460,10 +460,10 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
+bitmark/bitmark-node-docker
 ```
 
 請注意將`[YOUR_PUBLIC_IP]`置換成節點的對外IP。一旦 Bitmark 節點成功的開始執行，它會回傳一個代表 Bitmark 節點的 Docker container ID 的64字的16進位字串，如：
@@ -525,10 +525,10 @@ Bitmark 節點的參與者在`bitmark`或`testing`上運行`bitmarkd`及`recorde
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
+bitmark/bitmark-node-docker
 ```
 
 下表列出了許多`run`指令可執行的設定選項：
@@ -556,8 +556,8 @@ bitmark/bitmark-node
     - 9980: 網頁伺服器連接埠
     _(提示：請確認使用 TCP 設定您的網路的 port forwarding 以確保公共網路可以存取您的節點)_
   - Volumes:
-    - /.config/bitmark-node/bitmarkd/bitmark/data - 用於儲存`bitmark`的資料
-    - /.config/bitmark-node/bitmarkd/testing/data - 用於儲存`testing`的資料
+    - /.config/bitmark-node-docker/bitmarkd/bitmark/data - 用於儲存`bitmark`的資料
+    - /.config/bitmark-node-docker/bitmarkd/testing/data - 用於儲存`testing`的資料
 
 
 ## 更新
@@ -569,13 +569,13 @@ bitmark/bitmark-node
 欲更新 Bitmark 節點軟體至最新版本，開啟命令列終端機或命令提示字元，例如在 Mac 上的 Terminal 或是在 Windows 上的`cmd.exe`。然後輸入以下的指令來下載 Bitmark 節點軟體更新：
 
 ```
-docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node-docker
 ```
 
 輸入 pull 指令之後，下載應該就會開始執行。成功下載完成後，您會收到以下訊息：
 
 ```
-Status: Downloaded newer image for bitmark/bitmark-node:latest
+Status: Downloaded newer image for bitmark/bitmark-node-docker:latest
 ```
 
 
@@ -588,10 +588,10 @@ docker rm -f bitmarkNode
 docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
+bitmark/bitmark-node-docker
 ```
 
 
@@ -664,14 +664,14 @@ Vì phần mềm Bitmark node được xây dựng dưới dạng một bộ đ�
 Sau khi cài đặt thành công Docker, bạn có thể tải xuống phần mềm Bitmark node. Để làm như vậy, trước tiên bạn hãy mở một terminal dạng dòng lệnh hoặc ứng dụng shell, chẳng hạn như Terminal trên MacOS hoặc Linux hoặc `cmd.exe` tr Windows. Sau đó bạn hãy nhập lệnh sau để tải xuống phần mềm Bitmark node:
 
 ```
-docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node-docker
 ```
 
 
 Sau khi nhập lệnh pull, quá trình tải xuống sẽ bắt đầu trên terminal. Sau khi quá trình tải xuống hoàn tất, bạn sẽ nhận được thông báo như sau:
 
 ```
-Status: Downloaded newer image for bitmark/bitmark-node:latest
+Status: Downloaded newer image for bitmark/bitmark-node-docker:latest
 ```
 
 
@@ -679,7 +679,7 @@ Status: Downloaded newer image for bitmark/bitmark-node:latest
 
 #### Chuẩn bị Public IP
 
-IP công khai (Public IP) là một IP mà mọi người trên Internet có thể sử dụng để tiếp cận bitmark-node của bạn. Mã lệnh của chúng tôi sẽ tự động tìm IP công khai cho bạn. Tuy nhiên, do cấu hình mạng rất đa dạng nên chúng tôi sẽ khó có thể đảm bảo tính chính xác cho IP tự động tạo ra. Do đó, để có được mã IP công khai chính xác, vui lòng tham khảo ý kiến từ ISP của bạn.
+IP công khai (Public IP) là một IP mà mọi người trên Internet có thể sử dụng để tiếp cận bitmark-node-docker của bạn. Mã lệnh của chúng tôi sẽ tự động tìm IP công khai cho bạn. Tuy nhiên, do cấu hình mạng rất đa dạng nên chúng tôi sẽ khó có thể đảm bảo tính chính xác cho IP tự động tạo ra. Do đó, để có được mã IP công khai chính xác, vui lòng tham khảo ý kiến từ ISP của bạn.
 
 #### Chuẩn bị Môi Trường Mạng
 
@@ -691,7 +691,7 @@ IP công khai (Public IP) là một IP mà mọi người trên Internet có th�
     | `2135` | Cổng để công bố các sự kiện blockchain |
     | `2130` | Cổng cho server Bitmark node RPC [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) server |
 
-    Trong quá trình chạy bitmark-node, người dùng có thể đảm bảo các cổng được mở bằng các lệnh sau.
+    Trong quá trình chạy bitmark-node-docker, người dùng có thể đảm bảo các cổng được mở bằng các lệnh sau.
 
     ```netcat -v [Your Public IP] 2136```
 
@@ -700,7 +700,7 @@ IP công khai (Public IP) là một IP mà mọi người trên Internet có th�
     ```netcat -v [Your Public IP] 2130```
 
 
-- WebUI là một giao diện dùng để kiểm soát bitmark-node. Người dùng chỉ có thể truy cập vào WebUI thông qua mạng cục bộ. Xin lưu ý rằng người dùng không thể truy cập cổng từ internet vì lý do bảo mật.
+- WebUI là một giao diện dùng để kiểm soát bitmark-node-docker. Người dùng chỉ có thể truy cập vào WebUI thông qua mạng cục bộ. Xin lưu ý rằng người dùng không thể truy cập cổng từ internet vì lý do bảo mật.
 
     | CỔNG  | MÔ TẢ  |
     |:---|:---|
@@ -765,7 +765,7 @@ Docker Container phải được khởi động lại mỗi khi tắt máy tính
 
 #### Thiết lập thủ công
 
-Tất cả những dòng lệnh sau sẽ được chạy trên những giao diện dòng lệnh tương ứng theo mô tả [dưới đây](#Terminals). Trước khi chạy bộ chứa bitmark-node, bạn nên kiểm tra trạng thái của container:
+Tất cả những dòng lệnh sau sẽ được chạy trên những giao diện dòng lệnh tương ứng theo mô tả [dưới đây](#Terminals). Trước khi chạy bộ chứa bitmark-node-docker, bạn nên kiểm tra trạng thái của container:
 
 1. Chạy ```docker ps -a``` để kiểm tra đã có bộ chứa bitmarkNode hay chưa.
 
@@ -796,10 +796,10 @@ docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -e NETWORK=[YOUR_NETWORK] \
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
+-v $HOME/bitmark-node-data/db:/.config/bitmark-nod-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
+bitmark/bitmark-node-docker
 ```
 
 ##### Cần lưu ý rằng ```YOUR_PUBLIC_IP``` phải được thay thế bằng địa chỉ IP công khai (public IP) của bạn và ```[YOUR_NETWORK] phải được thay thế bằng một lựa chọn được mô tả [tại đây](#Current-Blockchain).
@@ -916,13 +916,13 @@ Khi người dùng chạy phần mềm Bitmark node lần đầu tiên, họ s�
 Để có thể cập nhật phiên bản mới cho phần mềm Bitmark node của mình, bạn cần mở terminal dạng dòng lệnh hoặc ứng dụng shell, chẳng hạn như Terminal trên MacOS hoặc Linux hoặc `cmd.exe` trên Windows 10 Pro hoặc Enterprise, hoặc ```Docker Quickstart Terminal``` trên Windows 8 hoặc 10 Home, sau đó nhập lệnh sau để tải xuống phiên bản cập nhật cho phần mềm:
 
 ```
-docker pull bitmark/bitmark-node
+docker pull bitmark/bitmark-node-docker
 ```
 
 Sau khi nhập lệnh pull, quá trình tải xuống sẽ bắt đầu trên terminal. Sau khi quá trình tải xuống hoàn tất, bạn sẽ nhận được thông báo như sau:
 
 ```
-Status: Downloaded newer image for bitmark/bitmark-node:latest
+Status: Downloaded newer image for bitmark/bitmark-node-docker:latest
 ```
 
 ### 2. Chạy Bitmark Node
@@ -935,10 +935,10 @@ docker run -d --name bitmarkNode -p 9980:9980 \
 -p 2136:2136 -p 2130:2130 \
 -e PUBLIC_IP=[YOUR_PUBLIC_IP] \
 -e NETWORK=[YOUR_NETWORK]
--v $HOME/bitmark-node-data/db:/.config/bitmark-node/db \
--v $HOME/bitmark-node-data/data:/.config/bitmark-node/bitmarkd/bitmark/data \
--v $HOME/bitmark-node-data/data-test:/.config/bitmark-node/bitmarkd/testing/data \
-bitmark/bitmark-node
+-v $HOME/bitmark-node-data/db:/.config/bitmark-node-docker/db \
+-v $HOME/bitmark-node-data/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data \
+-v $HOME/bitmark-node-data/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data \
+bitmark/bitmark-node-docker
 ```
 Cần LƯU Ý thay `[YOUR_PUBLIC_IP]` bằng địa chỉ IP công khai (public IP) của bạn, và ```[YOUR_NETWORK``` với ```bitmark``` hoặc ```testing```.
 
@@ -1000,5 +1000,5 @@ Sau khi khởi động lại `bitmarkd` node lần đầu tiên, Node sẽ thự
 #### Windows Login failed
 * Bạn cần đăng nhập vào docker hub trong lần đầu tiên để kéo ảnh về. Nếu bạn đăng nhập và vẫn nhận được thông báo dưới đây, có thể bạn đã sử dụng địa chỉ email để đăng nhập, thay vì usernam.
 
-  ```Error response from daemon: Get https://registry-1.docker.io/v2/bitmark/bitmark-node/manifests/latest: unauthorized: incorrect username or password```
+  ```Error response from daemon: Get https://registry-1.docker.io/v2/bitmark/bitmark-node-docker/manifests/latest: unauthorized: incorrect username or password```
 

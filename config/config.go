@@ -39,7 +39,7 @@ func New() *BitmarkNodeConfig {
 
 func (c *BitmarkNodeConfig) Initialise(dbPath string) error {
 	if !c.initialised {
-		db, err := bolt.Open(filepath.Join(dbPath, "bitmark-node.db"), 0600, nil)
+		db, err := bolt.Open(filepath.Join(dbPath, "bitmark-node-docker.db"), 0600, nil)
 		if err != nil {
 			return err
 		}

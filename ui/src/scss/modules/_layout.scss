@@ -15,7 +15,7 @@ a {
 }
 
 
-.bitmark-node-wrapper {
+.bitmark-node-docker-wrapper {
   width: 100%;
   //max-width: $max-width;
   height: calc(100% - 128px);
@@ -205,10 +205,10 @@ a {
   line-height: 22px;
 }
 
-.bitmark-node-version {
+.bitmark-node-docker-version {
   font-weight: bold;
 }
-.bitmark-node-update {
+.bitmark-node-docker-update {
   font-size: $font-size-xxsmall;
 }
 .bitmark-network {

@@ -24,7 +24,7 @@ type DockerTagsResponse struct {
 }
 
 func latestVersion() string {
-	resp, err := client.Get("https://hub.docker.com/v2/repositories/bitmark/bitmark-node/tags/")
+	resp, err := client.Get("https://hub.docker.com/v2/repositories/bitmark/bitmark-node-docker/tags/")
 	if err != nil {
 		return ""
 	}
@@ -84,7 +84,7 @@ func (ws *WebServer) NodeInfo(c *gin.Context) {
 		nodeVersion = defaultVersion
 		ws.log.Warnf("use default  bitmark node version =%s\n", nodeVersion)
 	}
-	c.SetCookie("bitmark-node-network", network, 0, "", "", false, false)
+	c.SetCookie("bitmark-node-docker-network", network, 0, "", "", false, false)
 	c.JSON(200, map[string]interface{}{
 		"ok": 1,
 		"result": map[string]string{

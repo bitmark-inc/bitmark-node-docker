@@ -1,4 +1,4 @@
-module github.com/bitmark-inc/bitmark-node
+module github.com/bitmark-inc/bitmark-node-docker
 
 go 1.12
 

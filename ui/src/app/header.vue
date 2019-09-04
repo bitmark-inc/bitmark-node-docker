@@ -7,7 +7,7 @@
         </div>
         <div class="header-blockchain">
           <div class="bitmark-version">
-            <div class="bitmark-node-version">Bitmark node {{ nodeInfo.version }}</div>
+            <div class="bitmark-node-docker-version">Bitmark node {{ nodeInfo.version }}</div>
             <div class="network">
               <span>Network:</span><span class="bitmark-network">{{ nodeInfo.network }}</span>
             </div>
@@ -51,7 +51,7 @@
               <svg class="icon-description">
                 <use xlink:href="assets/img/icons.svg#icon-description" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
               </svg>
-              <a href="https://hub.docker.com/r/bitmark/bitmark-node/" target="_blank">Instructions</a>
+              <a href="https://hub.docker.com/r/bitmark/bitmark-node-docker/" target="_blank">Instructions</a>
             </li>
             <li>
               <svg class="icon-language">
@@ -85,9 +85,9 @@
         </div>
       </div>
       <div class="bitmark-version">
-        <div class="bitmark-node-version">Bitmark node {{ nodeInfo.version }}</div>
-        <div class="bitmark-node-update">
-          <a href="https://hub.docker.com/r/bitmark/bitmark-node/tags/" target="_blank" v-if="(latestVersion > nodeInfo.version)">New update available</a>
+        <div class="bitmark-node-docker-version">Bitmark node {{ nodeInfo.version }}</div>
+        <div class="bitmark-node-docker-update">
+          <a href="https://hub.docker.com/r/bitmark/bitmark-node-docker/tags/" target="_blank" v-if="(latestVersion > nodeInfo.version)">New update available</a>
         </div>
       </div>
     </div> 

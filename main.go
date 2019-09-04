@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bitmark-inc/bitmark-node/config"
-	"github.com/bitmark-inc/bitmark-node/server"
-	"github.com/bitmark-inc/bitmark-node/services"
+	"github.com/bitmark-inc/bitmark-node-docker/config"
+	"github.com/bitmark-inc/bitmark-node-docker/server"
+	"github.com/bitmark-inc/bitmark-node-docker/services"
 	luaconf "github.com/bitmark-inc/bitmarkd/configuration"
 	"github.com/bitmark-inc/exitwithstatus"
 	"github.com/bitmark-inc/logger"
@@ -19,7 +19,7 @@ import (
 var version string = "v0.1" // do not change this value
 var log *logger.L
 
-// MasterConfiguration is a bitmark-Node Configuration file
+// MasterConfiguration is a bitmark-node-docker Configuration file
 type MasterConfiguration struct {
 	Port       int                  `gluamapper:"port" json:"port"`
 	DataDir    string               `gluamapper:"datadir" json:"datadir"`
@@ -48,7 +48,7 @@ func main() {
 	var confFile string
 	var containerIP string
 	var uiPath string
-	flag.StringVar(&confFile, "config-file", "bitmark-node.conf", "configuration for bitmark-node")
+	flag.StringVar(&confFile, "config-file", "bitmark-node-docker.conf", "configuration for bitmark-node-docker")
 	flag.StringVar(&containerIP, "container-ip", "", "ip address for container")
 	flag.StringVar(&uiPath, "ui", "ui/public", "path of ui interface")
 	flag.Parse()
@@ -63,7 +63,7 @@ func main() {
 	if err != nil {
 		exitwithstatus.Message(err.Error())
 	}
-	log = logger.New("bitmark-node")
+	log = logger.New("bitmark-node-docker")
 	log.Info(fmt.Sprintf("DataDirectory:%s", masterConfig.DataDir))
 	log.Info(fmt.Sprintf("Port:%d", masterConfig.Port))
 	log.Info(fmt.Sprintf("VersionURL:%s", masterConfig.VersionURL))

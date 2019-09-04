@@ -1,13 +1,13 @@
 version: '2'
 services:
-  bitmark-node:
+  bitmark-node-docker:
     environment:
       - PUBLIC_IP=127.0.0.1
     build: .
     volumes:
-      - /path/to/node/db:/.config/bitmark-node/db
-      - /path/to/bitmarkd/data:/.config/bitmark-node/bitmarkd/bitmark/data
-      - /path/to/bitmarkd/data-test:/.config/bitmark-node/bitmarkd/testing/data
+      - /path/to/node/db:/.config/bitmark-node-docker/db
+      - /path/to/bitmarkd/data:/.config/bitmark-node-docker/bitmarkd/bitmark/data
+      - /path/to/bitmarkd/data-test:/.config/bitmark-node-docker/bitmarkd/testing/data
     ports:
       - "0.0.0.0:2130:2130"
       - "0.0.0.0:2131:2131"

@@ -94,7 +94,7 @@ div.chain-content
           })
           .then((resp) => {
             if (resp.data && resp.data.ok) {
-              setCookie("bitmark-node-network", this.network, 30)
+              setCookie("bitmark-node-docker-network", this.network, 30)
               this.$router.push("/node")
             } else {
               throw new Error('fail to setup network: ' + resp.data.result)
@@ -107,7 +107,7 @@ div.chain-content
     },
     data() {
       return {
-        network: getCookie("bitmark-node-network")
+        network: getCookie("bitmark-node-docker-network")
       }
     }
   }

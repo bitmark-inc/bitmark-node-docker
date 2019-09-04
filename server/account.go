@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bitmark-inc/bitmark-node/config"
+	"github.com/bitmark-inc/bitmark-node-docker/config"
 	sdk "github.com/bitmark-inc/bitmark-sdk-go"
 	bolt "github.com/coreos/bbolt"
 	"github.com/gin-gonic/gin"

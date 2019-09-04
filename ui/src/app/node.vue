@@ -18,7 +18,7 @@
 
 
 <template>
-  <div class="bitmark-node-wrapper">
+  <div class="bitmark-node-docker-wrapper">
     <div class="content-body">
       <div class="row">
         <h3 class="paragraph-title">Bitmark node status</h3>
@@ -321,7 +321,7 @@
     },
 
     mounted() {
-      let network = getCookie("bitmark-node-network") || 'bitmark'
+      let network = getCookie("bitmark-node-docker-network") || 'bitmark'
       if (!network) {
         this.$router.push("/chain")
       }

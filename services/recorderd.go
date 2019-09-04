@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bitmark-inc/bitmark-node/fault"
-	"github.com/bitmark-inc/bitmark-node/utils"
+	"github.com/bitmark-inc/bitmark-node-docker/fault"
+	"github.com/bitmark-inc/bitmark-node-docker/utils"
 	"github.com/bitmark-inc/logger"
 )
 
