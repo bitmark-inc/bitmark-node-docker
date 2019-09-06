@@ -273,14 +273,8 @@ REM Allow the user to pick the network if one isn't chosen
 
 REM Get the IP Address and check for an internet connection - returns IP address of fec0
 :IPAddress
-	IF not -%1-==-- (
-		echo Set User defined Public IP = %1
-		set EXT_IP=%1
-		GOTO Create
-	)
+	for /f "tokens=2 delims=: " %%A in ( 'nslookup myip.opendns.com. resolver1.opendns.com 2^>NUL^|find "Address:"' ) Do set EXT_IP=%%A
 
-	for /f "skip=1 tokens=2" %%A in ( 'nslookup myip.opendns.com. resolver1.opendns.com 2^>NUL^|find "Address:"' ) Do set EXT_IP=%%A
-	echo Set PUBLIC IP = %EXT_IP%
 	IF "%EXT_IP%" == "fec0" (
 		GOTO NoConnection
 	)

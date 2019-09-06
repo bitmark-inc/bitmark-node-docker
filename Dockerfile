@@ -6,7 +6,7 @@ RUN cd /go/src/bitmark-node-docker/ui && bash -c "source ~/.nvm/nvm.sh && npm in
 FROM bitmark/go-env:go12 as go-env
 
 # VERSION SHOW ON BITMARK-NODE
-ENV VERSION v1.2.1
+ENV VERSION v1.3.0
 ENV BITMARKD_VERSION v0.11.0-rc.2
 
 # Install argon2 for OS
