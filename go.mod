@@ -9,6 +9,6 @@ require (
 	github.com/bitmark-inc/logger v0.3.4
 	github.com/coreos/bbolt v1.3.2
 	github.com/gin-gonic/contrib v0.0.0-20190408155029-b5986969cb50
-	github.com/gin-gonic/gin v1.7.0
+	github.com/gin-gonic/gin v1.9.1
 	go.etcd.io/bbolt v1.3.6 // indirect
 )
